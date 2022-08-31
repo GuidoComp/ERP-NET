@@ -2,5 +2,6 @@
 {
     public class Empleado
     {
+        public string Legajo { get; set; }  
     }
 }
