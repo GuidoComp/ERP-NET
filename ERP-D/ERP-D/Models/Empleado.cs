@@ -2,7 +2,7 @@
 {
     public class Empleado 
     {
-        public string Nombre { get; set; }
+        public string Nombre { get; private set; }
         public string Apellido { get; set; }
         public int DNI { get; set; }
         public List<Telefono> Telefonos { get; set; }
