@@ -2,6 +2,5 @@
 {
     public class TipoTelefono
     {
-        public string Nombre { get; set; }
     }
 }

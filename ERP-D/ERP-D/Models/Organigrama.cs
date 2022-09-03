@@ -1,6 +1,6 @@
 ﻿namespace ERP_D.Models
 {
-    public class Imagen
+    public class Organigrama
     {
     }
 }
