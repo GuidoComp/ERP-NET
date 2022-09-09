@@ -4,15 +4,13 @@
     {
         public enum TipoObraSocial
         {
-            OSDE,
-            OSECAC,
-            SWISS,
-            GALENO
+            PRIVADA,
+            ESTATAL,
         }
 
         public int NumeroAfiliado { get; set; }
 
-        public TipoObraSocial Nombre { get; set; }
+        public TipoObraSocial Tipo { get; set; }
 
         public String Plan { get; set; }    
         

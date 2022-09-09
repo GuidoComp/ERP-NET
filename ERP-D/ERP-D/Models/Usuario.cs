@@ -6,8 +6,6 @@ namespace ERP_D.Models
 {
     public class Usuario : Persona
     {
-        public int IdUsuario { get; set; }
-
         public string Username { get;}
 
         [PasswordPropertyText]

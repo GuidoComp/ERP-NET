@@ -2,5 +2,6 @@
 {
     public class Organigrama
     {
+        public int Id { get; }
     }
 }

@@ -11,6 +11,6 @@ namespace ERP_D.Models
         [Range(10000000, 9999999999999, ErrorMessage = ErrorMsgs.MsgRango)]
         public int Numero { get; set; }
 
-        public TipoTelefono Tipo { get; set; } = new TipoTelefono();
+        public TipoTelefono Tipo { get; set; } 
     }
 }
