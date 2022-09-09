@@ -1,6 +1,9 @@
 ﻿namespace ERP_D.Models
 {
-    public class TipoTelefono
+    public enum TipoTelefono
     {
+        CELULAR,
+        FIJO
+
     }
 }
