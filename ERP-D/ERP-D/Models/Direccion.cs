@@ -15,7 +15,7 @@ namespace ERP_D.Models
         [Range(1, 999999, ErrorMessage = ErrorMsgs.MsgRango)]
         public int Numero { get; set; }
 
-        public int Piso { get; set; }
+        public string Piso { get; set; }
 
         public string Ciudad { get; set; }
     }
