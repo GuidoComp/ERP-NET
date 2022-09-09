@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ERP_D.Models
 {
     public class Empleado : Persona
-    {
-        // Este el ID del empleado
-        [Key]
+    { 
+        public int Id { get;}
         public int Legajo { get; }
 
         public List<Telefono> Telefonos { get; set; }
