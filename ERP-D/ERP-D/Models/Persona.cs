@@ -7,6 +7,8 @@ namespace ERP_D.Models
     {
         //private const string requiredError = "El {0} es un campo obligatorio"; 
 
+        public int Id { get; set; }
+
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int DNI { get; set; }
 
