@@ -5,19 +5,18 @@ namespace ERP_D.Models
 {
     public abstract class Persona
     {
-        private const string requiredError = "El {0} es un campo obligatorio"; 
+        //private const string requiredError = "El {0} es un campo obligatorio"; 
 
-
-        [Required(ErrorMessage = requiredError)]
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int DNI { get; set; }
 
-        [Required(ErrorMessage = requiredError)]
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public String Nombre { get; set; }
 
-        [Required(ErrorMessage = requiredError)]
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public String Apellido { get; set; }
 
-        [EmailAddress(ErrorMessage = "Por favor, escriba un email valido")]
+        [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         public String Email { get; set; }
 
         public DateTime FechaAlta { get; set; }
