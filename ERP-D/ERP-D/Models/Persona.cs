@@ -5,7 +5,8 @@ namespace ERP_D.Models
 {
     public abstract class Persona
     {
-        //private const string requiredError = "El {0} es un campo obligatorio"; 
+        
+        public int Id { get; set; }
 
         public int Id { get; set; }
 
@@ -21,6 +22,11 @@ namespace ERP_D.Models
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         public String Email { get; set; }
 
+        public string UserName { get; }
+
+        public List<Telefono> Telefonos { get; set; }
+
+        public Direccion Direccion { get; }
         public DateTime FechaAlta { get; set; }
 
 

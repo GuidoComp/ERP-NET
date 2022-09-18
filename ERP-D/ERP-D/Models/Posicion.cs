@@ -4,7 +4,9 @@ namespace ERP_D.Models
 {
     public class Posicion
     {
-        public int IdPosicion { get; set; }
+        public int Id { get; set; }
+
+        public string Nombre { get; set; }
 
         public string Nombre { get; set; }
 
@@ -12,10 +14,10 @@ namespace ERP_D.Models
 
         public double Sueldo { get; set; }
 
-        public List<Empleado> Empleados { get; set; }
+        public Empleado Empleado { get; set; }
 
-        public Empleado Responsable { get; set; }
+        public Posicion Responsable { get; set; }
 
-        public Gerencia GerenciaResponsable { get; set; }
+        public Gerencia Gerencia { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Empresa
     {
-        public int IdEmpresa { get; set; }
+        public int Id { get; set; }
         public string Nombre { get; set; }
         public string Rubro { get; set; }
         public Imagen Logo { get; set; }
