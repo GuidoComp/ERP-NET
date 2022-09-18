@@ -3,7 +3,8 @@
     public enum TipoTelefono
     {
         CELULAR,
-        FIJO
+        FIJO,
+        OTRO
 
     }
 }

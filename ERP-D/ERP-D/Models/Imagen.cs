@@ -2,7 +2,7 @@
 {
     public class Imagen
     {
-        public int IdImagen { get; set; }
+        public int Id { get; set; }
         public string Nombre { get; set; }
         public string Path { get; set; }
     }

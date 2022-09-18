@@ -5,16 +5,11 @@ namespace ERP_D.Models
 {
     public class Empleado : Persona
     { 
-        public int Id { get;}
         public int Legajo { get; }
-
-        public List<Telefono> Telefonos { get; set; }
-
-        public Direccion Direccion { get; }
 
         public ObraSocial ObraSocial { get; }
 
-        public bool EstaActivo { get; }
+        public bool EmpleadoActivo { get; }
 
         public Posicion Posicion { get; }
 

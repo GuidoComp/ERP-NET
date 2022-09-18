@@ -2,10 +2,13 @@
 {
     public class ObraSocial
     {
+        public int Id { get; set; }
+
+        public string Nombre { get; set; }
         public enum TipoObraSocial
         {
-            PRIVADA,
-            ESTATAL,
+            OBRASOCIAL,
+            PREPAGA,
         }
 
         public int NumeroAfiliado { get; set; }

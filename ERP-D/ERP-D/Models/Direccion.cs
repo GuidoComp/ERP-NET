@@ -5,7 +5,7 @@ namespace ERP_D.Models
     public class Direccion
     {
         [Key]
-        public int id { get; }
+        public int Id { get; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(30, MinimumLength = 2, ErrorMessage = ErrorMsgs.MsgStringLength)]
