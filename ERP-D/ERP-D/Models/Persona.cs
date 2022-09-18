@@ -8,8 +8,6 @@ namespace ERP_D.Models
         
         public int Id { get; set; }
 
-        public int Id { get; set; }
-
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int DNI { get; set; }
 
