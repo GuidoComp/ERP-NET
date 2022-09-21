@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.ConstrainedExecution;
 
 namespace ERP_D.Models
@@ -20,13 +21,18 @@ namespace ERP_D.Models
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         public String Email { get; set; }
 
-        public string UserName { get; }
 
         public List<Telefono> Telefonos { get; set; }
 
         public Direccion Direccion { get; }
+
         public DateTime FechaAlta { get; set; }
 
+        // Agregamos los atributos de usuario dentro de persona
+        public string UserName { get; }
+
+        [PasswordPropertyText]
+        public string Password { get; }
 
     }
 }

@@ -10,8 +10,8 @@ namespace ERP_D.Models
         //[Required(ErrorMessage = ErrorMsgs.MsgReq)]
         //[Range(10000000, 9999999999999, ErrorMessage = ErrorMsgs.MsgRango)]
         //public int Numero { get; set; }
-
-        [RegularExpression(@"([0-9]{2}\[0-9]{4}\[0-9]{4}) | ([0-9]{3}\[0-9]{3}\[0-9]{4}) | ([0-9]{4}\[0-9]{2}\[0-9]{4})", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
+         
+        [RegularExpression(@"^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
         [DataType(DataType.PhoneNumber)]
         public string Numero { get; set; }
 

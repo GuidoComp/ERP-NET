@@ -9,7 +9,7 @@ namespace ERP_D.Models
         [Key]
         public int Legajo { get; }
 
-        public ObraSocial ObraSocial { get; }
+        public String ObraSocial { get; }
 
         public bool EmpleadoActivo { get; }
 
