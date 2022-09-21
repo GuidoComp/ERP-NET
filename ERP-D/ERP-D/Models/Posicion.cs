@@ -10,7 +10,7 @@ namespace ERP_D.Models
 
         public String Descripcion { get; set; }
 
-        public double Sueldo { get; set; }
+        public decimal Sueldo { get; set; }
 
         public Empleado Empleado { get; set; }
 

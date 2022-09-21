@@ -24,7 +24,7 @@ namespace ERP_D.Models
 
         public List<Telefono> Telefonos { get; set; }
 
-        public Direccion Direccion { get; }
+        public String Direccion { get; }
 
         public DateTime FechaAlta { get; set; }
 
