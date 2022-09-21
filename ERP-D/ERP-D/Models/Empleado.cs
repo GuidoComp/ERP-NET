@@ -6,12 +6,16 @@ namespace ERP_D.Models
     public class Empleado : Persona
     {
         // Este el ID del empleado
-        [Key]
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int Legajo { get; }
 
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public String ObraSocial { get; }
 
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public bool EmpleadoActivo { get; }
+
+        public int PosicionId { get; set; }
 
         public Posicion Posicion { get; }
 

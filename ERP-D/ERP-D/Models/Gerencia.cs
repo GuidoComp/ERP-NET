@@ -11,11 +11,12 @@ namespace ERP_D.Models
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(70, MinimumLength = 2, ErrorMessage = ErrorMsgs.MsgStringLength)]
-        public string Nombre { get; set; }
+        public String Nombre { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Boolean EsGerenciaGeneral { get; init; }
 
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Gerencia Direccion { get; set; }
 
         [ForeignKey("Gerencia")]

@@ -2,8 +2,8 @@ namespace ERP_D.Models
 {
     public class ErrorViewModel
     {
-        public string? RequestId { get; set; }
+        public String? RequestId { get; set; }
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public bool ShowRequestId => !String.IsNullOrEmpty(RequestId);
     }
 }
