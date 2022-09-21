@@ -6,5 +6,6 @@
         public const string MsgInvalido = "Por favor, escriba un {0} válido";
         public const string MsgRango = "El {0} debe estar comprendido entre {1} y {2}";
         public const string MsgStringLength = "El {0} debe estar comprendido entre {2} y {1}";
+        public const string MsgFormatoInvalido = "El {0} debe tener el formato {1}, {2} o {3}";
     }
 }
