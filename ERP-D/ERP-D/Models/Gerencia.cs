@@ -16,30 +16,32 @@ namespace ERP_D.Models
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Boolean EsGerenciaGeneral { get; init; }
 
+        [ForeignKey("Direccion")]
+        public int GerenciaId { get; set; }
+
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Gerencia Direccion { get; set; }
 
-        [ForeignKey("Gerencia")]
-        public int idDireccionGerencial { get; set; }
+        [ForeignKey("Responsable")]
+        public int PosicionResponsableId { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Posicion Responsable { get; set; }
-
-        [ForeignKey("Posicion")]
-        public int idPosicionResponsable { get; set; }
 
         public List<Posicion> Posiciones { get; set; }
 
         public List<Gerencia> Gerencias { get; set; }
 
+        [ForeignKey("Empresa")]
+        public int EmpresaId { get; set; }
+
         public Empresa Empresa { get; init; }
 
-        [ForeignKey("Empresa")]
-        public int idEmpresa { get; set; }
+        [ForeignKey("CentroDeCosto")]
+        public int CentroDeCostoId { get; set; }
 
         public CentroDeCosto CentroDeCosto { get; set; }
 
-        [ForeignKey("CentroDeCosto")]
-        public int idCentroDeCosto { get; set; }
+        
     }
 }

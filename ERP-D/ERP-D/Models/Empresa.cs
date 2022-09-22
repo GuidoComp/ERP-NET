@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP_D.Models
 {
@@ -10,6 +11,7 @@ namespace ERP_D.Models
         public Imagen Logo { get; set; }
         public String Direccion { get; set; }
 
+        [ForeignKey("TelefonoContacto")]
         public int TelefonoId { get; }
         public Telefono TelefonoContacto { get; set; }
 

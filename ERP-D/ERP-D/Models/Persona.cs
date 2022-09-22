@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.ConstrainedExecution;
 
 namespace ERP_D.Models
@@ -25,6 +26,8 @@ namespace ERP_D.Models
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         public String Email { get; set; }
 
+        [ForeignKey("Telefonos")] //Hacemos lista de ids en relación a Telefonos o no?
+        public List<int> TelefonosId { get; set; }
         public List<Telefono> Telefonos { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]

@@ -4,7 +4,6 @@ namespace ERP_D.Models
 {
     public class CentroDeCosto
     {
-        
         public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]

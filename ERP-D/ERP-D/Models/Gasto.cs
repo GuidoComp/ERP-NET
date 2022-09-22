@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace ERP_D.Models
@@ -18,10 +19,15 @@ namespace ERP_D.Models
         [DataType(DataType.Date)]
         public DateTime Fecha { get; }
 
+        [ForeignKey("Empleado")]
+
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int EmpleadoId { get; set; }
+
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Empleado Empleado { get; set; }
+
+        [ForeignKey("CentroDeCosto")]
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int CentroDeCostoId { get; set; }

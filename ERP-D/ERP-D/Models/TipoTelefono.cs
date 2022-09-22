@@ -5,6 +5,5 @@
         CELULAR,
         FIJO,
         OTRO
-
     }
 }
