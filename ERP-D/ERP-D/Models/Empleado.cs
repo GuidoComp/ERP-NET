@@ -16,14 +16,11 @@ namespace ERP_D.Models
         public bool EmpleadoActivo { get; }
 
         [ForeignKey("Posicion")]
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int PosicionId { get; set; }
 
         public Posicion Posicion { get; }
 
-        [ForeignKey("Foto")]
-
-        public int FotoId { get; set; }
-
-        public Imagen Foto { get; set;}
+        public String Foto { get; set;}
     }
 }
