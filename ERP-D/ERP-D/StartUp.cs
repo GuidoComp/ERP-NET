@@ -1,10 +1,16 @@
-﻿namespace ERP_D
+﻿using ERP_D.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace ERP_D
 {
     public static class StartUp
     {
         private static void ConfigureServices (WebApplicationBuilder builder)
         {
+            builder.Services.AddDbContext<ErpContext>(options => options.UseInMemoryDatabase("ErpDB"));
+
             builder.Services.AddControllersWithViews();
+                        
         }
 
         private static void Configure (WebApplication app)
