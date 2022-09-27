@@ -16,32 +16,34 @@ namespace ERP_D.Models
 
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [StringLength(15, MinimumLength = 3, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [StringLength(70, MinimumLength = 1 , ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Nombre { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [StringLength(15, MinimumLength = 3, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Apellido { get; set; }
 
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
-        public String Email { get; set; }
+        public String Email { get; set; }  //???? VER El email de la persona no es requerido, porque lo generarán uds. en base a alguna definición de nomenclatura? Podría ser interesante. Comentar a este respecto.
 
-        [ForeignKey("Telefonos")] //Hacemos lista de ids en relación a Telefonos o no?
-        public List<int> TelefonosId { get; set; }
         public List<Telefono> Telefonos { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        public String Direccion { get; }
+        [StringLength(70, MinimumLength = 4, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        public String Direccion { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [DataType(DataType.Date)]
-        public DateTime FechaAlta { get; set; }
+        public DateTime FechaAlta {
+            get { return FechaAlta; }
+            private set { FechaAlta = DateTime.Now; }
+        }
 
         // Agregamos los atributos de usuario dentro de persona
-        public String UserName { get; }
+        public String UserName { get; set; }
 
         [PasswordPropertyText]
-        public String Password { get; }
+        public String Password { get; set; }
 
     }
 }

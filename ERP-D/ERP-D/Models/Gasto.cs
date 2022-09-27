@@ -6,18 +6,18 @@ namespace ERP_D.Models
 {
     public class Gasto
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
-        [StringLength(100, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [StringLength(300, MinimumLength = 10, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Descripcion { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [Range(1.00, 9999999.00, ErrorMessage = ErrorMsgs.MsgMonto)]
-        public decimal Monto { get; set; }
+        [Range(1, double.MaxValue, ErrorMessage = ErrorMsgs.MsgMonto)]
+        public double Monto { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [DataType(DataType.Date)]
-        public DateTime Fecha { get; }
+        public DateTime Fecha { get; set; }
 
         [ForeignKey("Empleado")]
 

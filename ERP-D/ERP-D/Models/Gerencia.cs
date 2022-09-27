@@ -7,19 +7,19 @@ namespace ERP_D.Models
     public class Gerencia
     {
         [Key]
-        public int Id { get; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [StringLength(70, MinimumLength = 2, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Nombre { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        public Boolean EsGerenciaGeneral { get; init; }
+        public Boolean EsGerenciaGeneral { get; set; }
 
         [ForeignKey("Direccion")]
-        public int GerenciaId { get; set; }
-
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        public int GerenciaId { get; set; } 
+
         public Gerencia Direccion { get; set; }
 
         [ForeignKey("Responsable")]
@@ -28,14 +28,15 @@ namespace ERP_D.Models
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Posicion Responsable { get; set; }
 
+        [InverseProperty("Gerencia")] /// A CHEQUEAR
         public List<Posicion> Posiciones { get; set; }
 
-        public List<Gerencia> Gerencias { get; set; }
+        public List<Gerencia> SubGerencias { get; set; }
 
         [ForeignKey("Empresa")]
         public int EmpresaId { get; set; }
 
-        public Empresa Empresa { get; init; }
+        public Empresa Empresa { get; set; }
 
         [ForeignKey("CentroDeCosto")]
         public int CentroDeCostoId { get; set; }

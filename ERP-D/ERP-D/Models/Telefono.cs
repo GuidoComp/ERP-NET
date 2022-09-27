@@ -5,15 +5,12 @@ namespace ERP_D.Models
 {
     public class Telefono
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [RegularExpression(@"^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
-        [DataType(DataType.PhoneNumber)]
-        public String Numero { get; set; }
-
-        [ForeignKey("Tipo")] //Definimos una relación entre el Enum Tipo, y el telefono?
-        public int TipoId { get; set; }
+        // REVISAR REGEX PARA QUE ACEPTE NUMEROS NO CELULARES (5411)
+        public String Numero { get; set; } 
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public TipoTelefono Tipo { get; set; }
