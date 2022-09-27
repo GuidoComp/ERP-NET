@@ -7,19 +7,20 @@ namespace ERP_D.Models
     public class Empleado : Persona
     {
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        public int Legajo { get; }
+        [Range(1, 9999999, ErrorMessage = ErrorMsgs.MsgMonto)]
+        public int Legajo { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        public String ObraSocial { get; }
+        public String ObraSocial { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        public bool EmpleadoActivo { get; }
+        public bool EmpleadoActivo { get; set; }
 
         [ForeignKey("Posicion")]
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        public int PosicionId { get; set; }
+        public int PosicionId { get;  set; }
 
-        public Posicion Posicion { get; }
+        public Posicion Posicion { get; set; }
 
         public String Foto { get; set;}
     }

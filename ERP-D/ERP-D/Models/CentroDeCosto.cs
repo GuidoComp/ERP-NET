@@ -7,11 +7,11 @@ namespace ERP_D.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [StringLength(10, MinimumLength = 2, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Nombre { get; set; }
 
-        [Range(1.00, 9999999.00, ErrorMessage = ErrorMsgs.MsgMonto)]
-        public decimal MontoMaximo { get; set; }
+        [Range(1, double.MaxValue, ErrorMessage = ErrorMsgs.MsgMonto)]
+        public double MontoMaximo { get; set; }
 
         public List<Gasto> Gastos { get; set; }
     }

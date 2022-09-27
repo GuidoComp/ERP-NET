@@ -29,7 +29,7 @@ namespace ERP_D.Models
             
       
         [ForeignKey("TelefonoContacto")]
-        public int TelefonoId { get; }
+        public int TelefonoId { get; set; }
         public Telefono TelefonoContacto { get; set; }
 
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
