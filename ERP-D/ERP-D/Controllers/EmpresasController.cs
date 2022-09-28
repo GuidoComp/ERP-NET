@@ -10,85 +10,85 @@ using ERP_D.Models;
 
 namespace ERP_D.Controllers
 {
-    public class PersonasController : Controller
+    public class EmpresasController : Controller
     {
         private readonly ErpContext _context;
 
-        public PersonasController(ErpContext context)
+        public EmpresasController(ErpContext context)
         {
             _context = context;
         }
 
-        // GET: Personas
+        // GET: Empresas
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Personas.ToListAsync());
+              return View(await _context.Empresas.ToListAsync());
         }
 
-        // GET: Personas/Details/5
+        // GET: Empresas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Personas == null)
+            if (id == null || _context.Empresas == null)
             {
                 return NotFound();
             }
 
-            var persona = await _context.Personas
+            var empresa = await _context.Empresas
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (persona == null)
+            if (empresa == null)
             {
                 return NotFound();
             }
 
-            return View(persona);
+            return View(empresa);
         }
 
-        // GET: Personas/Create
+        // GET: Empresas/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Personas/Create
+        // POST: Empresas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Persona persona)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(persona);
+                _context.Add(empresa);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(persona);
+            return View(empresa);
         }
 
-        // GET: Personas/Edit/5
+        // GET: Empresas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Personas == null)
+            if (id == null || _context.Empresas == null)
             {
                 return NotFound();
             }
 
-            var persona = await _context.Personas.FindAsync(id);
-            if (persona == null)
+            var empresa = await _context.Empresas.FindAsync(id);
+            if (empresa == null)
             {
                 return NotFound();
             }
-            return View(persona);
+            return View(empresa);
         }
 
-        // POST: Personas/Edit/5
+        // POST: Empresas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Persona persona)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
         {
-            if (id != persona.Id)
+            if (id != empresa.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace ERP_D.Controllers
             {
                 try
                 {
-                    _context.Update(persona);
+                    _context.Update(empresa);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonaExists(persona.Id))
+                    if (!EmpresaExists(empresa.Id))
                     {
                         return NotFound();
                     }
@@ -113,49 +113,49 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(persona);
+            return View(empresa);
         }
 
-        // GET: Personas/Delete/5
+        // GET: Empresas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Personas == null)
+            if (id == null || _context.Empresas == null)
             {
                 return NotFound();
             }
 
-            var persona = await _context.Personas
+            var empresa = await _context.Empresas
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (persona == null)
+            if (empresa == null)
             {
                 return NotFound();
             }
 
-            return View(persona);
+            return View(empresa);
         }
 
-        // POST: Personas/Delete/5
+        // POST: Empresas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Personas == null)
+            if (_context.Empresas == null)
             {
-                return Problem("Entity set 'ErpContext.Personas'  is null.");
+                return Problem("Entity set 'ErpContext.Empresas'  is null.");
             }
-            var persona = await _context.Personas.FindAsync(id);
-            if (persona != null)
+            var empresa = await _context.Empresas.FindAsync(id);
+            if (empresa != null)
             {
-                _context.Personas.Remove(persona);
+                _context.Empresas.Remove(empresa);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PersonaExists(int id)
+        private bool EmpresaExists(int id)
         {
-          return _context.Personas.Any(e => e.Id == id);
+          return _context.Empresas.Any(e => e.Id == id);
         }
     }
 }

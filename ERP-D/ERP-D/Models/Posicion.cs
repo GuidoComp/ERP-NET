@@ -20,15 +20,15 @@ namespace ERP_D.Models
         public decimal Sueldo { get; set; }
 
         [ForeignKey("Empleado")]
-        public int EmpleadoId { get; set; }
+        public int? EmpleadoId { get; set; }
         public Empleado Empleado { get; set; }
 
         [ForeignKey("Responsable")]
-        public int ResponsableId { get; set; }
+        public int? ResponsableId { get; set; }
         public Posicion Responsable { get; set; }
 
         [ForeignKey("Gerencia")]
-        public int GerenciaId { get; set; }
+        public int? GerenciaId { get; set; }
         public Gerencia Gerencia { get; set; }
     }
 }

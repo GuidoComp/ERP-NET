@@ -1,14 +1,32 @@
 ﻿using ERP_D.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
+using System.Reflection.Metadata;
 
 namespace ERP_D.Data
 {
-    public class ErpContext : DbContext
+    public partial class ErpContext : DbContext
     {
         public ErpContext(DbContextOptions options) : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<Telefono>()
+                .Property(t => t.Tipo)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Empleado>()
+            .Property(e => e.FechaAlta)
+            .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Empleado>()
+                .Property(e => e.ObraSocial)
+                .HasConversion<string>();
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<CentroDeCosto> CentrosDeCosto { get; set; }

@@ -6,6 +6,7 @@
         GALENO,
         SANCOR_SALUD,
         OMINT,
-        MEDICUS
+        MEDICUS,
+        OTRO
     }
 }

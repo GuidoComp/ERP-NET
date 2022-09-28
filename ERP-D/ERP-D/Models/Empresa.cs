@@ -27,10 +27,9 @@ namespace ERP_D.Models
             return direccion;
         }
             
-      
-        [ForeignKey("TelefonoContacto")]
-        public int TelefonoId { get; set; }
-        public Telefono TelefonoContacto { get; set; }
+        //[ForeignKey("TelefonoContacto")]
+        //public int TelefonoId { get; set; }
+        //public Telefono TelefonoContacto { get; set; }
 
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         public String Email { get; set; }

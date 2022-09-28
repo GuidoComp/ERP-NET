@@ -19,18 +19,18 @@ namespace ERP_D.Models
         [DataType(DataType.Date)]
         public DateTime Fecha { get; set; }
 
-        [ForeignKey("Empleado")]
+        
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        [ForeignKey("Empleado")]
         public int EmpleadoId { get; set; }
         public Empleado Empleado { get; set; }
 
+        
+
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [ForeignKey("CentroDeCosto")]
-
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int CentroDeCostoId { get; set; }
-
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public CentroDeCosto CentroDeCosto { get; set;} 
 
 

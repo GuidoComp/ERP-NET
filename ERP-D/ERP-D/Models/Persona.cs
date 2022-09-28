@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.ConstrainedExecution;
@@ -7,7 +8,12 @@ namespace ERP_D.Models
 {
     public abstract class Persona
     {
-        
+
+        public Persona()
+        {
+            this.FechaAlta = DateTime.Now;
+        }
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
@@ -32,12 +38,9 @@ namespace ERP_D.Models
         [StringLength(70, MinimumLength = 4, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Direccion { get; set; }
 
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        //  [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [DataType(DataType.Date)]
-        public DateTime FechaAlta {
-            get { return FechaAlta; }
-            private set { FechaAlta = DateTime.Now; }
-        }
+        public DateTime? FechaAlta { get; private set; }
 
         // Agregamos los atributos de usuario dentro de persona
         public String UserName { get; set; }
