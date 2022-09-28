@@ -17,7 +17,7 @@ namespace ERP_D.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [RegularExpression(@"^[\d]{1,3}\.?[\d]{3,3}\.?[\d]{3,3}$", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
+        [RegularExpression(@"^[\d]{1,2}\.?[\d]{3,3}\.?[\d]{3,3}$", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
         public int DNI { get; set; }
 
 
@@ -38,13 +38,16 @@ namespace ERP_D.Models
         [StringLength(70, MinimumLength = 4, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Direccion { get; set; }
 
-        //  [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+
+        [Display(Name = "Fecha de alta")]
         [DataType(DataType.Date)]
         public DateTime? FechaAlta { get; private set; }
 
         // Agregamos los atributos de usuario dentro de persona
+        [Display(Name = "Usuario")]
         public String UserName { get; set; }
 
+        [Display(Name = "Contraseña")]
         [PasswordPropertyText]
         public String Password { get; set; }
 

@@ -13,9 +13,11 @@ namespace ERP_D.Models
         public int Legajo { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        [Display(Name = "Obra social")]
         public ObraSocial ObraSocial { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        [Display(Name = "Empleado activo", AutoGenerateFilter = false)]
         public bool EmpleadoActivo { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
