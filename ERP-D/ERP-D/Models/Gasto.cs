@@ -23,8 +23,6 @@ namespace ERP_D.Models
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public int EmpleadoId { get; set; }
-
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         public Empleado Empleado { get; set; }
 
         [ForeignKey("CentroDeCosto")]
