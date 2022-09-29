@@ -22,8 +22,7 @@ namespace ERP_D.Controllers
         // GET: Empleados
         public async Task<IActionResult> Index()
         {
-            var erpContext = _context.Empleados.Include(e => e.Posicion);
-            return View(await erpContext.ToListAsync());
+              return View(await _context.Empleados.ToListAsync());
         }
 
         // GET: Empleados/Details/5
@@ -35,7 +34,6 @@ namespace ERP_D.Controllers
             }
 
             var empleado = await _context.Empleados
-                .Include(e => e.Posicion)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (empleado == null)
             {
@@ -48,7 +46,6 @@ namespace ERP_D.Controllers
         // GET: Empleados/Create
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
             return View();
         }
 
@@ -57,7 +54,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Legajo,ObraSocial,EmpleadoActivo,PosicionId,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleado)
+        public async Task<IActionResult> Create([Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleado)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +62,6 @@ namespace ERP_D.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleado.PosicionId);
             return View(empleado);
         }
 
@@ -82,7 +78,6 @@ namespace ERP_D.Controllers
             {
                 return NotFound();
             }
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleado.PosicionId);
             return View(empleado);
         }
 
@@ -91,7 +86,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,PosicionId,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleado)
+        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleado)
         {
             if (id != empleado.Id)
             {
@@ -118,7 +113,6 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleado.PosicionId);
             return View(empleado);
         }
 
@@ -131,7 +125,6 @@ namespace ERP_D.Controllers
             }
 
             var empleado = await _context.Empleados
-                .Include(e => e.Posicion)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (empleado == null)
             {

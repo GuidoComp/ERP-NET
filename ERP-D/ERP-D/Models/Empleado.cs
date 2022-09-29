@@ -20,10 +20,6 @@ namespace ERP_D.Models
         [Display(Name = "Empleado activo", AutoGenerateFilter = false)]
         public bool EmpleadoActivo { get; set; }
 
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [ForeignKey("Posicion")]
-        public int PosicionId { get;  set; }
-
         public Posicion Posicion { get; set; }
 
         public String Foto { get; set;}
