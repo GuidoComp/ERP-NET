@@ -20,7 +20,12 @@ namespace ERP_D.Models
         [Display(Name = "Empleado activo", AutoGenerateFilter = false)]
         public bool EmpleadoActivo { get; set; }
 
+        //Posicion que está este empleado
+        [ForeignKey("Posicion")]
+        public int PosicionId { get; set; }
+        //Navegacional, para acceder a la posición de este empleado
         public Posicion Posicion { get; set; }
+
 
         public String Foto { get; set;}
 

@@ -23,8 +23,32 @@ namespace ERP_D.Controllers
         public async Task<IActionResult> Index()
         {
             var erpContext = _context.Posiciones.Include(p => p.Empleado).Include(p => p.Gerencia).Include(p => p.Responsable);
+
+            if (!_context.Posiciones.Any())
+            {
+                PreCarga();
+            }
+
             return View(await erpContext.ToListAsync());
         }
+
+        private void PreCarga()
+        {
+            #region Cargo El Jefe
+
+            _context.Posiciones.Add(new Posicion() { Nombre = "Jefe1", Sueldo = 1000 });
+            _context.SaveChanges();
+
+            #endregion
+
+            #region Cargo subordinados
+            _context.Posiciones.Add(new Posicion() { Nombre = "Jefe2", Sueldo = 500, ResponsableId = _context.Posiciones.FirstOrDefault().Id });
+            _context.Posiciones.Add(new Posicion() { Nombre = "Jefe3", Sueldo = 450, ResponsableId = _context.Posiciones.FirstOrDefault().Id });
+            _context.SaveChanges();
+            #endregion
+
+        }
+
 
         // GET: Posiciones/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -38,6 +62,7 @@ namespace ERP_D.Controllers
                 .Include(p => p.Empleado)
                 .Include(p => p.Gerencia)
                 .Include(p => p.Responsable)
+                .Include(p => p.Subordinadas)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (posicion == null)
             {
@@ -69,7 +94,7 @@ namespace ERP_D.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", posicion.EmpleadoId);
+            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
             return View(posicion);
@@ -88,7 +113,7 @@ namespace ERP_D.Controllers
             {
                 return NotFound();
             }
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", posicion.EmpleadoId);
+            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
             return View(posicion);
@@ -126,7 +151,7 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", posicion.EmpleadoId);
+            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
             return View(posicion);
@@ -167,14 +192,14 @@ namespace ERP_D.Controllers
             {
                 _context.Posiciones.Remove(posicion);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PosicionExists(int id)
         {
-          return _context.Posiciones.Any(e => e.Id == id);
+            return _context.Posiciones.Any(e => e.Id == id);
         }
     }
 }

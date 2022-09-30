@@ -27,11 +27,14 @@ namespace ERP_D.Models
         public Gerencia Direccion { get; set; }
 
 
-        
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        [InverseProperty("Gerencia")]
+        public List<Posicion> Posiciones { get; set; }
+
+        //podrian crear una gerencia, sin asignarle aún el responsable
+        //[Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Display(Name = "Responsable")]
         [ForeignKey("Responsable")]
-        public int ResponsableId { get; set; }
+        public int? ResponsableId { get; set; } 
         public Posicion Responsable { get; set; }
 
 
@@ -39,11 +42,13 @@ namespace ERP_D.Models
         //public List<Posicion> Posiciones { get; set; }
         //public List<Gerencia> SubGerencias { get; set; }
 
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)] //Debería ser requerida la selección de una empresa
         [Display(Name = "Empresa")]
         [ForeignKey("Empresa")]
         public int EmpresaId { get; set; }
         public Empresa Empresa { get; set; }
 
+        //Siendo así la relación, deberían entonces crear primero el centro de costo antes que la gerencia. Asi tal cual como está, uds. potencialmente, crearán una gerencia que querrá relacionarse con el Centro de costo Id 0. Con todas las modificaciones que hice en este ejemplo. Que deberían hacer?
         [Display(Name = "Centro de costo")]
         [ForeignKey("CentroDeCosto")]
         public int CentroDeCostoId { get; set; }
