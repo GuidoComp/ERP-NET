@@ -13,19 +13,21 @@ namespace ERP_D.Models
         public String Rubro { get; set; }
         public String Logo { get; set; }
 
-        public Gerencia Direccion;
+        public Gerencia GerenciaGeneral { get; set; }
 
-        public Gerencia getDireccion()
-        {
-            Gerencia direccion = null;
-            foreach (Gerencia g in Gerencias){
-                if (g.EsGerenciaGeneral)
-                {
-                    direccion = g;
-                }
-            }
-            return direccion;
-        }
+        //Llevar a clase tema de cómo implementar este getDireccion, pero manteniendo el modelo anémico (prop autoimplementada) (necesario).
+
+        //public Gerencia getDireccion()
+        //{
+        //    Gerencia direccion = null;
+        //    foreach (Gerencia g in Gerencias){
+        //        if (g.EsGerenciaGeneral)
+        //        {
+        //            direccion = g;
+        //        }
+        //    }
+        //    return direccion;
+        //}
             
         //[ForeignKey("TelefonoContacto")]
         //public int TelefonoId { get; set; }

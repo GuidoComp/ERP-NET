@@ -2,6 +2,7 @@
 {
     public enum ObraSocial
     {
+        //Contemplar opción Particular sugerencia Mariano
         OSDE,
         GALENO,
         SANCOR_SALUD,

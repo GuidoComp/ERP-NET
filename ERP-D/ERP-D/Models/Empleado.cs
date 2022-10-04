@@ -7,7 +7,7 @@ namespace ERP_D.Models
 {
     public class Empleado : Persona
     {
-
+        //Falta hacer que el valor de esta propiedad sea único. Cómo hacer que lo haga automáticamente? (Generated values, API fluente)
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Range(1, 9999999, ErrorMessage = ErrorMsgs.MsgMonto)]
         public int Legajo { get; set; }

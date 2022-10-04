@@ -29,6 +29,12 @@ namespace ERP_D.Models
         public int? ResponsableId { get; set; }
         public Posicion Responsable { get; set; }
 
+        //A CHEQUEAR
+        [Display(Name = "Posiciones que reportan")]
+        [InverseProperty("Responsable")]
+        public List<Posicion> PosicionesQueReportan { get; set; }
+
+
         [Display(Name = "Gerencia")]
         [ForeignKey("Gerencia")]
         public int? GerenciaId { get; set; }
