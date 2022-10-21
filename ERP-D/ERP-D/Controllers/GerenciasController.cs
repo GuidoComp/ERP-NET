@@ -39,6 +39,7 @@ namespace ERP_D.Controllers
                 .Include(g => g.Direccion)
                 .Include(g => g.Empresa)
                 .Include(g => g.Responsable)
+                .Include(g => g.SubGerencias)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (gerencia == null)
             {

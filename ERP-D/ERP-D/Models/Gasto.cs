@@ -27,10 +27,9 @@ namespace ERP_D.Models
         public int EmpleadoId { get; set; }
         public Empleado Empleado { get; set; }
 
-        
 
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Display(Name = "Centro de costo")]
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [ForeignKey("CentroDeCosto")]
         public int CentroDeCostoId { get; set; }
         public CentroDeCosto CentroDeCosto { get; set;} 

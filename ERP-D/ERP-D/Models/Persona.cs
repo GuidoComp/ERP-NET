@@ -8,12 +8,6 @@ namespace ERP_D.Models
 {
     public abstract class Persona
     {
-
-        public Persona()
-        {
-            this.FechaAlta = DateTime.Now;
-        }
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
@@ -41,7 +35,7 @@ namespace ERP_D.Models
 
         [Display(Name = "Fecha de alta")]
         [DataType(DataType.Date)]
-        public DateTime? FechaAlta { get; private set; }
+        public DateTime? FechaAlta { get; set; }
 
         // Agregamos los atributos de usuario dentro de persona
         [Display(Name = "Usuario")]

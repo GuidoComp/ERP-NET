@@ -3,11 +3,28 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: separate;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #F0EBCE;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #F0EBCE;
+    }
+</style>
 
 <h1>Details</h1>
 
 <div>
-    <h4>CentroDeCosto</h4>
+    <h4>Centro de costos</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -22,6 +39,37 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.MontoMaximo)
         </dd>
+    </dl>
+</div>
+<div>
+    <hr />
+    <h5>@Html.DisplayNameFor(model => model.Gastos)</h5>
+    <dl>
+        @if (!Model.Gastos.Any())
+        {
+            <p class="badge bg-warning">No hay gastos para este centro de costos</p>
+        }
+        else
+        {
+            <table>
+
+                <tr>
+                    <th>Descripcion</th>
+                    <th>Empleado</th>
+                    <th>Monto</th>
+                </tr>
+                @foreach (var item in Model.Gastos)
+                {
+                    <tr>
+                        <td>@item.Descripcion</td>
+                        <td>@item.Empleado.Nombre</td>
+                        <td>@item.Monto</td>
+                    </tr>
+                }
+            </table>
+
+        }
+
     </dl>
 </div>
 <div>

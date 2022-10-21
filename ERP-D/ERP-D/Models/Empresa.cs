@@ -13,22 +13,24 @@ namespace ERP_D.Models
         public String Rubro { get; set; }
         public String Logo { get; set; }
 
+        [Display(Name = "Gerencia general")]
         public Gerencia GerenciaGeneral { get; set; }
 
         //Llevar a clase tema de cómo implementar este getDireccion, pero manteniendo el modelo anémico (prop autoimplementada) (necesario).
 
-        //public Gerencia getDireccion()
-        //{
-        //    Gerencia direccion = null;
-        //    foreach (Gerencia g in Gerencias){
-        //        if (g.EsGerenciaGeneral)
-        //        {
-        //            direccion = g;
-        //        }
-        //    }
-        //    return direccion;
-        //}
-            
+        public Gerencia getDireccion()
+        {
+            Gerencia direccion = null;
+            foreach (Gerencia g in this.Gerencias)
+            {
+                if (g.EsGerenciaGeneral)
+                {
+                    direccion = g;
+                }
+            }
+            return direccion;
+        }
+
         //[ForeignKey("TelefonoContacto")]
         //public int TelefonoId { get; set; }
         //public Telefono TelefonoContacto { get; set; }
@@ -36,6 +38,7 @@ namespace ERP_D.Models
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         public String Email { get; set; }
 
+        [InverseProperty("Empresa")]
         public List<Gerencia> Gerencias { get; set; }
         
 

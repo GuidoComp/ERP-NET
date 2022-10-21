@@ -34,7 +34,10 @@ namespace ERP_D.Controllers
             }
 
             var centroDeCosto = await _context.CentrosDeCosto
+                .Include(c => c.Gastos)
+                .ThenInclude(g => g.Empleado)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (centroDeCosto == null)
             {
                 return NotFound();

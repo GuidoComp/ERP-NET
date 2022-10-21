@@ -34,7 +34,15 @@ namespace ERP_D.Controllers
             }
 
             var empresa = await _context.Empresas
+                .Include(e => e.Gerencias)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var gerencia = empresa.getDireccion();
+            if(gerencia != null)
+            {
+                ViewData["GerenciaGeneral"] = gerencia.Nombre;
+            }
+            
             if (empresa == null)
             {
                 return NotFound();
@@ -156,6 +164,12 @@ namespace ERP_D.Controllers
         private bool EmpresaExists(int id)
         {
           return _context.Empresas.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> RedirectToGerencia(int? id)
+        {
+            return RedirectToAction("Details", new RouteValueDictionary(
+             new { controller = "Gerencias", action = "Details", Id = id }));
         }
     }
 }
