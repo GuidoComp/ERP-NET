@@ -35,8 +35,6 @@ namespace ERP_D.Models
         //Navegacional para ver las posiciones Dependientes a esta posición
         public List<Posicion> Subordinadas { get; set; }
 
-
-
         [Display(Name = "Gerencia")]
         [ForeignKey("Gerencia")]
         public int? GerenciaId { get; set; }

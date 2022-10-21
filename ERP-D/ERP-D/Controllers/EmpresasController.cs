@@ -22,7 +22,7 @@ namespace ERP_D.Controllers
         // GET: Empresas
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Empresas.ToListAsync());
+            return View(await _context.Empresas.Include(e => e.GerenciaGeneral).ToListAsync());
         }
 
         // GET: Empresas/Details/5
@@ -164,12 +164,6 @@ namespace ERP_D.Controllers
         private bool EmpresaExists(int id)
         {
           return _context.Empresas.Any(e => e.Id == id);
-        }
-
-        public async Task<IActionResult> RedirectToGerencia(int? id)
-        {
-            return RedirectToAction("Details", new RouteValueDictionary(
-             new { controller = "Gerencias", action = "Details", Id = id }));
         }
     }
 }

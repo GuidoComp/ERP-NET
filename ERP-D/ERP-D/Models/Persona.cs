@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ERP_D.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,7 +25,9 @@ namespace ERP_D.Models
         public String Apellido { get; set; }
 
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
-        public String Email { get; set; }  //???? VER El email de la persona no es requerido, porque lo generarán uds. en base a alguna definición de nomenclatura? Podría ser interesante. Comentar a este respecto.
+        [Display(Name = Alias.email)]
+        public String? Email { get; set; }
+        //TODO: GENERAR EMAIL A PARTIR DE NOMBRE
 
         public List<Telefono> Telefonos { get; set; }
 

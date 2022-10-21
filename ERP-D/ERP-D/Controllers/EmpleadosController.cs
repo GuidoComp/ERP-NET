@@ -64,6 +64,9 @@ namespace ERP_D.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre",empleado.PosicionId);
+
+            ModelState.AddModelError(String.Empty, "Surgio un error inesperado");
+
             return View(empleado);
         }
 

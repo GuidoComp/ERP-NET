@@ -58,7 +58,7 @@
         {
             @foreach (var item in Model.Gerencias)
             {
-                <a asp-action="RedirectToGerencia" asp-route-id="@item.Id" class="badge bg-warning">@item.Nombre</a>
+                <a asp-controller="Gerencias" asp-action="Details" asp-route-id="@item.Id" class="badge bg-warning">@item.Nombre</a>
             }
         }
     </dl>
