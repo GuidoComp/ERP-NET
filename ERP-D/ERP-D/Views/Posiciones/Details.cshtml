@@ -10,43 +10,69 @@
     <h4>Posicion</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nombre)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Descripcion)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Descripcion)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Sueldo)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Sueldo)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Empleado)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Empleado.Apellido)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Responsable)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Responsable.Nombre)
+        <dd class="col-sm-10">
+            @if (@Model.Responsable == null)
+            {
+                <span class="badge bg-danger">No tiene jefe</span>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.Responsable.Nombre)
+            }
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Gerencia)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Gerencia.Nombre)
         </dd>
     </dl>
+</div>
+<div>
+    <hr />
+    <h5>@Html.DisplayNameFor(model => model.Subordinadas)</h5>
+    <dl>
+        @if (!Model.Subordinadas.Any())
+        {
+            <p class="badge bg-info">No hay posiciones de menor nivel</p>
+        }
+        else
+        {
+            @foreach (var item in Model.Subordinadas)
+            {
+                <a asp-action="details" asp-route-id="@item.Id" class="badge bg-warning">@item.Nombre</a>
+            }
+        }
+
+    </dl>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |

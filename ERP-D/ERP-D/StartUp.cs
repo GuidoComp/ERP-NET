@@ -7,8 +7,7 @@ namespace ERP_D
     {
         private static void ConfigureServices (WebApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<ErpContext>(options => options.UseInMemoryDatabase("ErpDB"));
-
+            builder.Services.AddDbContext<ErpContext>(options => options.UseInMemoryDatabase("ErpDB"));            
             builder.Services.AddControllersWithViews();
                         
         }

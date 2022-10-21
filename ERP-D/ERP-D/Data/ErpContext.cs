@@ -1,6 +1,7 @@
 ﻿using ERP_D.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using System.Xml;
 
 namespace ERP_D.Data
 {
@@ -13,6 +14,8 @@ namespace ERP_D.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Posicion>().Property(pos => pos.Sueldo).HasPrecision(38, 18);
 
             modelBuilder.Entity<Telefono>()
                 .Property(t => t.Tipo)
