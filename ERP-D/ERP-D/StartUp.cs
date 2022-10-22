@@ -13,7 +13,7 @@ namespace ERP_D
             //builder.Services.AddDbContext<ErpContext>(options => options.UseInMemoryDatabase("ErpDB"));            
             builder.Services.AddDbContext<ErpContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ErpDBCS")));
 
-            builder.Services.AddIdentity<Persona, IdentityRole<int>>().AddEntityFrameworkStores<ErpContext>();
+            builder.Services.AddIdentity<Persona, Rol>().AddEntityFrameworkStores<ErpContext>();
 
             //Password por defecto va a ser Password1!
 

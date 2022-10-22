@@ -26,9 +26,10 @@ namespace ERP_D.Models
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Apellido { get; set; }
 
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         [Display(Name = Alias.email)]
-        public override String? Email 
+        public override string Email 
         { 
             get => base.Email;
             set => base.Email = value;

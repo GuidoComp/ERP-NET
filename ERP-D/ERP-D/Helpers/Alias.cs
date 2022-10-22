@@ -5,5 +5,7 @@ namespace ERP_D.Helpers
     public static class Alias
     {
         public const String email = "Correo electronico"; 
+        public const String Password = "Contraseña";
+        public const String ConfirmPassword = "Confirmar contraseña";
     }
 }

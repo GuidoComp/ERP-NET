@@ -8,5 +8,6 @@
         public const String MsgStringLength = "El {0} debe estar comprendido entre {2} y {1}";
         public const String MsgFormatoInvalido = "El {0} debe tener el formato {1}";
         public const String MsgMonto = "Por favor, entre un monto entre {1} and {2}";
+        public const String PassMissmatch = "El campo {0} no coincide";
     }
 }

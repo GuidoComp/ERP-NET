@@ -15,7 +15,7 @@ namespace ERP_D.Models
         [Display(Name = "Rol")]
         public override string Name 
         {
-            get{ return base.Name; }
+            get { return base.Name; }
             set { base.Name = value; } 
         }
 
