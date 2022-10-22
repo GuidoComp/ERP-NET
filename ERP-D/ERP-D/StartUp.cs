@@ -1,4 +1,6 @@
 ﻿using ERP_D.Data;
+using ERP_D.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -10,6 +12,23 @@ namespace ERP_D
         {
             //builder.Services.AddDbContext<ErpContext>(options => options.UseInMemoryDatabase("ErpDB"));            
             builder.Services.AddDbContext<ErpContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ErpDBCS")));
+
+            builder.Services.AddIdentity<Persona, IdentityRole<int>>().AddEntityFrameworkStores<ErpContext>();
+
+            //Password por defecto va a ser Password1!
+
+            builder.Services.Configure<IdentityOptions>(options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 4;
+
+                }
+                
+            );
+            
             builder.Services.AddControllersWithViews();
         }
 
@@ -28,6 +47,8 @@ namespace ERP_D
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

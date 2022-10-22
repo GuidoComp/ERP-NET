@@ -1,4 +1,5 @@
 ﻿using ERP_D.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,9 +8,9 @@ using System.Runtime.ConstrainedExecution;
 
 namespace ERP_D.Models
 {
-    public abstract class Persona
+    public abstract class Persona : IdentityUser<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [RegularExpression(@"^[\d]{1,2}\.?[\d]{3,3}\.?[\d]{3,3}$", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
@@ -26,7 +27,7 @@ namespace ERP_D.Models
 
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         [Display(Name = Alias.email)]
-        public String? Email { get; set; }
+        public override String? Email { get; set; }
         //TODO: GENERAR EMAIL A PARTIR DE NOMBRE
 
         public List<Telefono> Telefonos { get; set; }
@@ -40,13 +41,13 @@ namespace ERP_D.Models
         [DataType(DataType.Date)]
         public DateTime? FechaAlta { get; set; }
 
-        // Agregamos los atributos de usuario dentro de persona
-        [Display(Name = "Usuario")]
-        public String UserName { get; set; }
+        //// Agregamos los atributos de usuario dentro de persona
+        //[Display(Name = "Usuario")]
+        //public String UserName { get; set; }
 
-        [Display(Name = "Contraseña")]
-        [PasswordPropertyText]
-        public String Password { get; set; }
+        //[Display(Name = "Contraseña")]
+        //[PasswordPropertyText]
+        //public String Password { get; set; }
 
     }
 }

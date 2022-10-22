@@ -1,11 +1,13 @@
 ﻿using ERP_D.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using System.Xml;
 
 namespace ERP_D.Data
 {
-    public partial class ErpContext : DbContext
+    public partial class ErpContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
     {
         public ErpContext(DbContextOptions options) : base(options)
         {
@@ -14,6 +16,8 @@ namespace ERP_D.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Posicion>().Property(pos => pos.Sueldo).HasPrecision(38, 18);
 
@@ -29,7 +33,15 @@ namespace ERP_D.Data
                 .Property(e => e.ObraSocial)
                 .HasConversion<string>();
 
-            base.OnModelCreating(modelBuilder);
+            //Establecemos los nombres de Identity Stores
+
+            modelBuilder.Entity<IdentityUser<int>>().ToTable("Personas");
+
+            modelBuilder.Entity<IdentityRole<int>>().ToTable("Roles");
+
+            modelBuilder.Entity<IdentityUserRole<int>>().ToTable("PersonasRoles");
+
+            
         }
 
         public DbSet<CentroDeCosto> CentrosDeCosto { get; set; }
@@ -41,6 +53,8 @@ namespace ERP_D.Data
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Posicion> Posiciones { get; set; }
         public DbSet<Telefono> Telefonos { get; set; }
+
+        public DbSet<Rol> Roles { get; set; }
 
     }
 }
