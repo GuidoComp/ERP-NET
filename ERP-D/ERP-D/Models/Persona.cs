@@ -1,6 +1,7 @@
 ﻿using ERP_D.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,7 +28,11 @@ namespace ERP_D.Models
 
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         [Display(Name = Alias.email)]
-        public override String? Email { get; set; }
+        public override String? Email 
+        { 
+            get => base.Email;
+            set => base.Email = value;
+        }
         //TODO: GENERAR EMAIL A PARTIR DE NOMBRE
 
         public List<Telefono> Telefonos { get; set; }
