@@ -22,7 +22,7 @@ namespace ERP_D.Models
 
         //Posicion que está este empleado
         [ForeignKey("Posicion")]
-        public int PosicionId { get; set; }
+        public int? PosicionId { get; set; }
         //Navegacional, para acceder a la posición de este empleado
         public Posicion Posicion { get; set; }
 
