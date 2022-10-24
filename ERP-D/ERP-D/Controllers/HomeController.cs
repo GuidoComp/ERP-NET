@@ -13,8 +13,10 @@ namespace ERP_D.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(String mensaje)
         {
+            ViewBag.mensaje = mensaje;
+
             return View();
         }
 

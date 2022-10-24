@@ -93,9 +93,9 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleado)
+        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleadoForm)
         {
-            if (id != empleado.Id)
+            if (id != empleadoForm.Id)
             {
                 return NotFound();
             }
@@ -104,12 +104,28 @@ namespace ERP_D.Controllers
             {
                 try
                 {
-                    _context.Update(empleado);
+
+                    var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
+
+                    if(empleadoDB == null)
+                    {
+                        return NotFound();
+                    }
+
+                    empleadoDB.DNI = empleadoForm.DNI;
+                    empleadoDB.Nombre = empleadoForm.Nombre;
+                    empleadoDB.Apellido = empleadoForm.Apellido;
+                    empleadoDB.ObraSocial = empleadoForm.ObraSocial;
+                    empleadoDB.Legajo = empleadoForm.Legajo;
+                    empleadoDB.Foto = empleadoForm.Foto;
+                    empleadoDB.Direccion = empleadoForm.Direccion;
+
+                    _context.Update(empleadoDB);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmpleadoExists(empleado.Id))
+                    if (!EmpleadoExists(empleadoForm.Id))
                     {
                         return NotFound();
                     }
@@ -120,8 +136,8 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleado.PosicionId);
-            return View(empleado);
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleadoForm.PosicionId);
+            return View(empleadoForm);
         }
 
         // GET: Empleados/Delete/5
