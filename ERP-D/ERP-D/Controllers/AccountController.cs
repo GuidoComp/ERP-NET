@@ -1,6 +1,7 @@
 ﻿//using AspNetCore;
 using ERP_D.Models;
 using ERP_D.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,20 +59,27 @@ namespace ERP_D.Controllers
             return View(viewModel);
         }
 
-        public IActionResult IniciarSesion()
+        public IActionResult IniciarSesion(String returnUrl)
         {
+            TempData["url"] = returnUrl;
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Login viewModel)
         {
+
+            String url = TempData["url"] as String;
             if (ModelState.IsValid)
             {
                 var resultado = await _signInManager.PasswordSignInAsync(viewModel.Email, viewModel.Password, viewModel.Recordarme, false);
 
                 if (resultado.Succeeded)
                 {
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        return Redirect(url);
+                    }
                    return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(String.Empty, "El inicio es invalido");
@@ -85,10 +93,16 @@ namespace ERP_D.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Administrador()
         {
             var roles = _roleManager.Roles.ToList();
             return View(roles);
+        }
+
+        public IActionResult AccesoDenegado(string redirectUrl)
+        {
+            return View();
         }
     }
 }

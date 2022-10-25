@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERP_D.Data;
 using ERP_D.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERP_D.Controllers
 {
+    [Authorize]
     public class CentrosDeCostoController : Controller
     {
         private readonly ErpContext _context;

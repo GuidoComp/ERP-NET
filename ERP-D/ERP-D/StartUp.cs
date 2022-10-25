@@ -1,5 +1,6 @@
 ﻿using ERP_D.Data;
 using ERP_D.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
@@ -27,6 +28,15 @@ namespace ERP_D
 
                 }
                 
+            );
+
+            builder.Services.PostConfigure<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme,
+                options =>
+                {
+                    options.LoginPath = "/Account/IniciarSesion";
+                    options.AccessDeniedPath = "/Account/AccesoDenegado";
+                    options.Cookie.Name = "IdentidadERP";
+                }
             );
             
             builder.Services.AddControllersWithViews();
