@@ -17,7 +17,6 @@ namespace ERP_D
             builder.Services.AddIdentity<Persona, Rol>().AddEntityFrameworkStores<ErpContext>();
 
             //Password por defecto va a ser Password1!
-
             builder.Services.Configure<IdentityOptions>(options =>
                 {
                     options.Password.RequireDigit = true;
@@ -49,6 +48,14 @@ namespace ERP_D
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+            }
+
+            using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var contexto = serviceScope.ServiceProvider.GetRequiredService<ErpContext>();
+
+                //contexto.Database.EnsureCreated();
+                contexto.Database.Migrate();
             }
 
             app.UseStaticFiles();
