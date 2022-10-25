@@ -61,6 +61,7 @@ namespace ERP_D.Controllers
                 empleado.FechaAlta = DateTime.Now;
                 _context.Add(empleado);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre",empleado.PosicionId);

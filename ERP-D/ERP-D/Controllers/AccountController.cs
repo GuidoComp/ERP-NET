@@ -10,15 +10,15 @@ namespace ERP_D.Controllers
     {
         private readonly UserManager<Persona> _usermanager;
         private readonly SignInManager<Persona> _signInManager;
+        private readonly RoleManager<Rol> _roleManager;
 
-        public AccountController(UserManager<Persona> usermanager, SignInManager<Persona> signInManager)
+        public AccountController(UserManager<Persona> usermanager, SignInManager<Persona> signInManager, RoleManager<Rol> roleManager)
         {
             this._usermanager = usermanager;
             this._signInManager = signInManager;
+            this._roleManager = roleManager;
 
         }
-
-
 
         public IActionResult Registrar()
         {
@@ -44,6 +44,7 @@ namespace ERP_D.Controllers
 
                 if (resultadoCreate.Succeeded)
                 {
+                    var resultadoRol = _usermanager.AddToRoleAsync(empleadoACrear, "Empleado");
                     await _signInManager.SignInAsync(empleadoACrear,isPersistent:false);
                     return RedirectToAction("Edit","Empleados", new {id = empleadoACrear.Id});
                 }
@@ -82,6 +83,12 @@ namespace ERP_D.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Administrador()
+        {
+            var roles = _roleManager.Roles.ToList();
+            return View(roles);
         }
     }
 }

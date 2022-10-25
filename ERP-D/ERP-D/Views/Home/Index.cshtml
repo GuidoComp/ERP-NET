@@ -6,10 +6,14 @@
     <h1 class="display-4">ERP Empleados - Grupo D</h1>
 </div>
 
-@if(ViewBag.mensaje != null){
+@if (ViewBag.mensaje != null)
+{
     <div class="text-center">
         <p>Carga de feed finalizada</p>
     </div>
 }
 
-<a asp-controller="PreCarga" asp-action="Seed" class="btn btn-warning">PreCarga</a>
+@if(signInManager.IsSignedIn(User))
+{
+    <a asp-controller="PreCarga" asp-action="Seed" class="btn btn-warning">PreCarga</a>
+}
