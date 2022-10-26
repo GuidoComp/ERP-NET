@@ -21,8 +21,9 @@ namespace ERP_D.Models
         public bool EmpleadoActivo { get; set; }
 
         //Posicion que está este empleado
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [ForeignKey("Posicion")]
-        public int? PosicionId { get; set; }
+        public int PosicionId { get; set; }
         //Navegacional, para acceder a la posición de este empleado
         public Posicion Posicion { get; set; }
 
