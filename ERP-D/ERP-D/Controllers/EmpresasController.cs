@@ -25,7 +25,8 @@ namespace ERP_D.Controllers
         // GET: Empresas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Empresas.Include(e => e.GerenciaGeneral).ToListAsync());
+            //(
+            return View(await _context.Empresas.Include(e => e.Gerencias).ToListAsync());
         }
 
         // GET: Empresas/Details/5
@@ -40,12 +41,12 @@ namespace ERP_D.Controllers
                 .Include(e => e.Gerencias)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            var gerencia = empresa.getDireccion();
-            if(gerencia != null)
+            var gerencia = empresa.Gerencias.Find(g => g.EsGerenciaGeneral);
+            if (gerencia != null)
             {
                 ViewData["GerenciaGeneral"] = gerencia.Nombre;
             }
-            
+
             if (empresa == null)
             {
                 return NotFound();
