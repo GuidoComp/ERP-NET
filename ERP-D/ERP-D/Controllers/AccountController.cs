@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_D.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<Persona> _usermanager;
@@ -20,51 +21,52 @@ namespace ERP_D.Controllers
             this._roleManager = roleManager;
 
         }
-
-        public IActionResult Registrar()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Registrar([Bind("DNI,Nombre,Apellido,Email,Password,ConfirmacionPassword")]RegistroEmpleado viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                Empleado empleadoACrear = new Empleado()
-                {
-                    DNI = viewModel.DNI,
-                    Nombre = viewModel.Nombre,
-                    Apellido = viewModel.Apellido,
-                    Email = viewModel.Email,
-                    UserName =  viewModel.Email
+        // EN nuestro proyecto no hay alta de usuario de esta manera. Lo hacen los usuarios RH
+        //[AllowAnonymous]
+        //public IActionResult Registrar()
+        //{
+        //    return View();
+        //}
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public async Task<IActionResult> Registrar([Bind("DNI,Nombre,Apellido,Email,Password,ConfirmacionPassword")]RegistroEmpleado viewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        Empleado empleadoACrear = new Empleado()
+        //        {
+        //            DNI = viewModel.DNI,
+        //            Nombre = viewModel.Nombre,
+        //            Apellido = viewModel.Apellido,
+        //            Email = viewModel.Email,
+        //            UserName =  viewModel.Email
                     
-                };
+        //        };
 
-                var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, viewModel.Password);
+        //        var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, viewModel.Password);
 
-                if (resultadoCreate.Succeeded)
-                {
-                    var resultadoRol = _usermanager.AddToRoleAsync(empleadoACrear, "Empleado");
-                    await _signInManager.SignInAsync(empleadoACrear,isPersistent:false);
-                    return RedirectToAction("Edit","Empleados", new {id = empleadoACrear.Id});
-                }
+        //        if (resultadoCreate.Succeeded)
+        //        {
+        //            var resultadoRol = _usermanager.AddToRoleAsync(empleadoACrear, "Empleado");
+        //            await _signInManager.SignInAsync(empleadoACrear,isPersistent:false);
+        //            return RedirectToAction("Edit","Empleados", new {id = empleadoACrear.Id});
+        //        }
 
-                foreach(var error in resultadoCreate.Errors)
-                {
-                    ModelState.AddModelError(String.Empty,error.Description);
-                }
+        //        foreach(var error in resultadoCreate.Errors)
+        //        {
+        //            ModelState.AddModelError(String.Empty,error.Description);
+        //        }
 
-            }
-            return View(viewModel);
-        }
-
+        //    }
+        //    return View(viewModel);
+        //}
+        [AllowAnonymous]
         public IActionResult IniciarSesion(String returnUrl)
         {
             TempData["url"] = returnUrl;
             return View();
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Login viewModel)
         {

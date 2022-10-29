@@ -23,25 +23,6 @@ namespace ERP_D.Controllers
 
         public async Task<IActionResult> Index(String mensaje)
         {
-            //TODO: Migrar creacion de admin a landing page
-            var admin = new Empleado();
-
-            admin.Nombre = "admin";
-            admin.Apellido = "admin";
-            admin.Email = "admin@erp.com";
-            admin.UserName = "admin@erp.com";
-
-            var adminEncontrado =_erpContext.Personas.Any(p => p.Nombre == "Admin");
-
-            if (!adminEncontrado)
-            {
-                var resultado = await _userManager.CreateAsync(admin, "Password1!");
-                if (resultado.Succeeded)
-                {
-                    var resultadoRol = _userManager.AddToRoleAsync(admin, "Admin");
-                }
-            }
-
             ViewBag.mensaje = mensaje;
 
             return View();
