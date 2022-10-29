@@ -9,7 +9,6 @@ namespace ERP_D.ViewModels
     public class Login
     {
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
         [Display(Name = Alias.email)]
         public string Email { get; set; }
 

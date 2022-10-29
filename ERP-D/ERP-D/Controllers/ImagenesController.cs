@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERP_D.Data;
 using ERP_D.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace ERP_D.Controllers
 {
+    [Authorize(Roles = "Admin, RH")]
     public class ImagenesController : Controller
     {
         private readonly ErpContext _context;

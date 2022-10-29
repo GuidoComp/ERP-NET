@@ -9,17 +9,20 @@ using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP_D.Controllers
 {
-    [Authorize(Roles = "Admin, Empleado")]
+    [Authorize(Roles = "Admin, Empleado, RH")]
     public class EmpleadosController : Controller
     {
         private readonly ErpContext _context;
+        private readonly UserManager<Persona> _userManager;
 
-        public EmpleadosController(ErpContext context)
+        public EmpleadosController(UserManager<Persona> userManager, ErpContext erpContext)
         {
-            _context = context;
+            this._userManager = userManager;
+            this._context = erpContext;
         }
 
         // GET: Empleados
@@ -61,9 +64,15 @@ namespace ERP_D.Controllers
         {
             if (ModelState.IsValid)
             {
-                empleado.FechaAlta = DateTime.Now;
-                _context.Add(empleado);
-                await _context.SaveChangesAsync();
+                
+                empleado.UserName = empleado.DNI.ToString();
+
+                    var resultado = await _userManager.CreateAsync(empleado, empleado.DNI.ToString());
+                    if (resultado.Succeeded)
+                    {
+                        var resultadoRol = await _userManager.AddToRoleAsync(empleado, "Empleado");
+                    }
+
 
                 return RedirectToAction(nameof(Index));
             }

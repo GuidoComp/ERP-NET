@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ERP_D.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, RH")]
     public class CentrosDeCostoController : Controller
     {
         private readonly ErpContext _context;

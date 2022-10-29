@@ -44,7 +44,7 @@ namespace ERP_D.Controllers
                 var resultado = await _userManager.CreateAsync(admin, "Password1!");
                 if (resultado.Succeeded)
                 {
-                    var resultadoRol = _userManager.AddToRoleAsync(admin, "Admin");
+                    var resultadoRol = await _userManager.AddToRoleAsync(admin, "Admin");
                 }
             }
         }
