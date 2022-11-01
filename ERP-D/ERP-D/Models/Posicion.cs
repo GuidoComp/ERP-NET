@@ -21,8 +21,6 @@ namespace ERP_D.Models
 
         [Display(Name = "Responsable")]
         [ForeignKey("Responsable")]
-
-                
         public int? ResponsableId { get; set; } //Hay que ponerlo en esta instancia como nulleable, porque sino, al no estár fisponible cuando consulten las posiciones en el index por ejemplo, al hacer un include, por fedecto, excluirá toda posición que no tiene el responsable.
         
         //Navegacional para ver la posición de mi jefe.

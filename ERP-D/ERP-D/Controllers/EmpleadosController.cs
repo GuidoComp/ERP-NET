@@ -10,6 +10,7 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
+using ERP_D.ViewModels;
 
 namespace ERP_D.Controllers
 {
@@ -28,6 +29,10 @@ namespace ERP_D.Controllers
         // GET: Empleados
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
+            {
+                return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) } );
+            }
               return View(await _context.Empleados.ToListAsync());
         }
 
@@ -39,7 +44,8 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.Include(e=>e.Posicion).FirstOrDefaultAsync(m => m.Id == id);
+            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(m => m.Id == id);
+            
             if (empleado == null)
             {
                 return NotFound();
@@ -49,9 +55,10 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empleados/Create
+        [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Nombre != "Admin" && p.Empleado == null), "Id", "Nombre");
             return View();
         }
 
@@ -60,30 +67,50 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,UserName,Password,PosicionId")] Empleado empleado)
+        [Authorize(Roles = "Admin, RH")]
+        public async Task<IActionResult> Create([Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH")] CreacionEmpleado empleadoForm)
         {
             if (ModelState.IsValid)
             {
-                
-                empleado.UserName = empleado.DNI.ToString();
+                var nuevoEmpleado = new Empleado();
 
-                    var resultado = await _userManager.CreateAsync(empleado, empleado.DNI.ToString());
+                nuevoEmpleado.Nombre = empleadoForm.Nombre;
+                nuevoEmpleado.DNI = empleadoForm.DNI;
+                nuevoEmpleado.Apellido = empleadoForm.Apellido;
+                nuevoEmpleado.Foto = empleadoForm.Foto;
+                nuevoEmpleado.EmpleadoActivo = empleadoForm.EmpleadoActivo;
+                nuevoEmpleado.Direccion = empleadoForm.Direccion;
+                nuevoEmpleado.ObraSocial = empleadoForm.ObraSocial;
+                nuevoEmpleado.Legajo = empleadoForm.Legajo;
+                nuevoEmpleado.UserName = empleadoForm.DNI.ToString();
+                nuevoEmpleado.PosicionId = empleadoForm.PosicionId;
+                nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@erp-zone.com";
+
+                    var resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
                     if (resultado.Succeeded)
                     {
-                        var resultadoRol = await _userManager.AddToRoleAsync(empleado, "Empleado");
+                        if (empleadoForm.RH)
+                        {
+                            await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
+                            await _userManager.AddToRoleAsync(nuevoEmpleado, "RH");
+                        }else
+                        {
+                            await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
+                        }
                     }
 
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre",empleado.PosicionId);
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleadoForm.PosicionId);
 
             ModelState.AddModelError(String.Empty, "Surgio un error inesperado");
 
-            return View(empleado);
+            return View(empleadoForm);
         }
 
         // GET: Empleados/Edit/5
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -97,7 +124,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleado.PosicionId);
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre", empleado.PosicionId);
             return View(empleado);
         }
 
@@ -106,7 +133,8 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password")] Empleado empleadoForm)
+        [Authorize(Roles = "Admin, RH")]
+        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password, PosicionId")] Empleado empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -132,6 +160,7 @@ namespace ERP_D.Controllers
                     empleadoDB.Legajo = empleadoForm.Legajo;
                     empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
+                    empleadoDB.PosicionId = empleadoForm.PosicionId;
 
                     _context.Update(empleadoDB);
                     await _context.SaveChangesAsync();
@@ -153,7 +182,76 @@ namespace ERP_D.Controllers
             return View(empleadoForm);
         }
 
+        // Action para que el rolm de empleado modifique sus datos
+        public async Task<IActionResult> PersonalEdit(int? id)
+        {
+            if (id == null || _context.Empleados == null)
+            {
+                return NotFound();
+            }
+
+            var empleado = await _context.Empleados.FindAsync(id);
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            var empleadoEdit = new PersonalEdit();
+            empleadoEdit.Id = empleado.Id;
+            empleadoEdit.Direccion = empleado.Direccion;
+            empleadoEdit.Foto = empleado.Foto;
+
+            return View(empleadoEdit);
+        }
+
+        // POST: Empleados/Edit/5
+        // Action para que el rolm de empleado modifique sus datos
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PersonalEdit(int id, [Bind("Id, Foto, Direccion")] PersonalEdit empleadoForm)
+        {
+            if (id != empleadoForm.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+                    var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
+
+                    if (empleadoDB == null)
+                    {
+                        return NotFound();
+                    }
+
+                    empleadoDB.Foto = empleadoForm.Foto;
+                    empleadoDB.Direccion = empleadoForm.Direccion;
+
+                    _context.Update(empleadoDB);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EmpleadoExists(empleadoForm.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(empleadoForm);
+        }
+
+
         // GET: Empleados/Delete/5
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -174,6 +272,7 @@ namespace ERP_D.Controllers
         // POST: Empleados/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Empleados == null)

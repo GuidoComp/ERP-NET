@@ -48,8 +48,12 @@ namespace ERP_D.Models
         public DateTime? FechaAlta { get; set; }
 
         //// Agregamos los atributos de usuario dentro de persona
-        //[Display(Name = "Usuario")]
-        //public String UserName { get; set; }
+        [Display(Name = "Usuario")]
+        public override String UserName
+        {
+            get => base.UserName;
+            set => base.UserName = value;
+        }
 
         //[Display(Name = "Contraseña")]
         //[PasswordPropertyText]

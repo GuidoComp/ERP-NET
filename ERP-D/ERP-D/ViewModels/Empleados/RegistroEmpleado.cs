@@ -3,7 +3,7 @@ using ERP_D.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace ERP_D.ViewModels
+namespace ERP_D.ViewModels.Empleados
 {
     public class RegistroEmpleado
     {
@@ -13,11 +13,11 @@ namespace ERP_D.ViewModels
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
-        public String Nombre { get; set; }
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
-        public String Apellido { get; set; }
+        public string Apellido { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [EmailAddress(ErrorMessage = ErrorMsgs.MsgInvalido)]
@@ -33,6 +33,6 @@ namespace ERP_D.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = Alias.ConfirmPassword)]
         [Compare("Password", ErrorMessage = ErrorMsgs.PassMissmatch)]
-        public String ConfirmacionPassword { get; set; }
+        public string ConfirmacionPassword { get; set; }
     }
 }

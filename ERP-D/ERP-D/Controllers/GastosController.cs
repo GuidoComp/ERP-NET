@@ -9,6 +9,8 @@ using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using ERP_D.ViewModels.Gastos;
+using Microsoft.AspNetCore.Identity;
 
 namespace ERP_D.Controllers
 {
@@ -16,16 +18,20 @@ namespace ERP_D.Controllers
     public class GastosController : Controller
     {
         private readonly ErpContext _context;
+        private readonly UserManager<Persona> _userManager;
 
-        public GastosController(ErpContext context)
+        public GastosController(UserManager<Persona> userManager, ErpContext erpContext)
         {
-            _context = context;
+            this._userManager = userManager;
+            this._context = erpContext;
         }
 
         // GET: Gastos
         public async Task<IActionResult> Index()
         {
-            var erpContext = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado);
+            var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
+
+            var erpContext = _context.Gastos.Where(g => g.EmpleadoId == idEmpleado);
             return View(await erpContext.ToListAsync());
         }
 
@@ -52,8 +58,6 @@ namespace ERP_D.Controllers
         // GET: Gastos/Create
         public IActionResult Create()
         {
-            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre");
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", "Nombre");
             return View();
         }
 
@@ -62,17 +66,57 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descripcion,Monto,Fecha,EmpleadoId,CentroDeCostoId")] Gasto gasto)
+        public async Task<IActionResult> Create([Bind("Descripcion,Monto")] CrearGastoEmp gastoForm)
         {
             if (ModelState.IsValid)
             {
+
+                var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
+
+                var empleado = await _context.Empleados
+                    .Include(e => e.Posicion)
+                    .ThenInclude(p => p.Gerencia)
+                    .ThenInclude(g => g.CentroDeCosto)
+                    .FirstOrDefaultAsync(m => m.Id == idEmpleado);
+
+
+                if(empleado == null || empleado.Posicion == null)
+                {
+                    ModelState.AddModelError(String.Empty, "El empleado debe tener asignada una posicion");
+                    return View(gastoForm);
+                }
+
+                if (empleado.Posicion.Gerencia == null)
+                {
+                    ModelState.AddModelError(String.Empty, "El empleado debe tener asignada una gerencia");
+                    return View(gastoForm);
+                }
+
+                if (empleado.Posicion.Gerencia.CentroDeCosto == null)
+                {
+                    ModelState.AddModelError(String.Empty, "El empleado debe tener asignada un centro de costo");
+                    return View(gastoForm);
+                }
+
+                if (gastoForm.Monto > empleado.Posicion.Gerencia.CentroDeCosto.MontoMaximo)
+                {
+                    ModelState.AddModelError(String.Empty, "El monto supera el monto maximo");
+                    return View(gastoForm);
+                }
+
+                var gasto = new Gasto();
+
+                gasto.Fecha = DateTime.Now;
+                gasto.Descripcion = gastoForm.Descripcion;
+                gasto.Monto = gastoForm.Monto;
+                gasto.EmpleadoId = empleado.Id;
+                gasto.CentroDeCostoId = (int)empleado.Posicion.Gerencia.CentroDeCostoId;
+
                 _context.Add(gasto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gasto.CentroDeCostoId);
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
-            return View(gasto);
+            return View(gastoForm);
         }
 
         // GET: Gastos/Edit/5

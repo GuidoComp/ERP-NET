@@ -2,6 +2,7 @@
 using ERP_D.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ERP_D.Controllers
@@ -14,17 +15,25 @@ namespace ERP_D.Controllers
 
         private readonly ErpContext _erpContext;
 
-        public HomeController(UserManager<Persona> userManager, RoleManager<Rol> roleManager, ErpContext erpContext, ILogger<HomeController> logger)
+        private readonly SignInManager<Persona> _signInManager;
+
+        public HomeController(UserManager<Persona> userManager, RoleManager<Rol> roleManager, ErpContext erpContext, ILogger<HomeController> logger, SignInManager<Persona> signInManager)
         {
             this._userManager = userManager;
             this._erpContext = erpContext;
             _logger = logger;
+            this._signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index(String mensaje)
         {
             ViewBag.mensaje = mensaje;
-
+            if (_signInManager.IsSignedIn(User)){
+                var userName = User.Identity.Name;
+                Persona empleado = await _erpContext.Personas.FirstOrDefaultAsync(p => p.NormalizedUserName == userName.ToLower());
+                ViewBag.fullName = empleado.Nombre + " " + empleado.Apellido;
+            }
+            
             return View();
         }
 

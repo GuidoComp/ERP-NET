@@ -24,7 +24,6 @@ namespace ERP_D
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequiredLength = 4;
-
                 }
                 
             );

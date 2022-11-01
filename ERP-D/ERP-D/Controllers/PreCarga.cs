@@ -2,6 +2,7 @@
 using ERP_D.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERP_D.Controllers
 {
@@ -28,23 +29,45 @@ namespace ERP_D.Controllers
             return RedirectToAction("Index", "Home", new {mensaje = "Termine"});
         }
 
+        private async Task CrearPosicion()
+        {
+            var posicionAdmin = new Posicion();
+            posicionAdmin.Nombre = "Admin";
+            posicionAdmin.Sueldo = 1;
+
+        }
+
         private async Task CrearAdmin()
         {
-            var admin = new Empleado();
-
-            admin.Nombre = "admin";
-            admin.Apellido = "admin";
-            admin.Email = "admin@erp.com";
-            admin.UserName = "admin@erp.com";
-
             var adminEncontrado = _erpContext.Personas.Any(p => p.Nombre == "Admin");
 
             if (!adminEncontrado)
             {
-                var resultado = await _userManager.CreateAsync(admin, "Password1!");
-                if (resultado.Succeeded)
+                var posicionAdmin = new Posicion();
+                posicionAdmin.Nombre = "Admin";
+                posicionAdmin.Sueldo = 1;
+
+                _erpContext.Posiciones.Add(posicionAdmin);
+
+                int result = await _erpContext.SaveChangesAsync();
+
+                if(result > 0)
                 {
-                    var resultadoRol = await _userManager.AddToRoleAsync(admin, "Admin");
+                    var posicion = await _erpContext.Posiciones.FirstOrDefaultAsync(p => p.Nombre == "Admin");
+
+                    var admin = new Empleado();
+
+                    admin.Nombre = "admin";
+                    admin.Apellido = "admin";
+                    admin.Email = "admin@erp.com";
+                    admin.UserName = "admin@erp.com";
+                    admin.PosicionId = posicion.Id;
+
+                    var resultado = await _userManager.CreateAsync(admin, "Password1!");
+                    if (resultado.Succeeded)
+                    {
+                        var resultadoRol = await _userManager.AddToRoleAsync(admin, "Admin");
+                    }
                 }
             }
         }

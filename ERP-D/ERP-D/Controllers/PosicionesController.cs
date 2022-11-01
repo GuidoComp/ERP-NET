@@ -25,9 +25,10 @@ namespace ERP_D.Controllers
         // GET: Posiciones
         public async Task<IActionResult> Index()
         {
-            var erpContext = _context.Posiciones.Include(p => p.Empleado).Include(p => p.Gerencia).Include(p => p.Responsable);
+            var erpContext = _context.Posiciones.Include(p => p.Empleado).Include(p => p.Gerencia).Include(p => p.Responsable)
+                .Where(p => p.Nombre != "Admin");
 
-            if (!_context.Posiciones.Any())
+            if (!_context.Posiciones.Any(p => p.Nombre != "Admin"))
             {
                 PreCarga();
             }

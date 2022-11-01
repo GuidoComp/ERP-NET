@@ -4,6 +4,10 @@
 
 <div class="text-center">
     <h1 class="display-4">ERP Empleados - Grupo D</h1>
+    @if (signInManager.IsSignedIn(User))
+    {
+        <h2>Hola @ViewBag.fullName !</h2>
+    }
 </div>
 
 @if (ViewBag.mensaje != null)
