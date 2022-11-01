@@ -31,7 +31,7 @@ namespace ERP_D.Controllers
         {
             var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
 
-            var erpContext = _context.Gastos.Where(g => g.EmpleadoId == idEmpleado);
+            var erpContext = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado);
             return View(await erpContext.ToListAsync());
         }
 

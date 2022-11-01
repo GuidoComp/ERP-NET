@@ -58,7 +58,7 @@ namespace ERP_D.Controllers
         [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Nombre != "Admin" && p.Empleado == null), "Id", "Nombre");
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre");
             return View();
         }
 
@@ -124,8 +124,21 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
+            var crearEmpleado = new CreacionEmpleado();
+
+            crearEmpleado.DNI = empleado.DNI;
+            crearEmpleado.Nombre = empleado.Nombre;
+            crearEmpleado.Apellido = empleado.Apellido;
+            crearEmpleado.ObraSocial = empleado.ObraSocial;
+            crearEmpleado.EmpleadoActivo = empleado.EmpleadoActivo;
+            crearEmpleado.Legajo = empleado.Legajo;
+            crearEmpleado.Foto = empleado.Foto;
+            crearEmpleado.Direccion = empleado.Direccion;
+            crearEmpleado.PosicionId = empleado.PosicionId;
+
+            // TODO: Como resolvemos aca al editar posicion????
             ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre", empleado.PosicionId);
-            return View(empleado);
+            return View(crearEmpleado);
         }
 
         // POST: Empleados/Edit/5
@@ -134,7 +147,7 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Email,Direccion,FechaAlta,UserName,Password, PosicionId")] Empleado empleadoForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
         {
             if (id != empleadoForm.Id)
             {

@@ -1,4 +1,4 @@
-﻿@model ERP_D.Models.Empleado
+﻿@model ERP_D.ViewModels.CreacionEmpleado
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,34 +12,8 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Legajo" class="control-label"></label>
-                <input asp-for="Legajo" class="form-control" />
-                <span asp-validation-for="Legajo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ObraSocial" class="control-label"></label>
-                <select asp-for="ObraSocial" class="form-control" asp-items="@Html.GetEnumSelectList<ObraSocial>()">
-                    <option value="">Selecciona el tipo de telefono</option>
-                </select>
-                <span asp-validation-for="ObraSocial" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EmpleadoActivo" /> @Html.DisplayNameFor(model => model.EmpleadoActivo)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-            </div>
+            <h4>Datos personales</h4>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="DNI" class="control-label"></label>
-                <input asp-for="DNI" class="form-control" />
-                <span asp-validation-for="DNI" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
@@ -51,9 +25,9 @@
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label asp-for="DNI" class="control-label"></label>
+                <input asp-for="DNI" class="form-control" />
+                <span asp-validation-for="DNI" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Direccion" class="control-label"></label>
@@ -61,16 +35,37 @@
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+                <label asp-for="ObraSocial" class="control-label"></label>
+                <select asp-for="ObraSocial" class="form-control" asp-items="@Html.GetEnumSelectList<ObraSocial>()">
+                    <option value="">Selecciona el tipo de telefono</option>
+                </select>
+                <span asp-validation-for="ObraSocial" class="text-danger"></span>
+            </div>
+            <hr class="solid">
+            <h4>Datos empleado</h4>
+            <div class="form-group">
+                <label asp-for="Legajo" class="control-label"></label>
+                <input asp-for="Legajo" class="form-control" />
+                <span asp-validation-for="Legajo" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="EmpleadoActivo" /> @Html.DisplayNameFor(model => model.EmpleadoActivo)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Foto" class="control-label"></label>
+                <input asp-for="Foto" class="form-control" />
+                <span asp-validation-for="Foto" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PosicionId" class="control-label"></label>
                 <select asp-for="PosicionId" class="form-control" asp-items="ViewBag.PosicionId"></select>
+                <span asp-validation-for="PosicionId" class="text-danger"></span>
             </div>
+            <hr></hr>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
             </div>
         </form>
     </div>

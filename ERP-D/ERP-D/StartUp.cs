@@ -70,7 +70,7 @@ namespace ERP_D
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "/{controller=Home}/{action=Index}/{id?}");
         }
 
         public static WebApplication InicializarApp(String[] args)

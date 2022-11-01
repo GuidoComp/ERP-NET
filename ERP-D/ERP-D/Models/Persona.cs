@@ -9,7 +9,7 @@ using System.Runtime.ConstrainedExecution;
 
 namespace ERP_D.Models
 {
-    public abstract class Persona : IdentityUser<int>
+    public class Persona : IdentityUser<int>
     {
         //public int Id { get; set; }
 
@@ -34,7 +34,6 @@ namespace ERP_D.Models
             get => base.Email;
             set => base.Email = value;
         }
-        //TODO: GENERAR EMAIL A PARTIR DE NOMBRE
 
         public List<Telefono> Telefonos { get; set; }
 

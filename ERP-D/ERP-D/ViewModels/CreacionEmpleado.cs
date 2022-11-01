@@ -8,6 +8,8 @@ namespace ERP_D.ViewModels
 {
     public class CreacionEmpleado
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Range(1, 9999999, ErrorMessage = ErrorMsgs.MsgMonto)]
         public int Legajo { get; set; }

@@ -6,18 +6,34 @@
 }
 @if (User.IsInRole("Admin") || User.IsInRole("RH"))
 {
-    <h1>Create</h1>
+    <h1>Nuevo empleado</h1>
 
-    <h4>Empleado</h4>
+    @*<h4>Empleado</h4>*@
     <hr />
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <h4>Datos personales</h4>
                 <div class="form-group">
-                    <label asp-for="Legajo" class="control-label"></label>
-                    <input asp-for="Legajo" class="form-control" />
-                    <span asp-validation-for="Legajo" class="text-danger"></span>
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DNI" class="control-label"></label>
+                    <input asp-for="DNI" class="form-control" />
+                    <span asp-validation-for="DNI" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Direccion" class="control-label"></label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="ObraSocial" class="control-label"></label>
@@ -25,6 +41,13 @@
                         <option value="">Selecciona el tipo de telefono</option>
                     </select>
                     <span asp-validation-for="ObraSocial" class="text-danger"></span>
+                </div>
+                <hr class="solid">
+                <h4>Datos empleado</h4>
+                <div class="form-group">
+                    <label asp-for="Legajo" class="control-label"></label>
+                    <input asp-for="Legajo" class="form-control" />
+                    <span asp-validation-for="Legajo" class="text-danger"></span>
                 </div>
                 <div class="form-group form-check">
                     <label class="form-check-label">
@@ -42,31 +65,11 @@
                     <span asp-validation-for="Foto" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="DNI" class="control-label"></label>
-                    <input asp-for="DNI" class="form-control" />
-                    <span asp-validation-for="DNI" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Nombre" class="control-label"></label>
-                    <input asp-for="Nombre" class="form-control" />
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Apellido" class="control-label"></label>
-                    <input asp-for="Apellido" class="form-control" />
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Direccion" class="control-label"></label>
-                    <input asp-for="Direccion" class="form-control" />
-                    <span asp-validation-for="Direccion" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
                     <label asp-for="PosicionId" class="control-label"></label>
                     <select asp-for="PosicionId" class="form-control" asp-items="ViewBag.PosicionId"></select>
                     <span asp-validation-for="PosicionId" class="text-danger"></span>
                 </div>
+                <hr></hr>
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
