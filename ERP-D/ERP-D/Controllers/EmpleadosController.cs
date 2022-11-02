@@ -99,7 +99,6 @@ namespace ERP_D.Controllers
                         }
                     }
 
-
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleadoForm.PosicionId);
@@ -135,6 +134,10 @@ namespace ERP_D.Controllers
             crearEmpleado.Foto = empleado.Foto;
             crearEmpleado.Direccion = empleado.Direccion;
             crearEmpleado.PosicionId = empleado.PosicionId;
+
+            //List asd = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null)
+
+            //    asd.Add()
 
             // TODO: Como resolvemos aca al editar posicion????
             ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre", empleado.PosicionId);
