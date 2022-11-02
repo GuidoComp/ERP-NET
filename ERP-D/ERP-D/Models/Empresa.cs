@@ -23,7 +23,7 @@ namespace ERP_D.Models
         [Display(Name = Alias.email)]
         public String Email { get; set; }
 
-        [InverseProperty("Empresa")]
+        [InverseProperty("Empresa")] //VER SI SACARLO
         public List<Gerencia> Gerencias { get; set; }
         
 

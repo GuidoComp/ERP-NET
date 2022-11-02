@@ -25,34 +25,10 @@ namespace ERP_D.Controllers
         // GET: Posiciones
         public async Task<IActionResult> Index()
         {
-            var erpContext = _context.Posiciones.Include(p => p.Empleado).Include(p => p.Gerencia).Include(p => p.Responsable)
-                .Where(p => p.Nombre != "Admin");
-
-            if (!_context.Posiciones.Any(p => p.Nombre != "Admin"))
-            {
-                PreCarga();
-            }
-
+            var erpContext = _context.Posiciones.Include(p => p.Empleado).Include(p => p.Gerencia).Include(p => p.Responsable);
+            
             return View(await erpContext.ToListAsync());
         }
-
-        private void PreCarga()
-        {
-            #region Cargo El Jefe
-
-            _context.Posiciones.Add(new Posicion() { Nombre = "Jefe1", Sueldo = 1000 });
-            _context.SaveChanges();
-
-            #endregion
-
-            #region Cargo subordinados
-            _context.Posiciones.Add(new Posicion() { Nombre = "Jefe2", Sueldo = 500, ResponsableId = _context.Posiciones.FirstOrDefault().Id });
-            _context.Posiciones.Add(new Posicion() { Nombre = "Jefe3", Sueldo = 450, ResponsableId = _context.Posiciones.FirstOrDefault().Id });
-            _context.SaveChanges();
-            #endregion
-
-        }
-
 
         // GET: Posiciones/Details/5
         public async Task<IActionResult> Details(int? id)
