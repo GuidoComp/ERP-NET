@@ -4,6 +4,7 @@ using ERP_D.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP_D.Migrations
 {
     [DbContext(typeof(ErpContext))]
-    partial class ErpContextModelSnapshot : ModelSnapshot
+    [Migration("20221102143051_EmpleadosCambios")]
+    partial class EmpleadosCambios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,7 @@ namespace ERP_D.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CentrosDeCosto", (string)null);
+                    b.ToTable("CentrosDeCosto");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Empresa", b =>
@@ -70,7 +72,7 @@ namespace ERP_D.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Empresas", (string)null);
+                    b.ToTable("Empresas");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Gasto", b =>
@@ -103,7 +105,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("EmpleadoId");
 
-                    b.ToTable("Gastos", (string)null);
+                    b.ToTable("Gastos");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Gerencia", b =>
@@ -144,7 +146,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("ResponsableId");
 
-                    b.ToTable("Gerencias", (string)null);
+                    b.ToTable("Gerencias");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Imagen", b =>
@@ -163,7 +165,7 @@ namespace ERP_D.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Imagenes", (string)null);
+                    b.ToTable("Imagenes");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Posicion", b =>
@@ -199,7 +201,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("ResponsableId");
 
-                    b.ToTable("Posiciones", (string)null);
+                    b.ToTable("Posiciones");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Telefono", b =>
@@ -225,7 +227,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("PersonaId");
 
-                    b.ToTable("Telefonos", (string)null);
+                    b.ToTable("Telefonos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -499,10 +501,6 @@ namespace ERP_D.Migrations
 
                     b.Property<int>("PosicionId")
                         .HasColumnType("int");
-
-                    b.HasIndex("DNI")
-                        .IsUnique()
-                        .HasFilter("[DNI] IS NOT NULL");
 
                     b.HasIndex("PosicionId")
                         .IsUnique()

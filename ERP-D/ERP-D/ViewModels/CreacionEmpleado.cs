@@ -11,10 +11,6 @@ namespace ERP_D.ViewModels
         public int Id { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [Range(1, 9999999, ErrorMessage = ErrorMsgs.MsgMonto)]
-        public int Legajo { get; set; }
-
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Display(Name = "Obra social")]
         public ObraSocial ObraSocial { get; set; }
 

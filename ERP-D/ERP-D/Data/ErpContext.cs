@@ -21,13 +21,27 @@ namespace ERP_D.Data
 
             modelBuilder.Entity<Posicion>().Property(pos => pos.Sueldo).HasPrecision(38, 18);
 
+            #region Configuracion incremental para legajo
+            modelBuilder.HasSequence<int>("Legajo")
+                .StartsAt(100)
+                .IncrementsBy(1);
+
+            modelBuilder.Entity<Empleado>().Property(e => e.Legajo)
+                .HasDefaultValueSql("NEXT VALUE FOR Legajo");
+            #endregion
+
             modelBuilder.Entity<Telefono>()
                 .Property(t => t.Tipo)
                 .HasConversion<string>();
 
+
             modelBuilder.Entity<Empleado>()
             .Property(e => e.FechaAlta)
             .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Empleado>()
+                .HasIndex(e => e.DNI)
+                .IsUnique();
 
             modelBuilder.Entity<Empleado>()
                 .Property(e => e.ObraSocial)

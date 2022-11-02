@@ -29,10 +29,19 @@ namespace ERP_D.Controllers
         // GET: Gastos
         public async Task<IActionResult> Index()
         {
-            var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
+            IQueryable<Gasto> gastos = null;
+            if (User.IsInRole("Empleado"))
+            {
+                var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
 
-            var erpContext = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado);
-            return View(await erpContext.ToListAsync());
+                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado);
+            }
+            else
+            {
+                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado);
+            }
+
+            return View(await gastos.ToListAsync());
         }
 
         // GET: Gastos/Details/5

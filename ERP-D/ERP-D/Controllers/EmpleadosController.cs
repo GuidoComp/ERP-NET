@@ -68,8 +68,9 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Create([Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Create([Bind("ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH")] CreacionEmpleado empleadoForm)
         {
+            IdentityResult resultado = null;
             if (ModelState.IsValid)
             {
                 var nuevoEmpleado = new Empleado();
@@ -81,12 +82,11 @@ namespace ERP_D.Controllers
                 nuevoEmpleado.EmpleadoActivo = empleadoForm.EmpleadoActivo;
                 nuevoEmpleado.Direccion = empleadoForm.Direccion;
                 nuevoEmpleado.ObraSocial = empleadoForm.ObraSocial;
-                nuevoEmpleado.Legajo = empleadoForm.Legajo;
                 nuevoEmpleado.UserName = empleadoForm.DNI.ToString();
                 nuevoEmpleado.PosicionId = empleadoForm.PosicionId;
-                nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@erp-zone.com";
+                nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@ort.edu.ar";
 
-                    var resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
+                    resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
                     if (resultado.Succeeded)
                     {
                         if (empleadoForm.RH)
@@ -97,14 +97,24 @@ namespace ERP_D.Controllers
                         {
                             await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
                         }
-                    }
-
-                return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Index));
+                    }               
             }
+
+            if(resultado != null)
+            {
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError(String.Empty, error.Description);
+
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Erorr inesperado");
+            }
+
             ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleadoForm.PosicionId);
-
-            ModelState.AddModelError(String.Empty, "Surgio un error inesperado");
-
             return View(empleadoForm);
         }
 
@@ -130,7 +140,6 @@ namespace ERP_D.Controllers
             crearEmpleado.Apellido = empleado.Apellido;
             crearEmpleado.ObraSocial = empleado.ObraSocial;
             crearEmpleado.EmpleadoActivo = empleado.EmpleadoActivo;
-            crearEmpleado.Legajo = empleado.Legajo;
             crearEmpleado.Foto = empleado.Foto;
             crearEmpleado.Direccion = empleado.Direccion;
             crearEmpleado.PosicionId = empleado.PosicionId;
@@ -150,7 +159,7 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -173,7 +182,6 @@ namespace ERP_D.Controllers
                     empleadoDB.Nombre = empleadoForm.Nombre;
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
-                    empleadoDB.Legajo = empleadoForm.Legajo;
                     empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;

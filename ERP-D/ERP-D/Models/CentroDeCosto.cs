@@ -14,6 +14,7 @@ namespace ERP_D.Models
         [Display(Name = "Monto máximo")]
         public double MontoMaximo { get; set; }
 
+        public Gerencia Gerencia { get; set; }
         public List<Gasto> Gastos { get; set; }
     }
 }
