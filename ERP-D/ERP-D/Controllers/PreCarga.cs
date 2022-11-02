@@ -159,15 +159,15 @@ namespace ERP_D.Controllers
             }
         }
 
-        private async Task CrearRoles()
+        private async Task CrearEmpleados()
         {
-            foreach (var rolName in roles)
-            {
-                if (!await _roleManager.RoleExistsAsync(rolName))
-                {
-                    await _roleManager.CreateAsync(new Rol(rolName));
-                }
-            }
+            //foreach (var rolName in roles)
+            //{
+            //    if (!await _roleManager.RoleExistsAsync(rolName))
+            //    {
+            //        await _roleManager.CreateAsync(new Rol(rolName));
+            //    }
+            //}
         }
     }
 }
