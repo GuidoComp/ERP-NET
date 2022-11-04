@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public String Nombre { get; set; }
+
         public String Path { get; set; }
     }
 }

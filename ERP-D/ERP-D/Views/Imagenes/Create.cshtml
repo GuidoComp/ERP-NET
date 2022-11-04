@@ -1,16 +1,22 @@
-﻿@model ERP_D.Models.Imagen
+﻿@model ERP_D.ViewModels.Imagenes.SubirImagen
 
 @{
     ViewData["Title"] = "Create";
 }
 
+@*@using (Html.BeginForm("Create", "Content", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="ImageData" id="ImageData" onchange="fileCheck(this);" />
+}
+
+*@
 <h1>Create</h1>
 
 <h4>Imagen</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
@@ -18,10 +24,10 @@
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Path" class="control-label"></label>
-                <input asp-for="Path" class="form-control" />
-                <span asp-validation-for="Path" class="text-danger"></span>
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" image="image/*"/>
             </div>
+            <br>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

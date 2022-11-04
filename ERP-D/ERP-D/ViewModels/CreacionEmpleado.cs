@@ -34,7 +34,15 @@ namespace ERP_D.ViewModels
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public string Apellido { get; set; }
 
-        public string Foto { get; set; }
+        [Display(Name = "Tipo de telefono")]
+        public Telefono.TipoTelefono TipoTelefono { get; set; }
+
+        [RegularExpression(@"^(?:(?:00)?549?)?0?(?:11|[2368]\d)(?:(?=\d{0,2}15)\d{2})??\d{8}$", ErrorMessage = ErrorMsgs.MsgFormatoInvalido)]
+        [Display(Name = "Telefono")]
+        public String NumeroTelefono { get; set; }
+
+        [Display(Name = "Foto")]
+        public IFormFile Foto { get; set; }
 
         public string Direccion { get; set; }
 

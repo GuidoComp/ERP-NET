@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using ERP_D.ViewModels;
+using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace ERP_D.Controllers
 {
@@ -58,7 +59,7 @@ namespace ERP_D.Controllers
         [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre");
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null || p.Empleado.EmpleadoActivo == false), "Id", "Nombre");
             return View();
         }
 
@@ -68,17 +69,19 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Create([Bind("ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Create([Bind("ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH, TipoTelefono, NumeroTelefono")] CreacionEmpleado empleadoForm)
         {
             IdentityResult resultado = null;
             if (ModelState.IsValid)
             {
                 var nuevoEmpleado = new Empleado();
 
+                var fotoPath = await CrearFoto(empleadoForm.Foto, empleadoForm.Nombre + empleadoForm.Apellido);
+
                 nuevoEmpleado.Nombre = empleadoForm.Nombre;
                 nuevoEmpleado.DNI = empleadoForm.DNI;
                 nuevoEmpleado.Apellido = empleadoForm.Apellido;
-                nuevoEmpleado.Foto = empleadoForm.Foto;
+                nuevoEmpleado.Foto = fotoPath;
                 nuevoEmpleado.EmpleadoActivo = empleadoForm.EmpleadoActivo;
                 nuevoEmpleado.Direccion = empleadoForm.Direccion;
                 nuevoEmpleado.ObraSocial = empleadoForm.ObraSocial;
@@ -96,6 +99,11 @@ namespace ERP_D.Controllers
                         }else
                         {
                             await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
+                        }
+                        if(!empleadoForm.TipoTelefono.ToString().Equals("") && empleadoForm.NumeroTelefono != null)
+                        {
+                            _context.Telefonos.Add(new Telefono {Tipo=empleadoForm.TipoTelefono, Numero=empleadoForm.NumeroTelefono, PersonaId=nuevoEmpleado.Id});
+                            await _context.SaveChangesAsync();
                         }
                         return RedirectToAction(nameof(Index));
                     }               
@@ -140,7 +148,7 @@ namespace ERP_D.Controllers
             crearEmpleado.Apellido = empleado.Apellido;
             crearEmpleado.ObraSocial = empleado.ObraSocial;
             crearEmpleado.EmpleadoActivo = empleado.EmpleadoActivo;
-            crearEmpleado.Foto = empleado.Foto;
+            // TODO: crearEmpleado.Foto = empleado.Foto;
             crearEmpleado.Direccion = empleado.Direccion;
             crearEmpleado.PosicionId = empleado.PosicionId;
 
@@ -182,7 +190,7 @@ namespace ERP_D.Controllers
                     empleadoDB.Nombre = empleadoForm.Nombre;
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
-                    empleadoDB.Foto = empleadoForm.Foto;
+                    // TODO: empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;
 
@@ -306,13 +314,34 @@ namespace ERP_D.Controllers
             var empleado = await _context.Empleados.FindAsync(id);
             if (empleado != null)
             {
-                _context.Empleados.Remove(empleado);
+                empleado.EmpleadoActivo = false;
+                _context.Empleados.Update(empleado);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        private async Task<string> CrearFoto(IFormFile foto, String nombreFoto)
+        {
+            var usePath = "";
+            if (foto != null && foto.Length > 0)
+            {
+                var nuevaImagen = new Imagen();
+                var fileName = nombreFoto + ".jpg";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                usePath = "/images/" + fileName;
+                nuevaImagen.Path = usePath;
+                nuevaImagen.Nombre = fileName;
+                _context.Imagenes.Add(nuevaImagen);
+                _context.SaveChanges();
+                using (var fileSrteam = new FileStream(filePath, FileMode.Create))
+                {
+                    await foto.CopyToAsync(fileSrteam);
+                }
+            }
+            return usePath;
+        }
         private bool EmpleadoExists(int id)
         {
           return _context.Empleados.Any(e => e.Id == id);

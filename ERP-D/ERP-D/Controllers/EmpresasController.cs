@@ -56,6 +56,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empresas/Create
+        [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
             return View();
@@ -78,6 +79,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empresas/Edit/5
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Empresas == null)
@@ -98,6 +100,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
         {
             if (id != empresa.Id)
@@ -129,6 +132,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empresas/Delete/5
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Empresas == null)
@@ -149,6 +153,7 @@ namespace ERP_D.Controllers
         // POST: Empresas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Empresas == null)

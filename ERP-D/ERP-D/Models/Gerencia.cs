@@ -50,7 +50,5 @@ namespace ERP_D.Models
 
         [Display(Name = "Centro de costo")]
         public CentroDeCosto CentroDeCosto { get; set; }
-
-
     }
 }

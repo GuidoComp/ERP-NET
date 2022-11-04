@@ -1,14 +1,14 @@
 ﻿@model ERP_D.Models.Empleado
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
 }
 
-<h1>Details</h1>
+<h1>Detalles</h1>
 
 <div>
-    <h4>Empleado</h4>
-    <img src="@Url.Content("/Images/1.jpg")" class="image-fluid" width="50" height="50" alt="IMAGES" />
+    <h4>@(Model.Nombre + " " + Model.Apellido)</h4>
+    <img src="@Url.Content(Model.Foto)" class="image-fluid" width="70" height="100" alt="IMAGES" />
     <hr />
     <dl class="row">
         <dt class="col-sm-2">

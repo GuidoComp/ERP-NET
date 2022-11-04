@@ -12,7 +12,7 @@
     <hr />
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Create">
+            <form asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h4>Datos personales</h4>
                 <div class="form-group">
@@ -42,8 +42,24 @@
                     </select>
                     <span asp-validation-for="ObraSocial" class="text-danger"></span>
                 </div>
+                <div class="form-group">
+                    <label asp-for="TipoTelefono" class="control-label"></label>
+                    <select asp-for="TipoTelefono" class="form-control" asp-items="@Html.GetEnumSelectList<TipoTelefono>()">
+                        <option value="">Selecciona el tipo de telefono</option>
+                    </select>
+                    <span asp-validation-for="TipoTelefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NumeroTelefono" class="control-label"></label>
+                    <input asp-for="NumeroTelefono" class="form-control" />
+                    <span asp-validation-for="NumeroTelefono" class="text-danger"></span>
+                </div>
                 <hr class="solid">
                 <h4>Datos empleado</h4>
+                <div class="form-group">
+                    <label asp-for="Foto" class="control-label"></label>
+                    <input asp-for="Foto" image="image/*" />
+                </div>
 @*                <div class="form-group">
                     <label asp-for="Legajo" class="control-label"></label>
                     <input asp-for="Legajo" class="form-control" />
@@ -58,11 +74,6 @@
                     <label class="form-check-label">
                         <input class="form-check-input" asp-for="RH" /> @Html.DisplayNameFor(model => model.RH)
                     </label>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Foto" class="control-label"></label>
-                    <input asp-for="Foto" class="form-control" />
-                    <span asp-validation-for="Foto" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="PosicionId" class="control-label"></label>
