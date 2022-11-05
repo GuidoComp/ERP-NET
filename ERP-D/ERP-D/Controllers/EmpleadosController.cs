@@ -270,20 +270,25 @@ namespace ERP_D.Controllers
                         await _context.SaveChangesAsync();
                     }
 
-                    if (empleadoDB.Telefonos.Count > 0)
+                    if(empleadoForm.NumeroTelefono != null)
                     {
-                        telefonoEdit = empleadoDB.Telefonos[0];
-                    } else
-                    {
-                        telefonoEdit = new Telefono();
+                        if (empleadoDB.Telefonos.Count > 0)
+                        {
+                            telefonoEdit = empleadoDB.Telefonos[0];
+                        }
+                        else
+                        {
+                            telefonoEdit = new Telefono();
+                        }
+
+                        telefonoEdit.Tipo = empleadoForm.TipoTelefono;
+                        telefonoEdit.Numero = empleadoForm.NumeroTelefono;
+                        telefonoEdit.PersonaId = empleadoForm.Id;
+
+                        _context.Telefonos.Update(telefonoEdit);
+                        await _context.SaveChangesAsync();
                     }
 
-                    telefonoEdit.Tipo = empleadoForm.TipoTelefono;
-                    telefonoEdit.Numero = empleadoForm.NumeroTelefono;
-                    telefonoEdit.PersonaId = empleadoForm.Id;
-
-                    _context.Telefonos.Update(telefonoEdit);
-                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

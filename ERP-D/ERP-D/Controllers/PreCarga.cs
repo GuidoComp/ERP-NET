@@ -185,7 +185,6 @@ namespace ERP_D.Controllers
                     empleadoCEO.Email = "marcos.lopez@ort.edu.ar";
                     empleadoCEO.UserName = "23384556";
                     empleadoCEO.NormalizedUserName = "23384556";
-                    empleadoCEO.Foto = "test";
                     empleadoCEO.PosicionId = posicionCEO.Id;
                     await CrearUser(empleadoCEO, true);
 
@@ -201,7 +200,6 @@ namespace ERP_D.Controllers
                     empleadoGerenteCom.Email = "maria.perez@ort.edu.ar";
                     empleadoGerenteCom.UserName = "20944855";
                     empleadoGerenteCom.NormalizedUserName = "20944855";
-                    empleadoGerenteCom.Foto = "test";
                     empleadoGerenteCom.PosicionId = posicionGerenteCom.Id;
                     await CrearUser(empleadoGerenteCom, false);
 
@@ -217,7 +215,6 @@ namespace ERP_D.Controllers
                     empleadoGerenteOpe.Email = "laura.gonzalez@ort.edu.ar";
                     empleadoGerenteOpe.UserName = "21445695";
                     empleadoGerenteOpe.NormalizedUserName = "21445695";
-                    empleadoGerenteOpe.Foto = "test";
                     empleadoGerenteOpe.PosicionId = posicionGerenteOpe.Id;
                     await CrearUser(empleadoGerenteOpe, false);
                 }
