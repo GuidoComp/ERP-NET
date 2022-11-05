@@ -4,9 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Posicion</h4>
+<h1>Nueva posicion</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -36,15 +34,16 @@
                 <label asp-for="GerenciaId" class="control-label"></label>
                 <select asp-for="GerenciaId" class ="form-control" asp-items="ViewBag.GerenciaId"></select>
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Aceptar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver</a>
 </div>
 
 @section Scripts {
