@@ -9,6 +9,7 @@ using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using ERP_D.Helpers;
 
 namespace ERP_D.Controllers
 {
@@ -71,9 +72,19 @@ namespace ERP_D.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(empresa);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(empresa);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception e)
+                {
+                    if (e.InnerException.Message.Contains("Nombre")){
+                        ModelState.AddModelError(String.Empty, Errors.NombreDuplicadoError);
+                    }
+                }
+
             }
             return View(empresa);
         }

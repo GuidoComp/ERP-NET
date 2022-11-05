@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using ERP_D.ViewModels;
+using ERP_D.ViewModels.Empleados;
 
 namespace ERP_D.Controllers
 {
@@ -27,9 +28,9 @@ namespace ERP_D.Controllers
         {
             if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
             {
-                return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) } );
+                return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) });
             }
-              return View(await _context.Empleados.ToListAsync());
+            return View(await _context.Empleados.ToListAsync());
         }
 
         // GET: Empleados/Details/5
@@ -41,7 +42,7 @@ namespace ERP_D.Controllers
             }
 
             var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(m => m.Id == id);
-            
+
             if (empleado == null)
             {
                 return NotFound();
@@ -84,32 +85,31 @@ namespace ERP_D.Controllers
                 nuevoEmpleado.PosicionId = empleadoForm.PosicionId;
                 nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@ort.edu.ar";
 
-                    resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
-                    if (resultado.Succeeded)
+                resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
+                if (resultado.Succeeded)
+                {
+                    if (empleadoForm.RH)
                     {
-                        if (empleadoForm.RH)
-                        {
-                            await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
-                            await _userManager.AddToRoleAsync(nuevoEmpleado, "RH");
-                        }else
-                        {
-                            await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
-                        }
-                        if(!empleadoForm.TipoTelefono.ToString().Equals("") && empleadoForm.NumeroTelefono != null)
-                        {
-                            _context.Telefonos.Add(new Telefono {Tipo=empleadoForm.TipoTelefono, Numero=empleadoForm.NumeroTelefono, PersonaId=nuevoEmpleado.Id});
-                            await _context.SaveChangesAsync();
-                        }
-                        return RedirectToAction(nameof(Index));
-                    }               
+                        await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
+                        await _userManager.AddToRoleAsync(nuevoEmpleado, "RH");
+                    } else
+                    {
+                        await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
+                    }
+                    if (!empleadoForm.TipoTelefono.ToString().Equals("") && empleadoForm.NumeroTelefono != null)
+                    {
+                        _context.Telefonos.Add(new Telefono { Tipo = empleadoForm.TipoTelefono, Numero = empleadoForm.NumeroTelefono, PersonaId = nuevoEmpleado.Id });
+                        await _context.SaveChangesAsync();
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
-            if(resultado != null)
+            if (resultado != null)
             {
                 foreach (var error in resultado.Errors)
                 {
                     ModelState.AddModelError(String.Empty, error.Description);
-
                 }
             }
             else
@@ -177,7 +177,7 @@ namespace ERP_D.Controllers
 
                     var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
 
-                    if(empleadoDB == null)
+                    if (empleadoDB == null)
                     {
                         return NotFound();
                     }
@@ -218,7 +218,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.FindAsync(id);
+            var empleado = await _context.Empleados.Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();
@@ -226,9 +226,12 @@ namespace ERP_D.Controllers
 
             var empleadoEdit = new PersonalEdit();
             empleadoEdit.Id = empleado.Id;
-            empleadoEdit.Direccion = empleado.Direccion;
-            empleadoEdit.Foto = empleado.Foto;
+            if(empleado.Telefonos.Count > 0)
+            {
+                empleadoEdit.TipoTelefono = empleado.Telefonos[0].Tipo;
+                empleadoEdit.NumeroTelefono = empleado.Telefonos[0].Numero;
 
+            } 
             return View(empleadoEdit);
         }
 
@@ -236,7 +239,7 @@ namespace ERP_D.Controllers
         // Action para que el rolm de empleado modifique sus datos
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PersonalEdit(int id, [Bind("Id, Foto, Direccion")] PersonalEdit empleadoForm)
+        public async Task<IActionResult> PersonalEdit(int id, [Bind("Id,NombreFoto, Foto, TipoTelefono, NumeroTelefono")] PersonalEdit empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -247,18 +250,39 @@ namespace ERP_D.Controllers
             {
                 try
                 {
+                    Telefono telefonoEdit;
 
-                    var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
+                    var empleadoDB = await _context.Empleados.Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == empleadoForm.Id) ;
 
                     if (empleadoDB == null)
                     {
                         return NotFound();
                     }
 
-                    empleadoDB.Foto = empleadoForm.Foto;
-                    empleadoDB.Direccion = empleadoForm.Direccion;
+                    if(empleadoForm.Foto != null && empleadoForm.NombreFoto != null)
+                    {
+                        var pathFoto = await CrearFoto(empleadoForm.Foto, empleadoForm.NombreFoto);
 
-                    _context.Update(empleadoDB);
+                        empleadoDB.Foto = pathFoto;
+
+                        _context.Update(empleadoDB);
+
+                        await _context.SaveChangesAsync();
+                    }
+
+                    if (empleadoDB.Telefonos.Count > 0)
+                    {
+                        telefonoEdit = empleadoDB.Telefonos[0];
+                    } else
+                    {
+                        telefonoEdit = new Telefono();
+                    }
+
+                    telefonoEdit.Tipo = empleadoForm.TipoTelefono;
+                    telefonoEdit.Numero = empleadoForm.NumeroTelefono;
+                    telefonoEdit.PersonaId = empleadoForm.Id;
+
+                    _context.Telefonos.Update(telefonoEdit);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

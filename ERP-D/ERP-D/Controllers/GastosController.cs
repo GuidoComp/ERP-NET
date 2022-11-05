@@ -34,7 +34,7 @@ namespace ERP_D.Controllers
             {
                 var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
 
-                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado);
+                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado).OrderByDescending(g => g.Fecha);
             }
             else
             {

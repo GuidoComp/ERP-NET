@@ -21,6 +21,11 @@ namespace ERP_D.Data
 
             modelBuilder.Entity<Posicion>().Property(pos => pos.Sueldo).HasPrecision(38, 18);
 
+            modelBuilder.Entity<Posicion>()
+            .HasIndex(p => p.Nombre)
+            .IsUnique();
+
+
             #region Configuracion incremental para legajo
             modelBuilder.HasSequence<int>("Legajo")
                 .StartsAt(100)
@@ -46,6 +51,19 @@ namespace ERP_D.Data
             modelBuilder.Entity<Empleado>()
                 .Property(e => e.ObraSocial)
                 .HasConversion<string>();
+
+
+            modelBuilder.Entity<Empresa>()
+                .HasIndex(e => e.Nombre)
+                .IsUnique();            
+            
+            modelBuilder.Entity<Gerencia>()
+                .HasIndex(g => g.EsGerenciaGeneral)
+                .IsUnique();
+
+            modelBuilder.Entity<Gerencia>()
+            .HasIndex(g => g.Nombre)
+            .IsUnique();
 
             //Establecemos los nombres de Identity Stores
 
