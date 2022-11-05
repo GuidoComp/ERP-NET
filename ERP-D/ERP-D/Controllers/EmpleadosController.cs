@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERP_D.Data;
@@ -11,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using ERP_D.ViewModels;
-using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace ERP_D.Controllers
 {
@@ -135,30 +130,31 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.FindAsync(id);
+            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();
             }
 
-            var crearEmpleado = new CreacionEmpleado();
+            var empleadoEdit = new CreacionEmpleado();
 
-            crearEmpleado.DNI = empleado.DNI;
-            crearEmpleado.Nombre = empleado.Nombre;
-            crearEmpleado.Apellido = empleado.Apellido;
-            crearEmpleado.ObraSocial = empleado.ObraSocial;
-            crearEmpleado.EmpleadoActivo = empleado.EmpleadoActivo;
+            empleadoEdit.DNI = empleado.DNI;
+            empleadoEdit.Nombre = empleado.Nombre;
+            empleadoEdit.Apellido = empleado.Apellido;
+            empleadoEdit.ObraSocial = empleado.ObraSocial;
+            empleadoEdit.EmpleadoActivo = empleado.EmpleadoActivo;
             // TODO: crearEmpleado.Foto = empleado.Foto;
-            crearEmpleado.Direccion = empleado.Direccion;
-            crearEmpleado.PosicionId = empleado.PosicionId;
+            empleadoEdit.Direccion = empleado.Direccion;
+            empleadoEdit.PosicionId = empleado.PosicionId;
 
-            //List asd = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null)
+            List<Posicion> positionList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null).ToList();
 
-            //    asd.Add()
+            positionList.Add(empleado.Posicion);
+            //positionList.Add(null);
 
             // TODO: Como resolvemos aca al editar posicion????
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre", empleado.PosicionId);
-            return View(crearEmpleado);
+            ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre", empleado.PosicionId);
+            return View(empleadoEdit);
         }
 
         // POST: Empleados/Edit/5

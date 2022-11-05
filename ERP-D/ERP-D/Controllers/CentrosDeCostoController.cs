@@ -22,8 +22,7 @@ namespace ERP_D.Controllers
             _context = context;
         }
 
-        // GET: CentroDeCostos
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             List<CentroCostoLista> listaCentros = new List<CentroCostoLista>();
             var centros = _context.CentrosDeCosto.Include(c => c.Gerencia).Include(c => c.Gastos);
