@@ -4,6 +4,7 @@ using ERP_D.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP_D.Migrations
 {
     [DbContext(typeof(ErpContext))]
-    partial class ErpContextModelSnapshot : ModelSnapshot
+    [Migration("20221104175242_imagenes")]
+    partial class imagenes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,16 +64,13 @@ namespace ERP_D.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rubro")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
 
                     b.ToTable("Empresas");
                 });
@@ -145,13 +144,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("EmpresaId");
 
-                    b.HasIndex("EsGerenciaGeneral")
-                        .IsUnique();
-
                     b.HasIndex("GerenciaId");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
 
                     b.HasIndex("ResponsableId");
 
@@ -165,6 +158,9 @@ namespace ERP_D.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
@@ -207,9 +203,6 @@ namespace ERP_D.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GerenciaId");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
 
                     b.HasIndex("ResponsableId");
 

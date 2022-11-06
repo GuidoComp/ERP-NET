@@ -4,6 +4,7 @@ using ERP_D.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP_D.Migrations
 {
     [DbContext(typeof(ErpContext))]
-    partial class ErpContextModelSnapshot : ModelSnapshot
+    [Migration("20221102143051_EmpleadosCambios")]
+    partial class EmpleadosCambios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,16 +64,13 @@ namespace ERP_D.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rubro")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
 
                     b.ToTable("Empresas");
                 });
@@ -139,19 +138,11 @@ namespace ERP_D.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CentroDeCostoId")
-                        .IsUnique()
-                        .HasFilter("[CentroDeCostoId] IS NOT NULL");
+                    b.HasIndex("CentroDeCostoId");
 
                     b.HasIndex("EmpresaId");
 
-                    b.HasIndex("EsGerenciaGeneral")
-                        .IsUnique();
-
                     b.HasIndex("GerenciaId");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
 
                     b.HasIndex("ResponsableId");
 
@@ -207,9 +198,6 @@ namespace ERP_D.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GerenciaId");
-
-                    b.HasIndex("Nombre")
-                        .IsUnique();
 
                     b.HasIndex("ResponsableId");
 
@@ -514,10 +502,6 @@ namespace ERP_D.Migrations
                     b.Property<int>("PosicionId")
                         .HasColumnType("int");
 
-                    b.HasIndex("DNI")
-                        .IsUnique()
-                        .HasFilter("[DNI] IS NOT NULL");
-
                     b.HasIndex("PosicionId")
                         .IsUnique()
                         .HasFilter("[PosicionId] IS NOT NULL");
@@ -547,8 +531,8 @@ namespace ERP_D.Migrations
             modelBuilder.Entity("ERP_D.Models.Gerencia", b =>
                 {
                     b.HasOne("ERP_D.Models.CentroDeCosto", "CentroDeCosto")
-                        .WithOne("Gerencia")
-                        .HasForeignKey("ERP_D.Models.Gerencia", "CentroDeCostoId");
+                        .WithMany()
+                        .HasForeignKey("CentroDeCostoId");
 
                     b.HasOne("ERP_D.Models.Empresa", "Empresa")
                         .WithMany("Gerencias")
@@ -664,8 +648,6 @@ namespace ERP_D.Migrations
             modelBuilder.Entity("ERP_D.Models.CentroDeCosto", b =>
                 {
                     b.Navigation("Gastos");
-
-                    b.Navigation("Gerencia");
                 });
 
             modelBuilder.Entity("ERP_D.Models.Empresa", b =>

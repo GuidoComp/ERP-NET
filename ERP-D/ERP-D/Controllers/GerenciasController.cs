@@ -9,6 +9,7 @@ using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using ERP_D.ViewModels.Gerencia;
 
 namespace ERP_D.Controllers
 {
@@ -55,7 +56,6 @@ namespace ERP_D.Controllers
         // GET: Gerencias/Create
         public IActionResult Create()
         {
-            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
             ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre");
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
@@ -67,19 +67,35 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,EsGerenciaGeneral,GerenciaId,ResponsableId,EmpresaId,CentroDeCostoId")] Gerencia gerencia)
+        public async Task<IActionResult> Create([Bind("Nombre,EsGerenciaGeneral,GerenciaId,ResponsableId,EmpresaId,NombreCentro,MontoMaximo")] CreacionGerencia gerenciaForm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gerencia);
+                var nuevoCentro = new CentroDeCosto();
+
+                nuevoCentro.Nombre = gerenciaForm.Nombre;
+                nuevoCentro.MontoMaximo = gerenciaForm.MontoMaximo;
+                _context.CentrosDeCosto.Add(nuevoCentro);
                 await _context.SaveChangesAsync();
+
+                var nuevaGerencia = new Gerencia();
+
+                nuevaGerencia.Nombre = gerenciaForm.Nombre;
+                nuevaGerencia.EsGerenciaGeneral = gerenciaForm.EsGerenciaGeneral;
+                nuevaGerencia.GerenciaId = gerenciaForm.GerenciaId;
+                nuevaGerencia.ResponsableId = gerenciaForm.ResponsableId;
+                nuevaGerencia.EmpresaId = gerenciaForm.EmpresaId;
+                nuevaGerencia.CentroDeCostoId = nuevoCentro.Id;
+                
+                _context.Gerencias.Add(nuevaGerencia);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gerencia.CentroDeCostoId);
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.GerenciaId);
-            ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerencia.EmpresaId);
-            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerencia.ResponsableId);
-            return View(gerencia);
+            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerenciaForm.GerenciaId);
+            ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerenciaForm.EmpresaId);
+            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerenciaForm.ResponsableId);
+            return View(gerenciaForm);
         }
 
         // GET: Gerencias/Edit/5

@@ -93,9 +93,13 @@ namespace ERP_D.Controllers
             {
                 return NotFound();
             }
+
+            if(posicion.ResponsableId != null) 
+            {
+                ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
+            }
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
-            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
             return View(posicion);
         }
 

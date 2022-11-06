@@ -10,6 +10,12 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 
+using System;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using ERP_D.ViewModels.Imagenes;
+
 namespace ERP_D.Controllers
 {
     [Authorize(Roles = "Admin, RH")]
@@ -57,15 +63,23 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Path")] Imagen imagen)
+        public async Task<IActionResult> Create([Bind("Nombre, ImageFile")] SubirImagen imagen)
         {
-            if (ModelState.IsValid)
+            if (imagen.ImageFile != null && imagen.ImageFile.Length > 0)
             {
-                _context.Add(imagen);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var nuevaImagen = new Imagen();
+                var fileName = imagen.Nombre + ".jpg";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                nuevaImagen.Path = "/images/" + fileName;
+                nuevaImagen.Nombre = imagen.Nombre;
+                _context.Imagenes.Add(nuevaImagen);
+                _context.SaveChanges();
+                using (var fileSrteam = new FileStream(filePath, FileMode.Create))
+                {
+                    await imagen.ImageFile.CopyToAsync(fileSrteam);
+                }
             }
-            return View(imagen);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Imagenes/Edit/5
@@ -160,5 +174,6 @@ namespace ERP_D.Controllers
         {
           return _context.Imagenes.Any(e => e.Id == id);
         }
+
     }
 }

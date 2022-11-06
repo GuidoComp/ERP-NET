@@ -4,6 +4,7 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace ERP_D.Controllers
 {
@@ -29,7 +30,9 @@ namespace ERP_D.Controllers
             CrearEmpresa().Wait();
             CrearGerencias().Wait();
             CrearPosiciones().Wait();
-            
+            CrearEmpleados().Wait();
+            CrearGastos().Wait();
+
             return RedirectToAction("Index", "Home", new {mensaje = "Termine"});
         }
 
@@ -138,7 +141,7 @@ namespace ERP_D.Controllers
                 {
                     #region Cargo El Jefe
 
-                    _erpContext.Posiciones.Add(new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerenciaDb.Id });
+                    var test = _erpContext.Posiciones.Add(new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerenciaDb.Id });
                     var result = _erpContext.SaveChanges();
 
                     if (result > 0)
@@ -161,13 +164,120 @@ namespace ERP_D.Controllers
 
         private async Task CrearEmpleados()
         {
-            //foreach (var rolName in roles)
-            //{
-            //    if (!await _roleManager.RoleExistsAsync(rolName))
-            //    {
-            //        await _roleManager.CreateAsync(new Rol(rolName));
-            //    }
-            //}
+            var empleadoEncontrado = _erpContext.Empleados.Any();
+
+            if (!empleadoEncontrado)
+            {
+                var posicionCEO = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "CEO");
+                var posicionGerenteCom = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente comercial");
+                var posicionGerenteOpe = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente de operaciones");
+                if (posicionCEO != null && posicionGerenteCom != null && posicionGerenteOpe != null)
+                {
+                    var empleadoCEO = new Empleado();
+
+                    //empleadoCEO.Legajo = 1;
+                    empleadoCEO.Nombre = "Marcos";
+                    empleadoCEO.Apellido = "Lopez";
+                    empleadoCEO.DNI = 23384556;
+                    empleadoCEO.ObraSocial = ObraSocial.GALENO;
+                    empleadoCEO.Direccion = "Callao 3532";
+                    empleadoCEO.EmpleadoActivo = true;
+                    empleadoCEO.Email = "marcos.lopez@ort.edu.ar";
+                    empleadoCEO.UserName = "23384556";
+                    empleadoCEO.NormalizedUserName = "23384556";
+                    empleadoCEO.PosicionId = posicionCEO.Id;
+                    await CrearUser(empleadoCEO, true);
+
+                    var empleadoGerenteCom = new Empleado();
+
+                    //empleadoGerenteCom.Legajo = 2;
+                    empleadoGerenteCom.Nombre = "Maria";
+                    empleadoGerenteCom.Apellido = "Perez";
+                    empleadoGerenteCom.DNI = 20944855;
+                    empleadoGerenteCom.ObraSocial = ObraSocial.MEDICUS;
+                    empleadoGerenteCom.Direccion = "Rodriguez Peña 443";
+                    empleadoGerenteCom.EmpleadoActivo = true;
+                    empleadoGerenteCom.Email = "maria.perez@ort.edu.ar";
+                    empleadoGerenteCom.UserName = "20944855";
+                    empleadoGerenteCom.NormalizedUserName = "20944855";
+                    empleadoGerenteCom.PosicionId = posicionGerenteCom.Id;
+                    await CrearUser(empleadoGerenteCom, false);
+
+                    var empleadoGerenteOpe = new Empleado();
+
+                    //empleadoGerenteOpe.Legajo = 1;
+                    empleadoGerenteOpe.Nombre = "Laura";
+                    empleadoGerenteOpe.Apellido = "Gonzalez";
+                    empleadoGerenteOpe.DNI = 21445695;
+                    empleadoGerenteOpe.ObraSocial = ObraSocial.OSDE;
+                    empleadoGerenteOpe.Direccion = "Peñaflor 5667";
+                    empleadoGerenteOpe.EmpleadoActivo = true;
+                    empleadoGerenteOpe.Email = "laura.gonzalez@ort.edu.ar";
+                    empleadoGerenteOpe.UserName = "21445695";
+                    empleadoGerenteOpe.NormalizedUserName = "21445695";
+                    empleadoGerenteOpe.PosicionId = posicionGerenteOpe.Id;
+                    await CrearUser(empleadoGerenteOpe, false);
+                }
+            }
+        }
+
+        public async Task CrearUser(Persona empleado, bool RH)
+        {
+            var resultado = await _userManager.CreateAsync(empleado, empleado.DNI.ToString());
+            if (resultado.Succeeded)
+            {
+                if (RH)
+                {
+                    await _userManager.AddToRoleAsync(empleado, "Empleado");
+                    await _userManager.AddToRoleAsync(empleado, "RH");
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(empleado, "Empleado");
+                }
+            }
+        }
+
+        public async Task CrearGastos()
+        {
+            var gastoEncontrado = _erpContext.Gastos.Any();
+
+            if (!gastoEncontrado)
+            {
+                var centroDeCosto = _erpContext.CentrosDeCosto.FirstOrDefault();
+                var empleados = _erpContext.Empleados.Select(e => e.Id).ToList();
+
+                foreach (var empleado in empleados)
+                {
+                    crearGasto(empleado, centroDeCosto.Id);
+                }
+            }
+        }
+
+        private void crearGasto(int empleadoId, int centroDeCostoId)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+
+                var gasto = new Gasto();
+                Random rnd = new Random();
+
+                gasto.Fecha = RandomDay();
+                gasto.Monto = rnd.Next(1, 3000);
+                gasto.CentroDeCostoId = centroDeCostoId;
+                gasto.EmpleadoId = empleadoId;
+
+                _erpContext.Gastos.Add(gasto);
+                _erpContext.SaveChanges();
+            }
+        }
+
+        private DateTime RandomDay()
+        {
+            Random gen = new Random();
+            DateTime start = new DateTime(1995, 1, 1);
+            int range = (DateTime.Today - start).Days;
+            return start.AddDays(gen.Next(range));
         }
     }
 }

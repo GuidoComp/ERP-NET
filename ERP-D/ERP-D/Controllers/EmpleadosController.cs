@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERP_D.Data;
@@ -11,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using ERP_D.ViewModels;
+using ERP_D.ViewModels.Empleados;
 
 namespace ERP_D.Controllers
 {
@@ -31,9 +28,9 @@ namespace ERP_D.Controllers
         {
             if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
             {
-                return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) } );
+                return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) });
             }
-              return View(await _context.Empleados.ToListAsync());
+            return View(await _context.Empleados.ToListAsync());
         }
 
         // GET: Empleados/Details/5
@@ -45,7 +42,7 @@ namespace ERP_D.Controllers
             }
 
             var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(m => m.Id == id);
-            
+
             if (empleado == null)
             {
                 return NotFound();
@@ -58,7 +55,7 @@ namespace ERP_D.Controllers
         [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre");
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null || p.Empleado.EmpleadoActivo == false), "Id", "Nombre");
             return View();
         }
 
@@ -68,43 +65,59 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Create([Bind("Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Create([Bind("ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId, RH, TipoTelefono, NumeroTelefono")] CreacionEmpleado empleadoForm)
         {
+            IdentityResult resultado = null;
             if (ModelState.IsValid)
             {
                 var nuevoEmpleado = new Empleado();
 
+                var fotoPath = await CrearFoto(empleadoForm.Foto, empleadoForm.Nombre + empleadoForm.Apellido);
+
                 nuevoEmpleado.Nombre = empleadoForm.Nombre;
                 nuevoEmpleado.DNI = empleadoForm.DNI;
                 nuevoEmpleado.Apellido = empleadoForm.Apellido;
-                nuevoEmpleado.Foto = empleadoForm.Foto;
+                nuevoEmpleado.Foto = fotoPath;
                 nuevoEmpleado.EmpleadoActivo = empleadoForm.EmpleadoActivo;
                 nuevoEmpleado.Direccion = empleadoForm.Direccion;
                 nuevoEmpleado.ObraSocial = empleadoForm.ObraSocial;
-                nuevoEmpleado.Legajo = empleadoForm.Legajo;
                 nuevoEmpleado.UserName = empleadoForm.DNI.ToString();
                 nuevoEmpleado.PosicionId = empleadoForm.PosicionId;
-                nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@erp-zone.com";
+                nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@ort.edu.ar";
 
-                    var resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
-                    if (resultado.Succeeded)
+                resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
+                if (resultado.Succeeded)
+                {
+                    if (empleadoForm.RH)
                     {
-                        if (empleadoForm.RH)
-                        {
-                            await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
-                            await _userManager.AddToRoleAsync(nuevoEmpleado, "RH");
-                        }else
-                        {
-                            await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
-                        }
+                        await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
+                        await _userManager.AddToRoleAsync(nuevoEmpleado, "RH");
+                    } else
+                    {
+                        await _userManager.AddToRoleAsync(nuevoEmpleado, "Empleado");
                     }
-
-                return RedirectToAction(nameof(Index));
+                    if (!empleadoForm.TipoTelefono.ToString().Equals("") && empleadoForm.NumeroTelefono != null)
+                    {
+                        _context.Telefonos.Add(new Telefono { Tipo = empleadoForm.TipoTelefono, Numero = empleadoForm.NumeroTelefono, PersonaId = nuevoEmpleado.Id });
+                        await _context.SaveChangesAsync();
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
             }
+
+            if (resultado != null)
+            {
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError(String.Empty, error.Description);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(String.Empty, "Erorr inesperado");
+            }
+
             ViewData["PosicionId"] = new SelectList(_context.Posiciones, "Id", "Nombre", empleadoForm.PosicionId);
-
-            ModelState.AddModelError(String.Empty, "Surgio un error inesperado");
-
             return View(empleadoForm);
         }
 
@@ -117,31 +130,31 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.FindAsync(id);
+            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();
             }
 
-            var crearEmpleado = new CreacionEmpleado();
+            var empleadoEdit = new CreacionEmpleado();
 
-            crearEmpleado.DNI = empleado.DNI;
-            crearEmpleado.Nombre = empleado.Nombre;
-            crearEmpleado.Apellido = empleado.Apellido;
-            crearEmpleado.ObraSocial = empleado.ObraSocial;
-            crearEmpleado.EmpleadoActivo = empleado.EmpleadoActivo;
-            crearEmpleado.Legajo = empleado.Legajo;
-            crearEmpleado.Foto = empleado.Foto;
-            crearEmpleado.Direccion = empleado.Direccion;
-            crearEmpleado.PosicionId = empleado.PosicionId;
+            empleadoEdit.DNI = empleado.DNI;
+            empleadoEdit.Nombre = empleado.Nombre;
+            empleadoEdit.Apellido = empleado.Apellido;
+            empleadoEdit.ObraSocial = empleado.ObraSocial;
+            empleadoEdit.EmpleadoActivo = empleado.EmpleadoActivo;
+            // TODO: crearEmpleado.Foto = empleado.Foto;
+            empleadoEdit.Direccion = empleado.Direccion;
+            empleadoEdit.PosicionId = empleado.PosicionId;
 
-            //List asd = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null)
+            List<Posicion> positionList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null).ToList();
 
-            //    asd.Add()
+            positionList.Add(empleado.Posicion);
+            //positionList.Add(null);
 
             // TODO: Como resolvemos aca al editar posicion????
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre", empleado.PosicionId);
-            return View(crearEmpleado);
+            ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre", empleado.PosicionId);
+            return View(empleadoEdit);
         }
 
         // POST: Empleados/Edit/5
@@ -150,7 +163,7 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, Legajo,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -164,7 +177,7 @@ namespace ERP_D.Controllers
 
                     var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
 
-                    if(empleadoDB == null)
+                    if (empleadoDB == null)
                     {
                         return NotFound();
                     }
@@ -173,8 +186,7 @@ namespace ERP_D.Controllers
                     empleadoDB.Nombre = empleadoForm.Nombre;
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
-                    empleadoDB.Legajo = empleadoForm.Legajo;
-                    empleadoDB.Foto = empleadoForm.Foto;
+                    // TODO: empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;
 
@@ -206,7 +218,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.FindAsync(id);
+            var empleado = await _context.Empleados.Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();
@@ -214,9 +226,12 @@ namespace ERP_D.Controllers
 
             var empleadoEdit = new PersonalEdit();
             empleadoEdit.Id = empleado.Id;
-            empleadoEdit.Direccion = empleado.Direccion;
-            empleadoEdit.Foto = empleado.Foto;
+            if(empleado.Telefonos.Count > 0)
+            {
+                empleadoEdit.TipoTelefono = empleado.Telefonos[0].Tipo;
+                empleadoEdit.NumeroTelefono = empleado.Telefonos[0].Numero;
 
+            } 
             return View(empleadoEdit);
         }
 
@@ -224,7 +239,7 @@ namespace ERP_D.Controllers
         // Action para que el rolm de empleado modifique sus datos
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PersonalEdit(int id, [Bind("Id, Foto, Direccion")] PersonalEdit empleadoForm)
+        public async Task<IActionResult> PersonalEdit(int id, [Bind("Id,NombreFoto, Foto, TipoTelefono, NumeroTelefono")] PersonalEdit empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -235,19 +250,45 @@ namespace ERP_D.Controllers
             {
                 try
                 {
+                    Telefono telefonoEdit;
 
-                    var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
+                    var empleadoDB = await _context.Empleados.Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == empleadoForm.Id) ;
 
                     if (empleadoDB == null)
                     {
                         return NotFound();
                     }
 
-                    empleadoDB.Foto = empleadoForm.Foto;
-                    empleadoDB.Direccion = empleadoForm.Direccion;
+                    if(empleadoForm.Foto != null && empleadoForm.NombreFoto != null)
+                    {
+                        var pathFoto = await CrearFoto(empleadoForm.Foto, empleadoForm.NombreFoto);
 
-                    _context.Update(empleadoDB);
-                    await _context.SaveChangesAsync();
+                        empleadoDB.Foto = pathFoto;
+
+                        _context.Update(empleadoDB);
+
+                        await _context.SaveChangesAsync();
+                    }
+
+                    if(empleadoForm.NumeroTelefono != null)
+                    {
+                        if (empleadoDB.Telefonos.Count > 0)
+                        {
+                            telefonoEdit = empleadoDB.Telefonos[0];
+                        }
+                        else
+                        {
+                            telefonoEdit = new Telefono();
+                        }
+
+                        telefonoEdit.Tipo = empleadoForm.TipoTelefono;
+                        telefonoEdit.Numero = empleadoForm.NumeroTelefono;
+                        telefonoEdit.PersonaId = empleadoForm.Id;
+
+                        _context.Telefonos.Update(telefonoEdit);
+                        await _context.SaveChangesAsync();
+                    }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -298,13 +339,34 @@ namespace ERP_D.Controllers
             var empleado = await _context.Empleados.FindAsync(id);
             if (empleado != null)
             {
-                _context.Empleados.Remove(empleado);
+                empleado.EmpleadoActivo = false;
+                _context.Empleados.Update(empleado);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        private async Task<string> CrearFoto(IFormFile foto, String nombreFoto)
+        {
+            var usePath = "";
+            if (foto != null && foto.Length > 0)
+            {
+                var nuevaImagen = new Imagen();
+                var fileName = nombreFoto + ".jpg";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                usePath = "/images/" + fileName;
+                nuevaImagen.Path = usePath;
+                nuevaImagen.Nombre = fileName;
+                _context.Imagenes.Add(nuevaImagen);
+                _context.SaveChanges();
+                using (var fileSrteam = new FileStream(filePath, FileMode.Create))
+                {
+                    await foto.CopyToAsync(fileSrteam);
+                }
+            }
+            return usePath;
+        }
         private bool EmpleadoExists(int id)
         {
           return _context.Empleados.Any(e => e.Id == id);

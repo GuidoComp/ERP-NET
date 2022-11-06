@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
+using ERP_D.ViewModels;
 
 namespace ERP_D.Controllers
 {
@@ -21,10 +22,31 @@ namespace ERP_D.Controllers
             _context = context;
         }
 
-        // GET: CentroDeCostos
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return View(await _context.CentrosDeCosto.ToListAsync());
+            List<CentroCostoLista> listaCentros = new List<CentroCostoLista>();
+            var centros = _context.CentrosDeCosto.Include(c => c.Gerencia).Include(c => c.Gastos);
+
+
+            foreach (var centro in centros)
+            {
+                double suma = 0;
+                var centroItem = new CentroCostoLista();
+                centroItem.Id = centro.Id;
+                centroItem.Nombre = centro.Nombre;
+                centroItem.MontoMaximo = centro.MontoMaximo;
+                centroItem.Gerencia = centro.Gerencia.Nombre;
+
+                foreach (var gasto in centro.Gastos)
+                {
+                    suma = suma + gasto.Monto;
+                }
+                centroItem.Total = suma;
+
+                listaCentros.Add(centroItem);
+            }
+
+              return View(listaCentros);
         }
 
         // GET: CentroDeCostos/Details/5
@@ -45,28 +67,6 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            return View(centroDeCosto);
-        }
-
-        // GET: CentroDeCostos/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CentroDeCostos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,MontoMaximo")] CentroDeCosto centroDeCosto)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(centroDeCosto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
             return View(centroDeCosto);
         }
 

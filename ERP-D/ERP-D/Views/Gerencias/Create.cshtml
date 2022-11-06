@@ -1,17 +1,16 @@
-﻿@model ERP_D.Models.Gerencia
+﻿@model ERP_D.ViewModels.Gerencia.CreacionGerencia
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Gerencia</h4>
+<h1>Nueva gerencia</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h4>Datos nueva gerencia</h4>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
@@ -35,19 +34,27 @@
                 <label asp-for="EmpresaId" class="control-label"></label>
                 <select asp-for="EmpresaId" class ="form-control" asp-items="ViewBag.EmpresaId"></select>
             </div>
+            <hr class="solid">
+            <h4>Datos centro de costo</h4>
             <div class="form-group">
-                <label asp-for="CentroDeCostoId" class="control-label"></label>
-                @Html.DropDownList("CentroDeCostoId", (SelectList)ViewBag.CentroDeCostoId, "Por favor, seleccione", new { @class = "form-control" })
+                <label asp-for="NombreCentro" class="control-label"></label>
+                <input asp-for="NombreCentro" class="form-control" />
+                <span asp-validation-for="NombreCentro" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="MontoMaximo" class="control-label"></label>
+                <input asp-for="MontoMaximo" class="form-control" />
+                <span asp-validation-for="MontoMaximo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver</a>
 </div>
 
 @section Scripts {
