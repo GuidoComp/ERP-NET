@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
+
+<div class="text-center">
+    <h1 class="display-4"><img src="../Images/logo.png" width="70" height="70"> Ort ERP</h1>
+    @*<img src="../Images/logo.png" width="300" height="300">*@
+    @if (signInManager.IsSignedIn(User))
+    {
+        <h2>Hola @ViewBag.fullName !</h2>
+    }
+</div>
+<div class="row pt-md-5 px-md-0 p-3 justify-content-md-center">
+    <div class="col-md-10 col-lg-8 col-xl-6 text-md-center">
+        <h2>¿Por qué elegir Ort ERP?</h2>
+        <p>Ort ERP es un <strong>sistema ERP</strong> con escalabilidad que acompaña cualquier cambio. No importa cuánto crezca o se modifique su organización, con Calipso su empresa podrá incrementarse, ampliarse, reestructurarse o hasta cambiar de rubro sin necesidad de migrar de sistema.</p>
+    </div>
+</div>
+<div class="container">
+    <div class="row d-flex py-md-6 px-md-0 p-3 justify-content-md-center">
+        <div class="col-md-5 d-flex flex-column justify-content-md-center">
+            <h3>Rápida implementación</h3>
+            <p>El <strong>delivery SaaS</strong> brinda metodologías de implementación, puesta en marcha y capacitación con reducciones de tiempo de hasta un 90%.</p>
+            <h3>Software as a service</h3>
+            <p>El modelo operativo <strong>SaaS</strong> disminuye los costos de infraestructura y de adquisición de licencias y pone a disposición de los usuarios servicios de back up en línea, actualización de versiones y monitoreo de performance.</p>
+        </div>
+        <div class="col-md-6 align-items-center">
+            <img src="https://emiralfg.com/wp-content/uploads/2021/06/Infografia-2-ERP_Mesa-de-trabajo.jpg" width="500" height="400">
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.mensaje != null)
+{
+    <div class="text-center">
+        <p>Carga de feed finalizada</p>
+    </div>
+}
+<div class="container-custom">
+    <div class="row pb-md-5 px-md-0 p-3 justify-content-md-center characteristics">
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <img src="~/Images/RRHH.svg" width="80px" alt="">
+        <img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/RRHH.svg" data-src="https://erp.calipso.com/wp-content/uploads/RRHH.svg" alt="">
+        <h3 class="">Gestión de RRHH</h3>
+        <p>
+            <span style="font-weight: 400;">Calipso te permite realizar la liquidación de nómina con múltiples convenios, en conjunto con la gestión de los recursos humanos.</span>
+        </p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript>
+            <img src="https://erp.calipso.com/wp-content/uploads/integracion.svg" alt="">
+        </noscript><img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/integracion.svg" data-src="https://erp.calipso.com/wp-content/uploads/integracion.svg" alt="">
+        <h3 class="">Integración</h3>
+        <p>La integración de nuestro ERP es extremadamente simple y eficiente, tanto con otros web services, como aplicaciones, equipos de medición, etc.</p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript>
+            <img src="https://erp.calipso.com/wp-content/uploads/contabilidad-online1.svg" alt="">
+        </noscript>
+        <img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/contabilidad-online1.svg" data-src="https://erp.calipso.com/wp-content/uploads/contabilidad-online1.svg" alt="">
+        <h3 class="">Contabilidad online</h3><p>Los movimientos realizados generan su contrapartida contable en el momento, para que tengas la información actualizada y disponible.</p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript><img src="https://erp.calipso.com/wp-content/uploads/crm.svg" alt=""></noscript>
+        <img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/crm.svg" data-src="https://erp.calipso.com/wp-content/uploads/crm.svg" alt="">
+        <h3 class="">CRM</h3>
+        <p>Nuestro CRM te permite trabajar en tu pipeline de oportunidades ayudándote a transformarlas en ventas con un tablero de control e información integrada.</p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript>
+            <img src="https://erp.calipso.com/wp-content/uploads/facturacion-masiva.svg" alt="">
+        </noscript><img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/facturacion-masiva.svg" data-src="https://erp.calipso.com/wp-content/uploads/facturacion-masiva.svg" alt="">
+        <h3 class="">Facturación masiva</h3>
+        <p>Calipso te permite realizar facturación masiva de contratos de servicios con definición de frecuencias y ciclos.</p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript>
+            <img src="https://erp.calipso.com/wp-content/uploads/back-office.svg" alt="">
+        </noscript><img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/back-office.svg" data-src="https://erp.calipso.com/wp-content/uploads/back-office.svg" alt="">
+        <h3 class="">Back Office</h3><p>Calipso permite realizar el manejo completo e integral de los procesos administrativos de su organización.</p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript>
+            <img src="https://erp.calipso.com/wp-content/uploads/planificacion4.svg" alt="">
+        </noscript>
+        <img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/planificacion4.svg" data-src="https://erp.calipso.com/wp-content/uploads/planificacion4.svg" alt="">
+        <h3 class="">Planificación</h3>
+        <p>Calipso ayuda con la planificación y gestión de la producción, compras y recursos productivos para utilizar recursos más eficientemente.</p>
+    </div>
+    <div class="col-6 col-md-3 text-md-center py-3">
+        <noscript><img src="https://erp.calipso.com/wp-content/uploads/mantenimiento.svg" alt=""></noscript>
+        <img class=" lazyloaded" src="https://erp.calipso.com/wp-content/uploads/mantenimiento.svg" data-src="https://erp.calipso.com/wp-content/uploads/mantenimiento.svg" alt="">
+        <h3 class="">Mantenimiento</h3>
+        <p>Ayuda a realizar el mantenimiento correctivo y preventivo de sus bienes como maquinarias y vehículos.</p>
+    </div>
+</div>
+
+</div>

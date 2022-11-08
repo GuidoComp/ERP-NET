@@ -25,6 +25,11 @@ namespace ERP_D.Controllers
             this._signInManager = signInManager;
         }
 
+        public IActionResult Landing(String mensaje)
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Index(String mensaje)
         {
             ViewBag.mensaje = mensaje;
@@ -32,6 +37,9 @@ namespace ERP_D.Controllers
                 var userName = User.Identity.Name;
                 Persona empleado = await _erpContext.Personas.FirstOrDefaultAsync(p => p.NormalizedUserName == userName.ToLower());
                 ViewBag.fullName = empleado.Nombre + " " + empleado.Apellido;
+            }
+            else{
+                return RedirectToAction(nameof(Landing));
             }
             
             return View();

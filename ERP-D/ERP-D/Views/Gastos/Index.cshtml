@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<ERP_D.Models.Gasto>
+<link rel="stylesheet" href="~/css/Employees/index.css" asp-append-version="true" />
 
 @{
     ViewData["Title"] = "Gastos";
 }
 
 <h3>Gastos</h3>
-<p>Estos son tus gastos:</p>
-<table class="table">
-    <thead>
+<table class="table custom-table">
+    <thead class="header-border">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.CentroDeCosto.Nombre)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                    <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>
             </td>
         </tr>
 }

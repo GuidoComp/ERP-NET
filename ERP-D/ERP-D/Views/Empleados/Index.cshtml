@@ -1,49 +1,26 @@
 ﻿@model IEnumerable<ERP_D.Models.Empleado>
+<link rel="stylesheet" href="~/css/Employees/index.css" asp-append-version="true" />
 
-@{
-    ViewData["Title"] = "Nomina empleados";
-}
 
-    <h1>Nomina empleados</h1>
-
-<p>
-    <a asp-action="Create">Nuevo empleado</a>
-</p>
-<table class="table">
+<div class="title-container clear-fix">
+    <a asp-action="Create" class="title-img" data-toggle="tooltip" data-placement="top" title="Agregar empleado"><img src="~/icons/add-employee.png" /></a>
+</div>
+    
+<table class="table custom-table">
     <thead>
-        <tr>
+        <tr class="header-border">
             <th>
-                @Html.DisplayNameFor(model => model.Legajo)
+                 @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ObraSocial)
+                 @Html.ActionLink("Apellido", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EmpleadoActivo)
+                @Html.ActionLink("Salario", "Index", new { sortOrder = ViewBag.SalarioSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Foto)
+                @Html.DisplayNameFor(model => model.Posicion)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DNI)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direccion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaAlta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th></th>
         </tr>
@@ -52,42 +29,21 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Legajo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ObraSocial)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmpleadoActivo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Foto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DNI)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Apellido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => item.Posicion.Sueldo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
+                @Html.DisplayFor(modelItem => item.Posicion.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FechaAlta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                <a class="btn btn-primary btn-xs" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a class="btn btn-primary btn-xs"asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                <a class="btn btn-primary btn-xs" asp-action="Delete" asp-route-id="@item.Id">Deshabilitar</a>
+                <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>
+                <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>
+                <a asp-action="Delete" asp-route-id="@item.Id"><img src="~/icons/delete.png" class="icon-size" /></a>
             </td>
         </tr>
 }

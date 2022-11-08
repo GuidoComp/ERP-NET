@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<ERP_D.Models.Gerencia>
-
+<link rel="stylesheet" href="~/css/Employees/index.css" asp-append-version="true" />
 @{
     ViewData["Title"] = "Index";
 }
@@ -9,8 +9,8 @@
 <p>
     <a asp-action="Create">Crear nueva gerencia</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table custom-table">
+    <thead class="header-border">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
@@ -55,9 +55,9 @@
                 @Html.DisplayFor(modelItem => item.CentroDeCosto.Nombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                 <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>
+                 <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>
+                 <a asp-action="Delete" asp-route-id="@item.Id"><img src="~/icons/delete.png" class="icon-size" /></a>
             </td>
         </tr>
 }

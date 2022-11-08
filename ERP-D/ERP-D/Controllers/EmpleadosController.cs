@@ -24,13 +24,34 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empleados
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
             if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
             {
                 return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) });
             }
-            return View(await _context.Empleados.ToListAsync());
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.SalarioSortParm = sortOrder == "Salario" ? "salario_desc" : "Salario";
+
+            var empleados = _context.Empleados.Include(e => e.Posicion).OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    empleados = empleados.OrderByDescending(e => e.Nombre).ThenBy(e => e.Apellido);
+                    break;
+                case "Salario":
+                    empleados = empleados.OrderBy(e => e.Posicion.Sueldo);
+                    break;
+                case "salario_desc":
+                    empleados = empleados.OrderByDescending(e => e.Posicion.Sueldo);
+                    break;
+                //default:
+                //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+                //    break;
+            }
+
+            return View(empleados.ToList());
         }
 
         // GET: Empleados/Details/5

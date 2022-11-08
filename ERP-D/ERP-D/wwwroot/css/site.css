@@ -12,7 +12,12 @@ html {
   position: relative;
   min-height: 100%;
 }
-
+/*
 body {
   margin-bottom: 60px;
+}*/
+
+li a:active {
+    font-weight: bold;
 }
+
