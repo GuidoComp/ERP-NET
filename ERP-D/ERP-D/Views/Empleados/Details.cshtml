@@ -3,15 +3,15 @@
 @{
     ViewData["Title"] = "Detalles";
 }
-
+<div class="form">
 <h1>Detalles</h1>
 
 <div>
     <h4>@(Model.Nombre + " " + Model.Apellido)</h4>
     @if(Model.Foto != null){
-        <img src="@Url.Content(Model.Foto)" class="image-fluid" width="70" height="100" alt="IMAGES" />
+        <img src="@Url.Content(Model.Foto)" width="14%" class="image-fluid" alt="IMAGES" />
     }else{
-        <img src="~/Images/employee.png" class="image-fluid" width="70" height="100" alt="IMAGES" />
+        <img src="~/Images/employee.png" class="image-fluid" alt="IMAGES" />
     }
     
     <hr />
@@ -99,4 +99,5 @@
         <a asp-action="PersonalEdit" asp-route-id="@Model?.Id">Edit</a>
     }
     
+</div>
 </div>

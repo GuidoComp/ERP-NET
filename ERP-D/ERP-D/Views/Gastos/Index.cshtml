@@ -4,25 +4,43 @@
 @{
     ViewData["Title"] = "Gastos";
 }
-
 <h3>Gastos</h3>
+
+@if (User.IsInRole("Admin") || User.IsInRole("RH")){
+    @using (Html.BeginForm())
+    {
+    <p>
+        Filtrar por nombre o apellido: @Html.TextBox("searchEmpleado")  
+        <input type="submit" value="Search" /></p>
+    }
+}
+
+
 <table class="table custom-table">
     <thead class="header-border">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
             </th>
+            @if (User.IsInRole("Admin") || User.IsInRole("RH")){
+            <th>
+                @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NameSortParm })
+            </th>
+            <th>
+                @Html.ActionLink("Apellido", "Index", new { sortOrder = ViewBag.NameSortParm })
+            </th>
+            }
+            <th>
+                @Html.ActionLink("Fecha", "Index", new { sortOrder = ViewBag.FechaSortParm })
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Monto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Empleado)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.CentroDeCosto)
+            </th>
+            <th>
+               Gerencia
             </th>
             <th></th>
         </tr>
@@ -33,17 +51,25 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Descripcion)
             </td>
+            @if (User.IsInRole("Admin") || User.IsInRole("RH")){
             <td>
-                @Html.DisplayFor(modelItem => item.Monto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
+                @Html.DisplayFor(modelItem => item.Empleado.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Empleado.Apellido)
             </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+               $ @Html.DisplayFor(modelItem => item.Monto)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CentroDeCosto.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CentroDeCosto.Gerencia.Nombre)
             </td>
             <td>
                     <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>

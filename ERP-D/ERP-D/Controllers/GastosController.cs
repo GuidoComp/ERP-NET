@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.ViewModels.Gastos;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace ERP_D.Controllers
 {
@@ -27,21 +28,45 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchEmpleado)
         {
             IQueryable<Gasto> gastos = null;
             if (User.IsInRole("Empleado"))
             {
                 var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
 
-                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado).OrderByDescending(g => g.Fecha);
+                gastos = _context.Gastos.Include(g => g.CentroDeCosto).ThenInclude(c => c.Gerencia).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado).OrderByDescending(g => g.Fecha);
             }
             else
             {
-                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado);
+                ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+                ViewBag.FechaSortParm = sortOrder == "Fecha" ? "fecha_desc" : "Fecha";
+                gastos = _context.Gastos.Include(g => g.Empleado).Include(g => g.CentroDeCosto).ThenInclude(c => c.Gerencia).OrderBy(g => g.Empleado.Nombre).ThenBy(g => g.Empleado.Apellido); ;
+
+                if (!String.IsNullOrEmpty(searchEmpleado))
+                {
+                    gastos = gastos.Where(g => g.Empleado.Nombre == searchEmpleado
+                                            || g.Empleado.Apellido == searchEmpleado);
+                }
+               
+                switch (sortOrder)
+                {
+                    case "name_desc":
+                        gastos = gastos.OrderByDescending(g => g.Empleado.Nombre).ThenBy(g => g.Empleado.Apellido);
+                        break;
+                    case "Fecha":
+                        gastos = gastos.OrderBy(g => g.Fecha);
+                        break;
+                    case "fecha_desc":
+                        gastos = gastos.OrderByDescending(g => g.Fecha);
+                        break;
+                        //default:
+                        //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+                        //    break;
+                }
             }
 
-            return View(await gastos.ToListAsync());
+            return View(gastos.ToList());
         }
 
         // GET: Gastos/Details/5

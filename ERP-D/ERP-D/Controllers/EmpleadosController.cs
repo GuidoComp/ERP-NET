@@ -164,7 +164,6 @@ namespace ERP_D.Controllers
             empleadoEdit.Apellido = empleado.Apellido;
             empleadoEdit.ObraSocial = empleado.ObraSocial;
             empleadoEdit.EmpleadoActivo = empleado.EmpleadoActivo;
-            // TODO: crearEmpleado.Foto = empleado.Foto;
             empleadoEdit.Direccion = empleado.Direccion;
             empleadoEdit.PosicionId = empleado.PosicionId;
 
@@ -184,7 +183,7 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId,TipoTelefono,NumeroTelefono")] CreacionEmpleado empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -210,6 +209,34 @@ namespace ERP_D.Controllers
                     // TODO: empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;
+
+
+                    if (empleadoForm.Foto != null )
+                    {
+                        var pathFoto = await CrearFoto(empleadoForm.Foto, "");
+
+                        empleadoDB.Foto = pathFoto;
+                    }
+
+                    if (empleadoForm.NumeroTelefono != null)
+                    {
+                        Telefono telefonoEdit;
+                        if (empleadoDB.Telefonos.Count > 0)
+                        {
+                            telefonoEdit = empleadoDB.Telefonos[0];
+                        }
+                        else
+                        {
+                            telefonoEdit = new Telefono();
+                        }
+
+                        telefonoEdit.Tipo = empleadoForm.TipoTelefono;
+                        telefonoEdit.Numero = empleadoForm.NumeroTelefono;
+                        telefonoEdit.PersonaId = empleadoForm.Id;
+
+                        _context.Telefonos.Update(telefonoEdit);
+                        await _context.SaveChangesAsync();
+                    }
 
                     _context.Update(empleadoDB);
                     await _context.SaveChangesAsync();
@@ -371,6 +398,12 @@ namespace ERP_D.Controllers
         private async Task<string> CrearFoto(IFormFile foto, String nombreFoto)
         {
             var usePath = "";
+
+            if(nombreFoto == null || nombreFoto == "")
+            {
+                nombreFoto = foto.FileName;
+            }
+
             if (foto != null && foto.Length > 0)
             {
                 var nuevaImagen = new Imagen();

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Create";
 
 }
+<div class="form">
 @if (User.IsInRole("Admin") || User.IsInRole("RH"))
 {
     <h1>Nuevo empleado</h1>
@@ -90,6 +91,7 @@
 }
 <div>
     <a asp-action="Index">Back to List</a>
+</div>
 </div>
 
 @section Scripts {

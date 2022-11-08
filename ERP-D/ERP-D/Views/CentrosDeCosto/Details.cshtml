@@ -4,74 +4,61 @@
     ViewData["Title"] = "Details";
 }
 
-<style>
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: separate;
-        width: 100%;
-    }
+<div class="form">
+    <div>
+        <h4>Detalles @Model.Nombre</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Nombre)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.MontoMaximo)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.MontoMaximo)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <hr />
+        <h5>@Html.DisplayNameFor(model => model.Gastos)</h5>
+        <dl>
+            @if (!Model.Gastos.Any())
+            {
+                <p class="badge bg-warning">No hay gastos para este centro de costos</p>
+            }
+            else
+            {
+                <table class="table custom-table">
+                    <thead>
+                        <tr class="header-border">
+                            <th>Descripcion</th>
+                            <th>Empleado</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.Gastos)
+                    {
+                        <tr>
+                            <td>@item.Descripcion</td>
+                            <td>@item.Empleado.Nombre</td>
+                            <td>@item.Monto</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
 
-    td, th {
-        border: 1px solid #F0EBCE;
-        text-align: left;
-        padding: 8px;
-    }
+            }
 
-    tr:nth-child(even) {
-        background-color: #F0EBCE;
-    }
-</style>
-
-<div>
-    <h4>Detalles @Model.Nombre</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MontoMaximo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MontoMaximo)
-        </dd>
-    </dl>
-</div>
-<div>
-    <hr />
-    <h5>@Html.DisplayNameFor(model => model.Gastos)</h5>
-    <dl>
-        @if (!Model.Gastos.Any())
-        {
-            <p class="badge bg-warning">No hay gastos para este centro de costos</p>
-        }
-        else
-        {
-            <table>
-
-                <tr>
-                    <th>Descripcion</th>
-                    <th>Empleado</th>
-                    <th>Monto</th>
-                </tr>
-                @foreach (var item in Model.Gastos)
-                {
-                    <tr>
-                        <td>@item.Descripcion</td>
-                        <td>@item.Empleado.Nombre</td>
-                        <td>@item.Monto</td>
-                    </tr>
-                }
-            </table>
-
-        }
-
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>

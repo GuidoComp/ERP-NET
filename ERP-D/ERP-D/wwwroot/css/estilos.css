@@ -17,6 +17,11 @@
 .custom-table {
     position: relative;
     left: 7px;
-    width: 99%;
+    width: 98%;
     box-shadow: 1px 2px 3px grey;
+}
+
+.form {
+    position: relative;
+    margin:15px;
 }

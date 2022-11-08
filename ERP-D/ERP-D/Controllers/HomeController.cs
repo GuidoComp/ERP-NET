@@ -1,5 +1,6 @@
 ﻿using ERP_D.Data;
 using ERP_D.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 
 namespace ERP_D.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -24,9 +26,14 @@ namespace ERP_D.Controllers
             _logger = logger;
             this._signInManager = signInManager;
         }
-
+        [AllowAnonymous]
         public IActionResult Landing(String mensaje)
         {
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction(nameof(Index));
+                
+            }
             return View();
         }
 
@@ -38,10 +45,6 @@ namespace ERP_D.Controllers
                 Persona empleado = await _erpContext.Personas.FirstOrDefaultAsync(p => p.NormalizedUserName == userName.ToLower());
                 ViewBag.fullName = empleado.Nombre + " " + empleado.Apellido;
             }
-            else{
-                return RedirectToAction(nameof(Landing));
-            }
-            
             return View();
         }
 

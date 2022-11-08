@@ -26,14 +26,6 @@
                                 <a class="nav-link active text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
 
-                            <li class="nav-item menu-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="Index">Empleados</a>
-                            </li>
-
-                            <li class="nav-item menu-item">
-                                <a class="nav-link text-dark menu-text" asp-area="" asp-controller="Gastos" asp-action="Index">Gastos</a>
-                            </li>
- 
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item menu-item">
@@ -42,6 +34,12 @@
                             }
                             @if (User.IsInRole("Admin") || User.IsInRole("RH"))
                             {
+                                <li class="nav-item menu-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="Index">Empleados</a>
+                                </li>
+                                <li class="nav-item menu-item">
+                                    <a class="nav-link text-dark menu-text" asp-area="" asp-controller="Gastos" asp-action="Index">Gastos</a>
+                                </li>
                                 <li class="nav-item menu-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Empresas" asp-action="Index">Empresas</a>
                                 </li>
@@ -60,18 +58,25 @@
                                 <li class="nav-item menu-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="CentrosDeCosto" asp-action="Index">Centros de costo</a>
                                 </li>
+                            }else {
+                                <li class="nav-item menu-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="Index">Mis datos</a>
+                                </li>
+                                <li class="nav-item menu-item">
+                                    <a class="nav-link text-dark menu-text" asp-area="" asp-controller="Gastos" asp-action="Index">Mis gastos</a>
+                                </li>
                             }
                             <li class="nav-item menu-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="CerrarSesion">Cerrar Sesion</a>
                             </li>
                             </ul>
-                            } else{
-                                <ul class="navbar-nav ml-auto">
-                                    <li class="nav-item menu-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="IniciarSesion">Iniciar Sesion</a>
-                                    </li>
-                                </ul>
-                            }
+                        } else{
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item menu-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="IniciarSesion">Iniciar Sesion</a>
+                                </li>
+                            </ul>
+                        }
                 </div>
             </div>
         </nav>
