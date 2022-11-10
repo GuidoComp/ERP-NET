@@ -21,24 +21,38 @@
             <th>
                 @Html.DisplayNameFor(model => model.Posicion)
             </th>
+            <th>
+                Status
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+        var className = "item";
+        @if(!item.EmpleadoActivo){
+            className = "item-disable";
+        }
         <tr>
-            <td>
+            <td class="@className">
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
-            <td>
+                <td class="@className">
                 @Html.DisplayFor(modelItem => item.Apellido)
             </td>
-            <td>
+            <td class="@className">
                 @Html.DisplayFor(modelItem => item.Posicion.Sueldo)
             </td>
-            <td>
+            <td class="@className">
                 @Html.DisplayFor(modelItem => item.Posicion.Nombre)
+            </td>
+            <td class="@className">
+                @if (!item.EmpleadoActivo)
+                {
+                    <img src="~/icons/unavailable.png" class="icon-size" />
+                }else{
+                    <img src="~/icons/ok.png" class="icon-size" />
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>

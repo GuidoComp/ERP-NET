@@ -24,3 +24,12 @@
 th a{
     color: white;
 }
+
+.item{
+    color:black;
+}
+
+.item-disable {
+    color: grey;
+    font-style: italic;
+}

@@ -40,7 +40,10 @@
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EsGerenciaGeneral)
+                @if (item.EsGerenciaGeneral)
+                    {
+                  <img src="~/icons/ok.png" class="icon-size" />
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Direccion.Nombre)

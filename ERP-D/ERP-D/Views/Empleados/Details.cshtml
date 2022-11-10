@@ -8,8 +8,8 @@
 
 <div>
     <h4>@(Model.Nombre + " " + Model.Apellido)</h4>
-    @if(Model.Foto != null){
-        <img src="@Url.Content(Model.Foto)" width="14%" class="image-fluid" alt="IMAGES" />
+    @if(!String.IsNullOrEmpty(Model.Foto)){
+        <img src="@Url.Content(Model.Foto)" class="image-fluid" alt="IMAGES" />
     }else{
         <img src="~/Images/employee.png" class="image-fluid" alt="IMAGES" />
     }

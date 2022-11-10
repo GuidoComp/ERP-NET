@@ -76,7 +76,7 @@ namespace ERP_D.Controllers
         [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null || p.Empleado.EmpleadoActivo == false), "Id", "Nombre");
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre");
             return View();
         }
 
@@ -151,7 +151,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(e => e.Id == id);
+            var empleado = await _context.Empleados.Include(e => e.Posicion).Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();
@@ -165,7 +165,13 @@ namespace ERP_D.Controllers
             empleadoEdit.ObraSocial = empleado.ObraSocial;
             empleadoEdit.EmpleadoActivo = empleado.EmpleadoActivo;
             empleadoEdit.Direccion = empleado.Direccion;
-            empleadoEdit.PosicionId = empleado.PosicionId;
+            empleadoEdit.PosicionId = (int)empleado.PosicionId;
+            if(empleado.Telefonos != null && empleado.Telefonos.Count > 0)
+            {
+                empleadoEdit.TipoTelefono = empleado.Telefonos[0].Tipo;
+                empleadoEdit.NumeroTelefono = empleado.Telefonos[0].Numero;
+            }
+
 
             List<Posicion> positionList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null).ToList();
 
@@ -221,7 +227,7 @@ namespace ERP_D.Controllers
                     if (empleadoForm.NumeroTelefono != null)
                     {
                         Telefono telefonoEdit;
-                        if (empleadoDB.Telefonos.Count > 0)
+                        if (empleadoDB.Telefonos != null && empleadoDB.Telefonos.Count > 0)
                         {
                             telefonoEdit = empleadoDB.Telefonos[0];
                         }
@@ -388,6 +394,7 @@ namespace ERP_D.Controllers
             if (empleado != null)
             {
                 empleado.EmpleadoActivo = false;
+                empleado.PosicionId = null;
                 _context.Empleados.Update(empleado);
             }
             
