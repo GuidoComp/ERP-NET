@@ -86,7 +86,7 @@
                         {
                             <tr>
                                 <td>
-                                @Html.DisplayFor(modelItem => empleado.Nombre)
+                                    <a asp-action="TarjetaEmpleado" asp-route-id="@empleado.Id">@empleado.Nombre</a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => empleado.Apellido)

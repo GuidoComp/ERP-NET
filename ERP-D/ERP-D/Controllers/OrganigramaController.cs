@@ -37,6 +37,33 @@ namespace ERP_D.Controllers
             return View(org);
         }
 
+        public async Task<IActionResult> TarjetaEmpleado(int? Id)
+        {
+            if (Id == null || _context.Empleados == null)
+            {
+                return NotFound();
+            }
+
+            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(m => m.Id == Id);
+
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            var tarjetaEmpleado = new TarjetaEmpleado();
+
+            tarjetaEmpleado.Nombre = empleado.Nombre;
+            tarjetaEmpleado.Apellido = empleado.Apellido;
+            tarjetaEmpleado.Email = empleado.Email;
+            tarjetaEmpleado.Foto = empleado.Foto;
+            tarjetaEmpleado.Direccion = empleado.Direccion;
+            //tarjetaEmpleado.TipoTelefono = empleado.Telefonos;
+            tarjetaEmpleado.Posicion = empleado.Posicion.Nombre;
+
+            return View(tarjetaEmpleado);
+        }
+
         private async Task<Organigrama> BuscarNodoEspecifico(int Id)
         {
             var org = new Organigrama();
