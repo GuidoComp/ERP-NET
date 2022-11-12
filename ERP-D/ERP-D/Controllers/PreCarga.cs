@@ -357,6 +357,14 @@ namespace ERP_D.Controllers
                     empleadoCEO.PosicionId = posicionCEO.Id;
                     await CrearUser(empleadoCEO, true);
 
+                    var telefonoCEO = new Telefono();
+                    telefonoCEO.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoCEO.Numero = "1168223399";
+                    telefonoCEO.PersonaId = empleadoCEO.Id;
+                    _erpContext.Telefonos.Add(telefonoCEO);
+                    _erpContext.SaveChanges();
+
+
                     var empleadoGerenteCom = new Empleado();
 
                     //empleadoGerenteCom.Legajo = 2;
@@ -372,6 +380,13 @@ namespace ERP_D.Controllers
                     empleadoGerenteCom.NormalizedUserName = "20944855";
                     empleadoGerenteCom.PosicionId = posicionGerenteCom.Id;
                     await CrearUser(empleadoGerenteCom, false);
+
+                    var telefonoGerenenteCom = new Telefono();
+                    telefonoGerenenteCom.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteCom.Numero = "1134332208";
+                    telefonoGerenenteCom.PersonaId = empleadoGerenteCom.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteCom);
+                    _erpContext.SaveChanges();
 
                     var empleadoGerenteOpe = new Empleado();
 
@@ -389,6 +404,13 @@ namespace ERP_D.Controllers
                     empleadoGerenteOpe.PosicionId = posicionGerenteOpe.Id;
                     await CrearUser(empleadoGerenteOpe, false);
 
+                    var telefonoGerenenteOpe= new Telefono();
+                    telefonoGerenenteOpe.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteOpe.Numero = "1123887312";
+                    telefonoGerenenteOpe.PersonaId = empleadoGerenteOpe.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteOpe);
+                    _erpContext.SaveChanges();
+
                     var empleadoGerenteSis = new Empleado();
                     empleadoGerenteSis.Nombre = "Rodrigo";
                     empleadoGerenteSis.Apellido = "Varae";
@@ -402,6 +424,13 @@ namespace ERP_D.Controllers
                     empleadoGerenteSis.NormalizedUserName = "23456788";
                     empleadoGerenteSis.PosicionId = posicionGerenteSis.Id;
                     await CrearUser(empleadoGerenteSis, false);
+
+                    var telefonoGerenenteSis = new Telefono();
+                    telefonoGerenenteSis.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteSis.Numero = "1593887212";
+                    telefonoGerenenteSis.PersonaId = empleadoGerenteSis.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteSis);
+                    _erpContext.SaveChanges();
 
                     var empleadoGerenteRH = new Empleado();
                     empleadoGerenteRH.Nombre = "Romina";
@@ -417,6 +446,13 @@ namespace ERP_D.Controllers
                     empleadoGerenteRH.PosicionId = posicionGerenteRH.Id;
                     await CrearUser(empleadoGerenteRH, true);
 
+                    var telefonoGerenenteRH = new Telefono();
+                    telefonoGerenenteRH.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteRH.Numero = "1165223464";
+                    telefonoGerenenteRH.PersonaId = empleadoGerenteRH.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteRH);
+                    _erpContext.SaveChanges();
+
                     var empleadoGerenteRecr = new Empleado();
                     empleadoGerenteRecr.Nombre = "Juana";
                     empleadoGerenteRecr.Apellido = "Villa";
@@ -431,6 +467,14 @@ namespace ERP_D.Controllers
                     empleadoGerenteRecr.PosicionId = posicionGerenteRecr.Id;
                     await CrearUser(empleadoGerenteRecr, true);
 
+
+                    var telefonoGerenenteRecr = new Telefono();
+                    telefonoGerenenteRecr.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteRecr.Numero = "1145667788";
+                    telefonoGerenenteRecr.PersonaId = empleadoGerenteRecr.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteRecr);
+                    _erpContext.SaveChanges();
+
                     var empleadoRecruiter1 = new Empleado();
                     empleadoRecruiter1.Nombre = "Jorge";
                     empleadoRecruiter1.Apellido = "Gonzalez";
@@ -438,12 +482,19 @@ namespace ERP_D.Controllers
                     empleadoRecruiter1.ObraSocial = ObraSocial.GALENO;
                     empleadoRecruiter1.Direccion = "Correa 3432";
                     empleadoRecruiter1.EmpleadoActivo = true;
-                    empleadoRecruiter1.Foto = "/images/jorge.jfif";
+                    empleadoRecruiter1.Foto = "/images/jorge.jfif.jpg";
                     empleadoRecruiter1.Email = "jorge.gonzalez@ort.edu.ar";
                     empleadoRecruiter1.UserName = "21344022";
                     empleadoRecruiter1.NormalizedUserName = "21344022";
                     empleadoRecruiter1.PosicionId = posicionRecruiter1.Id;
                     await CrearUser(empleadoRecruiter1, true);
+
+                    var telefonoRecruiter1 = new Telefono();
+                    telefonoRecruiter1.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoRecruiter1.Numero = "1522993322";
+                    telefonoRecruiter1.PersonaId = empleadoRecruiter1.Id;
+                    _erpContext.Telefonos.Add(telefonoRecruiter1);
+                    _erpContext.SaveChanges();
 
                     var empleadoRecruiter2 = new Empleado();
                     empleadoRecruiter2.Nombre = "Maria Rosa";
@@ -458,6 +509,13 @@ namespace ERP_D.Controllers
                     empleadoRecruiter2.NormalizedUserName = "19233812";
                     empleadoRecruiter2.PosicionId = posicionRecruiter2.Id;
                     await CrearUser(empleadoRecruiter2, true);
+
+                    var telefonoRecruiter2 = new Telefono();
+                    telefonoRecruiter2.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoRecruiter2.Numero = "1134931233";
+                    telefonoRecruiter2.PersonaId = empleadoRecruiter2.Id;
+                    _erpContext.Telefonos.Add(telefonoRecruiter2);
+                    _erpContext.SaveChanges();
                 }
             }
         }
