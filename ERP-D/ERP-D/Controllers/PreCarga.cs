@@ -30,7 +30,6 @@ namespace ERP_D.Controllers
             CrearAdmin().Wait();
             CrearEmpresa().Wait();
             CrearGerencias().Wait();
-            //CrearPosiciones().Wait();
             CrearEmpleados().Wait();
             CrearGastos().Wait();
 
@@ -427,7 +426,7 @@ namespace ERP_D.Controllers
 
                     var telefonoGerenenteSis = new Telefono();
                     telefonoGerenenteSis.Tipo = Telefono.TipoTelefono.CELULAR;
-                    telefonoGerenenteSis.Numero = "1593887212";
+                    telefonoGerenenteSis.Numero = "1193887212";
                     telefonoGerenenteSis.PersonaId = empleadoGerenteSis.Id;
                     _erpContext.Telefonos.Add(telefonoGerenenteSis);
                     _erpContext.SaveChanges();
@@ -491,7 +490,7 @@ namespace ERP_D.Controllers
 
                     var telefonoRecruiter1 = new Telefono();
                     telefonoRecruiter1.Tipo = Telefono.TipoTelefono.CELULAR;
-                    telefonoRecruiter1.Numero = "1522993322";
+                    telefonoRecruiter1.Numero = "1122993322";
                     telefonoRecruiter1.PersonaId = empleadoRecruiter1.Id;
                     _erpContext.Telefonos.Add(telefonoRecruiter1);
                     _erpContext.SaveChanges();
@@ -561,6 +560,7 @@ namespace ERP_D.Controllers
                 var gasto = new Gasto();
                 Random rnd = new Random();
 
+                gasto.Descripcion = "Caja chica";
                 gasto.Fecha = RandomDay();
                 gasto.Monto = rnd.Next(1, montoMaximo);
                 gasto.CentroDeCostoId = centroDeCostoId;

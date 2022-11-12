@@ -9,6 +9,7 @@ using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using ERP_D.Helpers;
 
 namespace ERP_D.Controllers
 {
@@ -58,6 +59,7 @@ namespace ERP_D.Controllers
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
+            ViewBag.AnyGerenciaGeneral = _context.Posiciones.Any(p => p.ResponsableId == null);
             return View();
         }
 
@@ -74,6 +76,7 @@ namespace ERP_D.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.AnyGerenciaGeneral = _context.Posiciones.Any(p => p.ResponsableId == null);
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
@@ -179,6 +182,21 @@ namespace ERP_D.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult NombreDisponible(string nombre)
+        {
+            var nombreExistente = _context.Posiciones.Any(g => g.Nombre == nombre);
+
+            if (!nombreExistente)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(Errors.NombreDuplicadoError);
+            }
         }
 
         private bool PosicionExists(int id)

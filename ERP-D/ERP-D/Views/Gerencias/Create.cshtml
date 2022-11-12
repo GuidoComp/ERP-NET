@@ -16,14 +16,14 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-                @if(!ViewBag.AnyGerenciaGeneral)
-                {
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EsGerenciaGeneral" /> @Html.DisplayNameFor(model => model.EsGerenciaGeneral)
-                </label>
-            </div>
-                }
+            @if(!ViewBag.AnyGerenciaGeneral)
+            {
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="EsGerenciaGeneral" /> @Html.DisplayNameFor(model => model.EsGerenciaGeneral)
+                    </label>
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="GerenciaId" class="control-label"></label>
                 @Html.DropDownList("GerenciaId", (SelectList)ViewBag.GerenciaId, "Por favor, seleccione gerencia", new { @class = "form-control" })

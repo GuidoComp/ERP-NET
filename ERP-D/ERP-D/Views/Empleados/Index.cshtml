@@ -54,11 +54,19 @@
                     <img src="~/icons/ok.png" class="icon-size" />
                 }
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>
-                <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>
-                <a asp-action="Delete" asp-route-id="@item.Id"><img src="~/icons/delete.png" class="icon-size" /></a>
-            </td>
+            @if (item.EmpleadoActivo){
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>
+                        <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id"><img src="~/icons/delete.png" class="icon-size" /></a>
+                    </td>
+            }else{
+                    <td>
+                        <img src="~/icons/edit.png" class="icon-size" />
+                        <img src="~/icons/details.png" class="icon-size" >
+                        <img src="~/icons/delete.png" class="icon-size"  />
+                    </td>
+            }
         </tr>
 }
     </tbody>

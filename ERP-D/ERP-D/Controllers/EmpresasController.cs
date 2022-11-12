@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.Helpers;
 using ERP_D.ViewModels.Empresa;
+using Microsoft.Data.SqlClient;
 
 namespace ERP_D.Controllers
 {
@@ -89,10 +90,15 @@ namespace ERP_D.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception e)
+                catch (DbUpdateException dbex)
                 {
-                    if (e.InnerException.Message.Contains("Nombre")){
-                        ModelState.AddModelError(String.Empty, Errors.NombreDuplicadoError);
+                    SqlException innerException = dbex.InnerException as SqlException;
+                    if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601)){
+                        ModelState.AddModelError("Nombre", Errors.NombreDuplicadoError);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, dbex.Message);
                     }
                 }
 
@@ -118,6 +124,7 @@ namespace ERP_D.Controllers
 
             var empresaForm = new CreacionEmpresa();
 
+            empresaForm.Id = empresa.Id;
             empresaForm.Nombre = empresa.Nombre;
             empresaForm.Rubro = empresa.Rubro;
             empresaForm.Email = empresa.Email;
@@ -148,27 +155,28 @@ namespace ERP_D.Controllers
                         var fotoPath = await Utils.CrearFoto(empresaForm.Logo, "", _context);
                         empresa.Logo = fotoPath;
                     }
-                    
+
+                    empresa.Id = empresaForm.Id;
                     empresa.Nombre = empresaForm.Nombre;
-                    
                     empresa.Rubro = empresaForm.Rubro;
                     empresa.Email = empresaForm.Email;
 
                     _context.Update(empresa);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException dbex)
                 {
-                    if (!EmpresaExists(empresaForm.Id))
+                    SqlException innerException = dbex.InnerException as SqlException;
+                    if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
                     {
-                        return NotFound();
+                        ModelState.AddModelError("Nombre", Errors.NombreDuplicadoError);
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(String.Empty, dbex.Message);
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(empresaForm);
         }
@@ -212,6 +220,20 @@ namespace ERP_D.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public IActionResult NombreDisponible(string nombre)
+        {
+            var nombreExistente = _context.Empresas.Any(g => g.Nombre == nombre);
+
+            if (!nombreExistente)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(Errors.NombreDuplicadoError);
+            }
+        }
         private bool EmpresaExists(int id)
         {
           return _context.Empresas.Any(e => e.Id == id);

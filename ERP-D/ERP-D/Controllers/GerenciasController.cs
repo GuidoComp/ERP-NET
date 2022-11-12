@@ -10,6 +10,7 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.ViewModels.Gerencia;
+using ERP_D.Helpers;
 
 namespace ERP_D.Controllers
 {
@@ -202,6 +203,20 @@ namespace ERP_D.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult NombreDisponible(string nombre) {
+            var nombreExistente = _context.Gerencias.Any(g => g.Nombre == nombre);
+
+            if(!nombreExistente)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(Errors.NombreDuplicadoError);
+            }
         }
 
         private bool GerenciaExists(int id)

@@ -1,4 +1,5 @@
 ﻿using ERP_D.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,6 +11,7 @@ namespace ERP_D.Models
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [Remote(action: "NombreDisponible", controller: "Posiciones")]
         public String Nombre { get; set; }
 
         [StringLength(200, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]

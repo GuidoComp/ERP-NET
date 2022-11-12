@@ -8,6 +8,7 @@ using System.Data;
 using Microsoft.AspNetCore.Identity;
 using ERP_D.ViewModels;
 using ERP_D.ViewModels.Empleados;
+using ERP_D.Helpers;
 
 namespace ERP_D.Controllers
 {
@@ -24,6 +25,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empleados
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> Index(string sortOrder)
         {
             if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
@@ -55,6 +57,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empleados/Details/5
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -176,9 +179,7 @@ namespace ERP_D.Controllers
             List<Posicion> positionList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null).ToList();
 
             positionList.Add(empleado.Posicion);
-            //positionList.Add(null);
 
-            // TODO: Como resolvemos aca al editar posicion????
             ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre", empleado.PosicionId);
             return View(empleadoEdit);
         }
@@ -212,7 +213,6 @@ namespace ERP_D.Controllers
                     empleadoDB.Nombre = empleadoForm.Nombre;
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
-                    // TODO: empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;
 
@@ -265,6 +265,7 @@ namespace ERP_D.Controllers
         }
 
         // Action para que el rolm de empleado modifique sus datos
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> PersonalEdit(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -293,6 +294,7 @@ namespace ERP_D.Controllers
         // Action para que el rolm de empleado modifique sus datos
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> PersonalEdit(int id, [Bind("Id,NombreFoto, Foto, TipoTelefono, NumeroTelefono")] PersonalEdit empleadoForm)
         {
             if (id != empleadoForm.Id)

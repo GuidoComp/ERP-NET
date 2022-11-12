@@ -1,4 +1,5 @@
 ﻿using ERP_D.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
@@ -9,6 +10,7 @@ namespace ERP_D.ViewModels.Gerencia
     {
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [Remote (action:"NombreDisponible", controller:"Gerencias")]
         public String Nombre { get; set; }
 
         [Display(Name = "Es gerencia general")]

@@ -86,10 +86,10 @@
 
     @if (User.IsInRole("RH") || User.IsInRole("Admin"))
     {
-        <a asp-action="Index">Back to List</a>
-        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+        <a asp-action="Index">Volver</a>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a>
     }else{
-        <a asp-action="PersonalEdit" asp-route-id="@Model?.Id">Edit</a>
+        <a asp-action="PersonalEdit" asp-route-id="@Model?.Id">Editar</a>
     }
     
 </div>

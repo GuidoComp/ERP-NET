@@ -3,6 +3,7 @@ using ERP_D.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_D.ViewModels.Empresa
 {
@@ -10,6 +11,7 @@ namespace ERP_D.ViewModels.Empresa
     {
         public int Id { get; set; }
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        [Remote(action: "NombreDisponible", controller: "Empresas")]
         public String Nombre { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
