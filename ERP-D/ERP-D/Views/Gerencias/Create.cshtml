@@ -16,21 +16,21 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+                @if(!ViewBag.AnyGerenciaGeneral)
+                {
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="EsGerenciaGeneral" /> @Html.DisplayNameFor(model => model.EsGerenciaGeneral)
                 </label>
             </div>
+                }
             <div class="form-group">
                 <label asp-for="GerenciaId" class="control-label"></label>
-                @*<select asp-for="GerenciaId" class ="form-control" asp-items="ViewBag.GerenciaId"></select>*@
-                @Html.DropDownList("GerenciaId", (SelectList)ViewBag.GerenciaId, "Por favor, seleccione", new { @class = "form-control" })
+                @Html.DropDownList("GerenciaId", (SelectList)ViewBag.GerenciaId, "Por favor, seleccione gerencia", new { @class = "form-control" })
             </div>
             <div class="form-group">
-                <label asp-for="ResponsableId" class="control-label"></label>
-                <select asp-for="ResponsableId" class ="form-control" asp-items="ViewBag.ResponsableId">
-                    <option value=null >Seleccione responsable</option>
-                </select>
+               <label asp-for="ResponsableId" class="control-label"></label>
+                @Html.DropDownList("ResponsableId", (SelectList)ViewBag.ResponsableId, "Por favor, seleccione responsable", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="EmpresaId" class="control-label"></label>

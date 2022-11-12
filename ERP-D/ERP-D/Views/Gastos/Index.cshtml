@@ -22,7 +22,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Descripcion)
             </th>
-            @if (User.IsInRole("Admin") || User.IsInRole("RH")){
+            @if (User.IsInRole("Admin") || User.IsInRole("RH")) {
             <th>
                 @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>

@@ -11,7 +11,6 @@ namespace ERP_D.ViewModels.Gerencia
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
         public String Nombre { get; set; }
 
-        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Display(Name = "Es gerencia general")]
         public Boolean EsGerenciaGeneral { get; set; }
 

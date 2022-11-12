@@ -313,7 +313,7 @@ namespace ERP_D.Controllers
                         return NotFound();
                     }
 
-                    if(empleadoForm.Foto != null && empleadoForm.NombreFoto != null)
+                    if(empleadoForm.Foto != null)
                     {
                         var pathFoto = await CrearFoto(empleadoForm.Foto, empleadoForm.NombreFoto);
 
@@ -428,6 +428,7 @@ namespace ERP_D.Controllers
             }
             return usePath;
         }
+
         private bool EmpleadoExists(int id)
         {
           return _context.Empleados.Any(e => e.Id == id);

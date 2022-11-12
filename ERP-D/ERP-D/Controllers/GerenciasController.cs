@@ -56,6 +56,8 @@ namespace ERP_D.Controllers
         // GET: Gerencias/Create
         public IActionResult Create()
         {
+            ViewBag.AnyGerenciaGeneral = _context.Gerencias.Any(g => g.EsGerenciaGeneral == true);
+
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
             ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre");
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
@@ -81,8 +83,11 @@ namespace ERP_D.Controllers
                 var nuevaGerencia = new Gerencia();
 
                 nuevaGerencia.Nombre = gerenciaForm.Nombre;
-                nuevaGerencia.EsGerenciaGeneral = gerenciaForm.EsGerenciaGeneral;
-                nuevaGerencia.GerenciaId = gerenciaForm.GerenciaId;
+                if (gerenciaForm.EsGerenciaGeneral)
+                {
+                    nuevaGerencia.EsGerenciaGeneral = gerenciaForm.EsGerenciaGeneral;
+                }
+                nuevaGerencia.DireccionId = gerenciaForm.GerenciaId;
                 nuevaGerencia.ResponsableId = gerenciaForm.ResponsableId;
                 nuevaGerencia.EmpresaId = gerenciaForm.EmpresaId;
                 nuevaGerencia.CentroDeCostoId = nuevoCentro.Id;
@@ -111,8 +116,9 @@ namespace ERP_D.Controllers
             {
                 return NotFound();
             }
+            ViewBag.AnyGerenciaGeneral = _context.Gerencias.Any(g => g.EsGerenciaGeneral == true);
             ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gerencia.CentroDeCostoId);
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.GerenciaId);
+            ViewData["DireccionId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.DireccionId);
             ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerencia.EmpresaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerencia.ResponsableId);
             return View(gerencia);
@@ -123,7 +129,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,EsGerenciaGeneral,GerenciaId,ResponsableId,EmpresaId,CentroDeCostoId")] Gerencia gerencia)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,EsGerenciaGeneral,DireccionId,ResponsableId,EmpresaId,CentroDeCostoId")] Gerencia gerencia)
         {
             if (id != gerencia.Id)
             {
@@ -151,7 +157,7 @@ namespace ERP_D.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gerencia.CentroDeCostoId);
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.GerenciaId);
+            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.DireccionId);
             ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerencia.EmpresaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerencia.ResponsableId);
             return View(gerencia);

@@ -10,6 +10,7 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.Helpers;
+using ERP_D.ViewModels.Empresa;
 
 namespace ERP_D.Controllers
 {
@@ -68,12 +69,22 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email")] CreacionEmpresa empresaForm)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var empresa = new Empresa();
+                    empresa.Nombre = empresaForm.Nombre;
+                    if (empresaForm.Logo != null)
+                    {
+                        var fotoPath = await Utils.CrearFoto(empresaForm.Logo, "", _context);
+                        empresa.Logo = fotoPath;
+                    }
+
+                    empresa.Rubro = empresaForm.Rubro;
+                    empresa.Email = empresaForm.Email;
                     _context.Add(empresa);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -86,7 +97,7 @@ namespace ERP_D.Controllers
                 }
 
             }
-            return View(empresa);
+            return View(empresaForm);
         }
 
         // GET: Empresas/Edit/5
@@ -99,11 +110,18 @@ namespace ERP_D.Controllers
             }
 
             var empresa = await _context.Empresas.FindAsync(id);
+
             if (empresa == null)
             {
                 return NotFound();
             }
-            return View(empresa);
+
+            var empresaForm = new CreacionEmpresa();
+
+            empresaForm.Nombre = empresa.Nombre;
+            empresaForm.Rubro = empresa.Rubro;
+            empresaForm.Email = empresa.Email;
+            return View(empresaForm);
         }
 
         // POST: Empresas/Edit/5
@@ -112,9 +130,9 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] CreacionEmpresa empresaForm)
         {
-            if (id != empresa.Id)
+            if (id != empresaForm.Id)
             {
                 return NotFound();
             }
@@ -123,12 +141,25 @@ namespace ERP_D.Controllers
             {
                 try
                 {
+                    var empresa = new Empresa();
+                    empresa.Id = empresaForm.Id;
+                    if (empresaForm.Logo != null)
+                    {
+                        var fotoPath = await Utils.CrearFoto(empresaForm.Logo, "", _context);
+                        empresa.Logo = fotoPath;
+                    }
+                    
+                    empresa.Nombre = empresaForm.Nombre;
+                    
+                    empresa.Rubro = empresaForm.Rubro;
+                    empresa.Email = empresaForm.Email;
+
                     _context.Update(empresa);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmpresaExists(empresa.Id))
+                    if (!EmpresaExists(empresaForm.Id))
                     {
                         return NotFound();
                     }
@@ -139,7 +170,7 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(empresa);
+            return View(empresaForm);
         }
 
         // GET: Empresas/Delete/5

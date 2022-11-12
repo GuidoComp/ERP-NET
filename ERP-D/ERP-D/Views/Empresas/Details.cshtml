@@ -34,7 +34,7 @@
             @Html.DisplayNameFor(model => model.Logo)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Logo)
+                <img width="5%"src="@Url.Content(Model.Logo)" class="image-fluid" alt="IMAGES" />
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Email)

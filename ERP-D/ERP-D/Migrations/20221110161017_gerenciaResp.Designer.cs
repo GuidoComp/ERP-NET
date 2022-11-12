@@ -4,6 +4,7 @@ using ERP_D.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP_D.Migrations
 {
     [DbContext(typeof(ErpContext))]
-    partial class ErpContextModelSnapshot : ModelSnapshot
+    [Migration("20221110161017_gerenciaResp")]
+    partial class gerenciaResp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,6 +148,9 @@ namespace ERP_D.Migrations
                     b.HasIndex("DireccionId");
 
                     b.HasIndex("EmpresaId");
+
+                    b.HasIndex("EsGerenciaGeneral")
+                        .IsUnique();
 
                     b.HasIndex("Nombre")
                         .IsUnique();

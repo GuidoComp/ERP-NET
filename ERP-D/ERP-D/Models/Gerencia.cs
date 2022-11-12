@@ -1,5 +1,4 @@
-﻿using ERP_D.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP_D.Models
@@ -23,7 +22,7 @@ namespace ERP_D.Models
         [ForeignKey("Direccion")]
         //[Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [Display(Name = "Direccion")]
-        public int? GerenciaId { get; set; } 
+        public int? DireccionId { get; set; } 
         public Gerencia Direccion { get; set; }
 
 

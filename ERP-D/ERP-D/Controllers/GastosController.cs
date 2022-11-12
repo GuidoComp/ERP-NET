@@ -34,8 +34,17 @@ namespace ERP_D.Controllers
             if (User.IsInRole("Empleado"))
             {
                 var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
-
+                ViewBag.FechaSortParm = sortOrder == "Fecha" ? "fecha_desc" : "Fecha";
                 gastos = _context.Gastos.Include(g => g.CentroDeCosto).ThenInclude(c => c.Gerencia).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado).OrderByDescending(g => g.Fecha);
+                switch (sortOrder)
+                {
+                    case "Fecha":
+                        gastos = gastos.OrderBy(g => g.Fecha);
+                        break;
+                    case "fecha_desc":
+                        gastos = gastos.OrderByDescending(g => g.Fecha);
+                        break;
+                }
             }
             else
             {

@@ -6,6 +6,12 @@
     <div class="image-container">
         <img src="../Images/logo.png" class="image-logo">
     </div>
+    @if(!String.IsNullOrEmpty(@ViewBag.Precarg)){
+        <div>
+            @ViewBag.Precarg
+        </div>
+    }
+
     <div class="loginform-container">
         <div class="col-md-7">
             <form asp-action="IniciarSesion">

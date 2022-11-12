@@ -23,9 +23,13 @@ namespace ERP_D.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult IniciarSesion(String returnUrl)
+        public IActionResult IniciarSesion(String returnUrl, string mensaje)
         {
             TempData["url"] = returnUrl;
+            if (mensaje != null)
+            {
+                ViewBag.Precarg = "Se termino de pre-cargar";
+            }
             return View();
         }
 
