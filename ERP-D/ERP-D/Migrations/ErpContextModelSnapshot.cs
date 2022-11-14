@@ -120,14 +120,14 @@ namespace ERP_D.Migrations
                     b.Property<int?>("CentroDeCostoId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DireccionId")
+                        .HasColumnType("int");
+
                     b.Property<int>("EmpresaId")
                         .HasColumnType("int");
 
                     b.Property<bool>("EsGerenciaGeneral")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("GerenciaId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -143,12 +143,9 @@ namespace ERP_D.Migrations
                         .IsUnique()
                         .HasFilter("[CentroDeCostoId] IS NOT NULL");
 
+                    b.HasIndex("DireccionId");
+
                     b.HasIndex("EmpresaId");
-
-                    b.HasIndex("EsGerenciaGeneral")
-                        .IsUnique();
-
-                    b.HasIndex("GerenciaId");
 
                     b.HasIndex("Nombre")
                         .IsUnique();
@@ -511,7 +508,7 @@ namespace ERP_D.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PosicionId")
+                    b.Property<int?>("PosicionId")
                         .HasColumnType("int");
 
                     b.HasIndex("DNI")
@@ -550,15 +547,15 @@ namespace ERP_D.Migrations
                         .WithOne("Gerencia")
                         .HasForeignKey("ERP_D.Models.Gerencia", "CentroDeCostoId");
 
+                    b.HasOne("ERP_D.Models.Gerencia", "Direccion")
+                        .WithMany("SubGerencias")
+                        .HasForeignKey("DireccionId");
+
                     b.HasOne("ERP_D.Models.Empresa", "Empresa")
                         .WithMany("Gerencias")
                         .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ERP_D.Models.Gerencia", "Direccion")
-                        .WithMany("SubGerencias")
-                        .HasForeignKey("GerenciaId");
 
                     b.HasOne("ERP_D.Models.Posicion", "Responsable")
                         .WithMany()
@@ -654,9 +651,7 @@ namespace ERP_D.Migrations
                 {
                     b.HasOne("ERP_D.Models.Posicion", "Posicion")
                         .WithOne("Empleado")
-                        .HasForeignKey("ERP_D.Models.Empleado", "PosicionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ERP_D.Models.Empleado", "PosicionId");
 
                     b.Navigation("Posicion");
                 });

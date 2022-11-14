@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.ViewModels.Gastos;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace ERP_D.Controllers
 {
-    [Authorize(Roles = "Admin, Empleado, RH")]
+    
     public class GastosController : Controller
     {
         private readonly ErpContext _context;
@@ -27,25 +28,63 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin, Empleado, RH")]
+        public IActionResult MisGastos(string sortOrder, string searchEmpleado)
         {
             IQueryable<Gasto> gastos = null;
-            if (User.IsInRole("Empleado"))
-            {
-                var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
 
-                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado).OrderByDescending(g => g.Fecha);
-            }
-            else
+            var idEmpleado = Int32.Parse(_userManager.GetUserId(User));
+            ViewBag.FechaSortParm = sortOrder == "Fecha" ? "fecha_desc" : "Fecha";
+            gastos = _context.Gastos.Include(g => g.CentroDeCosto).ThenInclude(c => c.Gerencia).Include(g => g.Empleado).Where(g => g.EmpleadoId == idEmpleado).OrderByDescending(g => g.Fecha);
+            switch (sortOrder)
             {
-                gastos = _context.Gastos.Include(g => g.CentroDeCosto).Include(g => g.Empleado);
+                case "Fecha":
+                    gastos = gastos.OrderBy(g => g.Fecha);
+                    break;
+                case "fecha_desc":
+                    gastos = gastos.OrderByDescending(g => g.Fecha);
+                    break;
             }
 
-            return View(await gastos.ToListAsync());
+            return View(gastos.ToList());
+        }
+
+        [Authorize(Roles = "Admin, RH")]
+        public IActionResult Index(string sortOrder, string searchEmpleado)
+        {
+            IQueryable<Gasto> gastos = null;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.FechaSortParm = sortOrder == "Fecha" ? "fecha_desc" : "Fecha";
+            gastos = _context.Gastos.Include(g => g.Empleado).Include(g => g.CentroDeCosto).ThenInclude(c => c.Gerencia).OrderBy(g => g.Empleado.Nombre).ThenBy(g => g.Empleado.Apellido); ;
+
+            if (!String.IsNullOrEmpty(searchEmpleado))
+            {
+                gastos = gastos.Where(g => g.Empleado.Nombre == searchEmpleado
+                                        || g.Empleado.Apellido == searchEmpleado);
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    gastos = gastos.OrderByDescending(g => g.Empleado.Nombre).ThenBy(g => g.Empleado.Apellido);
+                    break;
+                case "Fecha":
+                    gastos = gastos.OrderBy(g => g.Fecha);
+                    break;
+                case "fecha_desc":
+                    gastos = gastos.OrderByDescending(g => g.Fecha);
+                    break;
+                    //default:
+                    //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+                    //    break;
+            }
+
+            return View(gastos.ToList());
         }
 
         // GET: Gastos/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Authorize(Roles = "Admin, RH")]
+        public async Task<IActionResult> Details(String returnUrl, int? id)
         {
             if (id == null || _context.Gastos == null)
             {
@@ -65,6 +104,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos/Create
+        [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
             return View();
@@ -123,12 +163,13 @@ namespace ERP_D.Controllers
 
                 _context.Add(gasto);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MisGastos));
             }
             return View(gastoForm);
         }
 
         // GET: Gastos/Edit/5
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Gastos == null)
@@ -151,6 +192,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Descripcion,Monto,Fecha,EmpleadoId,CentroDeCostoId")] Gasto gasto)
         {
             if (id != gasto.Id)
@@ -184,6 +226,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos/Delete/5
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Gastos == null)
@@ -206,6 +249,7 @@ namespace ERP_D.Controllers
         // POST: Gastos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, RH")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Gastos == null)

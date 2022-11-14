@@ -57,9 +57,9 @@ namespace ERP_D.Data
                 .HasIndex(e => e.Nombre)
                 .IsUnique();            
             
-            modelBuilder.Entity<Gerencia>()
-                .HasIndex(g => g.EsGerenciaGeneral)
-                .IsUnique();
+            //modelBuilder.Entity<Gerencia>()
+            //    .HasIndex(g => g.EsGerenciaGeneral)
+            //    .IsUnique();
 
             modelBuilder.Entity<Gerencia>()
             .HasIndex(g => g.Nombre)

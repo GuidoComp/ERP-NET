@@ -10,6 +10,8 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.Helpers;
+using ERP_D.ViewModels.Empresa;
+using Microsoft.Data.SqlClient;
 
 namespace ERP_D.Controllers
 {
@@ -68,25 +70,40 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email")] CreacionEmpresa empresaForm)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var empresa = new Empresa();
+                    empresa.Nombre = empresaForm.Nombre;
+                    if (empresaForm.Logo != null)
+                    {
+                        var fotoPath = await Utils.CrearFoto(empresaForm.Logo, "", _context);
+                        empresa.Logo = fotoPath;
+                    }
+
+                    empresa.Rubro = empresaForm.Rubro;
+                    empresa.Email = empresaForm.Email;
                     _context.Add(empresa);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception e)
+                catch (DbUpdateException dbex)
                 {
-                    if (e.InnerException.Message.Contains("Nombre")){
-                        ModelState.AddModelError(String.Empty, Errors.NombreDuplicadoError);
+                    SqlException innerException = dbex.InnerException as SqlException;
+                    if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601)){
+                        ModelState.AddModelError("Nombre", Errors.NombreDuplicadoError);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, dbex.Message);
                     }
                 }
 
             }
-            return View(empresa);
+            return View(empresaForm);
         }
 
         // GET: Empresas/Edit/5
@@ -99,11 +116,19 @@ namespace ERP_D.Controllers
             }
 
             var empresa = await _context.Empresas.FindAsync(id);
+
             if (empresa == null)
             {
                 return NotFound();
             }
-            return View(empresa);
+
+            var empresaForm = new CreacionEmpresa();
+
+            empresaForm.Id = empresa.Id;
+            empresaForm.Nombre = empresa.Nombre;
+            empresaForm.Rubro = empresa.Rubro;
+            empresaForm.Email = empresa.Email;
+            return View(empresaForm);
         }
 
         // POST: Empresas/Edit/5
@@ -112,9 +137,9 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] Empresa empresa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] CreacionEmpresa empresaForm)
         {
-            if (id != empresa.Id)
+            if (id != empresaForm.Id)
             {
                 return NotFound();
             }
@@ -123,23 +148,37 @@ namespace ERP_D.Controllers
             {
                 try
                 {
+                    var empresa = new Empresa();
+                    empresa.Id = empresaForm.Id;
+                    if (empresaForm.Logo != null)
+                    {
+                        var fotoPath = await Utils.CrearFoto(empresaForm.Logo, "", _context);
+                        empresa.Logo = fotoPath;
+                    }
+
+                    empresa.Id = empresaForm.Id;
+                    empresa.Nombre = empresaForm.Nombre;
+                    empresa.Rubro = empresaForm.Rubro;
+                    empresa.Email = empresaForm.Email;
+
                     _context.Update(empresa);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException dbex)
                 {
-                    if (!EmpresaExists(empresa.Id))
+                    SqlException innerException = dbex.InnerException as SqlException;
+                    if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
                     {
-                        return NotFound();
+                        ModelState.AddModelError("Nombre", Errors.NombreDuplicadoError);
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(String.Empty, dbex.Message);
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(empresa);
+            return View(empresaForm);
         }
 
         // GET: Empresas/Delete/5
@@ -181,6 +220,20 @@ namespace ERP_D.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public IActionResult NombreDisponible(string nombre)
+        {
+            var nombreExistente = _context.Empresas.Any(g => g.Nombre == nombre);
+
+            if (!nombreExistente)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(Errors.NombreDuplicadoError);
+            }
+        }
         private bool EmpresaExists(int id)
         {
           return _context.Empresas.Any(e => e.Id == id);

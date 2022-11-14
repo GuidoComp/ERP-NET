@@ -1,0 +1,18 @@
+﻿.menu-item{
+
+}
+
+.menu-item:hover {
+    font-weight: bolder !important;
+}
+
+.navbar-nav li.active {
+    font-weight: bold;
+}
+
+
+
+
+
+
+

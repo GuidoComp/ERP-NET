@@ -1,42 +1,51 @@
 ﻿@model Login
+<link href="../wwwroot/css/Login/login.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/Login/login.css" asp-append-version="true" />
 
-@{
-    ViewData["Title"] = "Iniciar sesión";
-}
+<div class="login-container">
+    <div class="image-container">
+        <img src="../Images/logo.png" class="image-logo">
+    </div>
+    @if(!String.IsNullOrEmpty(@ViewBag.Precarg)){
+        <div>
+            @ViewBag.Precarg
+        </div>
+    }
 
-<h1>@ViewData["Title"]</h1>
+    <div class="loginform-container">
+        <div class="col-md-7">
+            <form asp-action="IniciarSesion">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group input-login">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group input-login">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Recordarme" class="form-check-label"></label>
+                    <input type="checkbox" asp-for="Recordarme" class="form-check-label" />
+                    <span asp-validation-for="Recordarme" class="text-danger"></span>
+                </div>
+
+                <div class="buttons-container">
+                    <input type="submit" value="Login" class="btn btn-primary btn-login" />
+                    <a asp-controller="PreCarga" asp-action="Seed" class="btn btn-info">Precarga</a>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="row">
-    <div class="col-md-7">
-        <form asp-action="IniciarSesion">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Recordarme" class="form-check-label"></label>
-                <input type="checkbox" asp-for="Recordarme" class="form-check-label" />
-                <span asp-validation-for="Recordarme" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-            <a asp-controller="PreCarga" asp-action="Seed" class="btn btn-warning">PreCarga</a>
-        </form>
-    </div>
-
     @section Scripts{
         @{
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
     }
-
-
-    </div>
+</div>

@@ -8,6 +8,7 @@ using System.Data;
 using Microsoft.AspNetCore.Identity;
 using ERP_D.ViewModels;
 using ERP_D.ViewModels.Empleados;
+using ERP_D.Helpers;
 
 namespace ERP_D.Controllers
 {
@@ -24,16 +25,39 @@ namespace ERP_D.Controllers
         }
 
         // GET: Empleados
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin, Empleado, RH")]
+        public async Task<IActionResult> Index(string sortOrder)
         {
             if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
             {
                 return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) });
             }
-            return View(await _context.Empleados.ToListAsync());
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.SalarioSortParm = sortOrder == "Salario" ? "salario_desc" : "Salario";
+
+            var empleados = _context.Empleados.Include(e => e.Posicion).OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    empleados = empleados.OrderByDescending(e => e.Nombre).ThenBy(e => e.Apellido);
+                    break;
+                case "Salario":
+                    empleados = empleados.OrderBy(e => e.Posicion.Sueldo);
+                    break;
+                case "salario_desc":
+                    empleados = empleados.OrderByDescending(e => e.Posicion.Sueldo);
+                    break;
+                //default:
+                //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+                //    break;
+            }
+
+            return View(empleados.ToList());
         }
 
         // GET: Empleados/Details/5
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -55,7 +79,7 @@ namespace ERP_D.Controllers
         [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null || p.Empleado.EmpleadoActivo == false), "Id", "Nombre");
+            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre");
             return View();
         }
 
@@ -130,7 +154,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(e => e.Id == id);
+            var empleado = await _context.Empleados.Include(e => e.Posicion).Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();
@@ -143,16 +167,19 @@ namespace ERP_D.Controllers
             empleadoEdit.Apellido = empleado.Apellido;
             empleadoEdit.ObraSocial = empleado.ObraSocial;
             empleadoEdit.EmpleadoActivo = empleado.EmpleadoActivo;
-            // TODO: crearEmpleado.Foto = empleado.Foto;
             empleadoEdit.Direccion = empleado.Direccion;
-            empleadoEdit.PosicionId = empleado.PosicionId;
+            empleadoEdit.PosicionId = (int)empleado.PosicionId;
+            if(empleado.Telefonos != null && empleado.Telefonos.Count > 0)
+            {
+                empleadoEdit.TipoTelefono = empleado.Telefonos[0].Tipo;
+                empleadoEdit.NumeroTelefono = empleado.Telefonos[0].Numero;
+            }
+
 
             List<Posicion> positionList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null).ToList();
 
             positionList.Add(empleado.Posicion);
-            //positionList.Add(null);
 
-            // TODO: Como resolvemos aca al editar posicion????
             ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre", empleado.PosicionId);
             return View(empleadoEdit);
         }
@@ -163,7 +190,7 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId")] CreacionEmpleado empleadoForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ObraSocial,EmpleadoActivo,Foto,Id,DNI,Nombre,Apellido,Direccion,PosicionId,TipoTelefono,NumeroTelefono")] CreacionEmpleado empleadoForm)
         {
             if (id != empleadoForm.Id)
             {
@@ -186,9 +213,36 @@ namespace ERP_D.Controllers
                     empleadoDB.Nombre = empleadoForm.Nombre;
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
-                    // TODO: empleadoDB.Foto = empleadoForm.Foto;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;
+
+
+                    if (empleadoForm.Foto != null )
+                    {
+                        var pathFoto = await CrearFoto(empleadoForm.Foto, "");
+
+                        empleadoDB.Foto = pathFoto;
+                    }
+
+                    if (empleadoForm.NumeroTelefono != null)
+                    {
+                        Telefono telefonoEdit;
+                        if (empleadoDB.Telefonos != null && empleadoDB.Telefonos.Count > 0)
+                        {
+                            telefonoEdit = empleadoDB.Telefonos[0];
+                        }
+                        else
+                        {
+                            telefonoEdit = new Telefono();
+                        }
+
+                        telefonoEdit.Tipo = empleadoForm.TipoTelefono;
+                        telefonoEdit.Numero = empleadoForm.NumeroTelefono;
+                        telefonoEdit.PersonaId = empleadoForm.Id;
+
+                        _context.Telefonos.Update(telefonoEdit);
+                        await _context.SaveChangesAsync();
+                    }
 
                     _context.Update(empleadoDB);
                     await _context.SaveChangesAsync();
@@ -211,6 +265,7 @@ namespace ERP_D.Controllers
         }
 
         // Action para que el rolm de empleado modifique sus datos
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> PersonalEdit(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -239,6 +294,7 @@ namespace ERP_D.Controllers
         // Action para que el rolm de empleado modifique sus datos
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> PersonalEdit(int id, [Bind("Id,NombreFoto, Foto, TipoTelefono, NumeroTelefono")] PersonalEdit empleadoForm)
         {
             if (id != empleadoForm.Id)
@@ -259,7 +315,7 @@ namespace ERP_D.Controllers
                         return NotFound();
                     }
 
-                    if(empleadoForm.Foto != null && empleadoForm.NombreFoto != null)
+                    if(empleadoForm.Foto != null)
                     {
                         var pathFoto = await CrearFoto(empleadoForm.Foto, empleadoForm.NombreFoto);
 
@@ -340,6 +396,7 @@ namespace ERP_D.Controllers
             if (empleado != null)
             {
                 empleado.EmpleadoActivo = false;
+                empleado.PosicionId = null;
                 _context.Empleados.Update(empleado);
             }
             
@@ -350,6 +407,12 @@ namespace ERP_D.Controllers
         private async Task<string> CrearFoto(IFormFile foto, String nombreFoto)
         {
             var usePath = "";
+
+            if(nombreFoto == null || nombreFoto == "")
+            {
+                nombreFoto = foto.FileName;
+            }
+
             if (foto != null && foto.Length > 0)
             {
                 var nuevaImagen = new Imagen();
@@ -367,6 +430,7 @@ namespace ERP_D.Controllers
             }
             return usePath;
         }
+
         private bool EmpleadoExists(int id)
         {
           return _context.Empleados.Any(e => e.Id == id);

@@ -58,9 +58,10 @@ namespace ERP_D.Controllers
             }
 
             var centroDeCosto = await _context.CentrosDeCosto
-                .Include(c => c.Gastos)
+                .Include(c => c.Gastos.OrderByDescending(g => g.Monto))
                 .ThenInclude(g => g.Empleado)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id)
+                ;
             
             if (centroDeCosto == null)
             {

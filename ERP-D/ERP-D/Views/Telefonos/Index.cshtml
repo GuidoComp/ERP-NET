@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<ERP_D.Models.Telefono>
-
+<link rel="stylesheet" href="~/css/Employees/index.css" asp-append-version="true" />
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Listado de telefonos</h1>
-<table class="table">
-    <thead>
+<table class="table custom-table">
+    <thead class="header-border">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Numero)
@@ -33,7 +33,7 @@
                 @Html.DisplayFor(modelItem => item.Persona.Apellido)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+               <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>
             </td>
         </tr>
 }

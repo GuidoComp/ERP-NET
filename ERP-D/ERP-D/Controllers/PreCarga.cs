@@ -4,6 +4,7 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using System.Drawing;
 
 namespace ERP_D.Controllers
@@ -29,11 +30,12 @@ namespace ERP_D.Controllers
             CrearAdmin().Wait();
             CrearEmpresa().Wait();
             CrearGerencias().Wait();
-            CrearPosiciones().Wait();
             CrearEmpleados().Wait();
             CrearGastos().Wait();
 
-            return RedirectToAction("Index", "Home", new {mensaje = "Termine"});
+            
+
+            return RedirectToAction("IniciarSesion", "Account", new {mensaje = "Termine"});
         }
 
         private async Task CrearAdmin()
@@ -82,7 +84,7 @@ namespace ERP_D.Controllers
 
                 empresa.Nombre = "Globant";
                 empresa.Rubro = "Sistemas";
-                empresa.Logo = String.Empty;
+                empresa.Logo = "/images/Globant.jpg.jpg";
                 empresa.Email = "globant@ort.com.ar";
 
                 _erpContext.Empresas.Add(empresa);
@@ -123,42 +125,202 @@ namespace ERP_D.Controllers
 
                             _erpContext.Gerencias.Add(gerencia);
                             await _erpContext.SaveChangesAsync();
+
+                            var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id };
+                            _erpContext.Posiciones.Add(posicion);
+                            await _erpContext.SaveChangesAsync();
+
+                            gerencia.ResponsableId = posicion.Id;
+                            _erpContext.Gerencias.Update(gerencia);
+                            await _erpContext.SaveChangesAsync();
+
+                            await crearGerenciaOpe(gerencia.Id);
+                            await crearGerenciaCome(gerencia.Id);
+                            await crearGerenciaSis(gerencia.Id);
+                            await crearGerenciaRH(gerencia.Id);
                         }
                     }
                 }
+
             }
         }
 
-        private async Task CrearPosiciones()
+        private async Task crearGerenciaOpe(int idGerenciaGen)
         {
-            var posicionEncontrada = _erpContext.Posiciones.Any();
+            var centroDeCosto = new CentroDeCosto();
 
-            if (!posicionEncontrada)
+            centroDeCosto.Nombre = "Centro operaciones";
+            centroDeCosto.MontoMaximo = 50000;
+
+            _erpContext.CentrosDeCosto.Add(centroDeCosto);
+            var result = await _erpContext.SaveChangesAsync();
+
+            var empresa = _erpContext.Empresas.FirstOrDefault();
+            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+            if (empresa != null)
             {
-                var gerenciaDb = _erpContext.Gerencias.FirstOrDefault();
+                var gerencia = new Gerencia();
 
-                if (gerenciaDb != null)
-                {
-                    #region Cargo El Jefe
+                gerencia.Nombre = "Gerencia operaciones";
+                gerencia.EmpresaId = empresa.Id;
+                gerencia.DireccionId = idGerenciaGen;
+                gerencia.CentroDeCostoId = centroDeCosto.Id;
 
-                    var test = _erpContext.Posiciones.Add(new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerenciaDb.Id });
-                    var result = _erpContext.SaveChanges();
+                _erpContext.Gerencias.Add(gerencia);
+                await _erpContext.SaveChangesAsync();
 
-                    if (result > 0)
-                    {
-                        gerenciaDb.ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id;
-                        _erpContext.Gerencias.Update(gerenciaDb);
-                        _erpContext.SaveChanges();
-                    }
+                var posicion = new Posicion() { Nombre = "Gerente de operaciones", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion);
+                await _erpContext.SaveChangesAsync();
 
-                    #endregion
+                gerencia.ResponsableId = posicion.Id;
+                _erpContext.Gerencias.Update(gerencia);
+                await _erpContext.SaveChangesAsync();
+            }
+        }
 
-                    #region Cargo subordinados
-                    _erpContext.Posiciones.Add(new Posicion() { Nombre = "Gerente comercial", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerenciaDb.Id });
-                    _erpContext.Posiciones.Add(new Posicion() { Nombre = "Gerente de operaciones", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerenciaDb.Id });
-                    _erpContext.SaveChanges();
-                    #endregion
-                }
+        private async Task crearGerenciaCome(int idGerenciaGen)
+        {
+            var centroDeCosto = new CentroDeCosto();
+
+            centroDeCosto.Nombre = "Centro comercial";
+            centroDeCosto.MontoMaximo = 20000;
+
+            _erpContext.CentrosDeCosto.Add(centroDeCosto);
+            var result = await _erpContext.SaveChangesAsync();
+
+            var empresa = _erpContext.Empresas.FirstOrDefault();
+            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+            if (empresa != null)
+            {
+                var gerencia = new Gerencia();
+
+                gerencia.Nombre = "Gerencia comercial";
+                gerencia.EmpresaId = empresa.Id;
+                gerencia.DireccionId = idGerenciaGen;
+                gerencia.CentroDeCostoId = centroDeCosto.Id;
+
+                _erpContext.Gerencias.Add(gerencia);
+                await _erpContext.SaveChangesAsync();
+
+                var posicion = new Posicion() { Nombre = "Gerente comercial", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion);
+                await _erpContext.SaveChangesAsync();
+
+                gerencia.ResponsableId = posicion.Id;
+                _erpContext.Gerencias.Update(gerencia);
+                await _erpContext.SaveChangesAsync();
+            }
+        }
+
+        private async Task crearGerenciaSis(int idGerenciaGen)
+        {
+            var centroDeCosto = new CentroDeCosto();
+
+            centroDeCosto.Nombre = "Centro sistemas";
+            centroDeCosto.MontoMaximo = 30000;
+
+            _erpContext.CentrosDeCosto.Add(centroDeCosto);
+            var result = await _erpContext.SaveChangesAsync();
+
+            var empresa = _erpContext.Empresas.FirstOrDefault();
+            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+            if (empresa != null)
+            {
+                var gerencia = new Gerencia();
+
+                gerencia.Nombre = "Gerencia sistemas";
+                gerencia.EmpresaId = empresa.Id;
+                gerencia.DireccionId = idGerenciaGen;
+                gerencia.CentroDeCostoId = centroDeCosto.Id;
+
+                _erpContext.Gerencias.Add(gerencia);
+                await _erpContext.SaveChangesAsync();
+
+                var posicion = new Posicion() { Nombre = "Gerente sistemas", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion);
+                await _erpContext.SaveChangesAsync();
+
+                gerencia.ResponsableId = posicion.Id;
+                _erpContext.Gerencias.Update(gerencia);
+                await _erpContext.SaveChangesAsync();
+            }
+        }
+
+        private async Task crearGerenciaRH(int idGerenciaGen)
+        {
+            var centroDeCosto = new CentroDeCosto();
+
+            centroDeCosto.Nombre = "Centro RH";
+            centroDeCosto.MontoMaximo = 2000;
+
+            _erpContext.CentrosDeCosto.Add(centroDeCosto);
+            var result = await _erpContext.SaveChangesAsync();
+
+            var empresa = _erpContext.Empresas.FirstOrDefault();
+            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+            if (empresa != null)
+            {
+                var gerencia = new Gerencia();
+
+                gerencia.Nombre = "Gerencia RH";
+                gerencia.EmpresaId = empresa.Id;
+                gerencia.DireccionId = idGerenciaGen;
+                gerencia.CentroDeCostoId = centroDeCosto.Id;
+
+                _erpContext.Gerencias.Add(gerencia);
+                await _erpContext.SaveChangesAsync();
+                var posicion = new Posicion() { Nombre = "Gerente RH", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion);
+                await _erpContext.SaveChangesAsync();
+
+                gerencia.ResponsableId = posicion.Id;
+                _erpContext.Gerencias.Update(gerencia);
+                await _erpContext.SaveChangesAsync();
+
+                await crearGerenciaRecruiting(gerencia.Id);
+            }
+        }
+
+        private async Task crearGerenciaRecruiting(int idGerenciaGen)
+        {
+            var centroDeCosto = new CentroDeCosto();
+
+            centroDeCosto.Nombre = "Centro Recruiting";
+            centroDeCosto.MontoMaximo = 2000;
+
+            _erpContext.CentrosDeCosto.Add(centroDeCosto);
+            var result = await _erpContext.SaveChangesAsync();
+
+            var empresa = _erpContext.Empresas.FirstOrDefault();
+            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+            if (empresa != null)
+            {
+                var gerencia = new Gerencia();
+
+                gerencia.Nombre = "Gerencia recruiting";
+                gerencia.EmpresaId = empresa.Id;
+                gerencia.DireccionId = idGerenciaGen;
+                gerencia.CentroDeCostoId = centroDeCosto.Id;
+
+                _erpContext.Gerencias.Add(gerencia);
+                await _erpContext.SaveChangesAsync();
+
+                var posicion = new Posicion() { Nombre = "Gerente recruiting", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente RH").Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion);
+                await _erpContext.SaveChangesAsync();
+
+                var posicion1 = new Posicion() { Nombre = "Recruiter 1", Sueldo = 1000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting").Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion1);
+                await _erpContext.SaveChangesAsync();
+
+                var posicion2 = new Posicion() { Nombre = "Recruiter 2", Sueldo = 2000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting").Id, GerenciaId = gerencia.Id };
+                _erpContext.Posiciones.Add(posicion2);
+                await _erpContext.SaveChangesAsync();
+
+                gerencia.ResponsableId = posicion.Id;
+                _erpContext.Gerencias.Update(gerencia);
+                await _erpContext.SaveChangesAsync();
             }
         }
 
@@ -171,6 +333,11 @@ namespace ERP_D.Controllers
                 var posicionCEO = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "CEO");
                 var posicionGerenteCom = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente comercial");
                 var posicionGerenteOpe = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente de operaciones");
+                var posicionGerenteSis = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente sistemas");
+                var posicionGerenteRH = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente RH");
+                var posicionGerenteRecr = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting");
+                var posicionRecruiter1 = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Recruiter 1");
+                var posicionRecruiter2 = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Recruiter 2");
                 if (posicionCEO != null && posicionGerenteCom != null && posicionGerenteOpe != null)
                 {
                     var empleadoCEO = new Empleado();
@@ -181,6 +348,7 @@ namespace ERP_D.Controllers
                     empleadoCEO.DNI = 23384556;
                     empleadoCEO.ObraSocial = ObraSocial.GALENO;
                     empleadoCEO.Direccion = "Callao 3532";
+                    empleadoCEO.Foto = "/images/Marcos.jfif.jpg";
                     empleadoCEO.EmpleadoActivo = true;
                     empleadoCEO.Email = "marcos.lopez@ort.edu.ar";
                     empleadoCEO.UserName = "23384556";
@@ -188,20 +356,36 @@ namespace ERP_D.Controllers
                     empleadoCEO.PosicionId = posicionCEO.Id;
                     await CrearUser(empleadoCEO, true);
 
+                    var telefonoCEO = new Telefono();
+                    telefonoCEO.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoCEO.Numero = "1168223399";
+                    telefonoCEO.PersonaId = empleadoCEO.Id;
+                    _erpContext.Telefonos.Add(telefonoCEO);
+                    _erpContext.SaveChanges();
+
+
                     var empleadoGerenteCom = new Empleado();
 
                     //empleadoGerenteCom.Legajo = 2;
-                    empleadoGerenteCom.Nombre = "Maria";
+                    empleadoGerenteCom.Nombre = "Carmen";
                     empleadoGerenteCom.Apellido = "Perez";
                     empleadoGerenteCom.DNI = 20944855;
                     empleadoGerenteCom.ObraSocial = ObraSocial.MEDICUS;
                     empleadoGerenteCom.Direccion = "Rodriguez Peña 443";
                     empleadoGerenteCom.EmpleadoActivo = true;
                     empleadoGerenteCom.Email = "maria.perez@ort.edu.ar";
+                    empleadoGerenteCom.Foto = "/images/Carmen.jfif.jpg";
                     empleadoGerenteCom.UserName = "20944855";
                     empleadoGerenteCom.NormalizedUserName = "20944855";
                     empleadoGerenteCom.PosicionId = posicionGerenteCom.Id;
                     await CrearUser(empleadoGerenteCom, false);
+
+                    var telefonoGerenenteCom = new Telefono();
+                    telefonoGerenenteCom.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteCom.Numero = "1134332208";
+                    telefonoGerenenteCom.PersonaId = empleadoGerenteCom.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteCom);
+                    _erpContext.SaveChanges();
 
                     var empleadoGerenteOpe = new Empleado();
 
@@ -212,11 +396,125 @@ namespace ERP_D.Controllers
                     empleadoGerenteOpe.ObraSocial = ObraSocial.OSDE;
                     empleadoGerenteOpe.Direccion = "Peñaflor 5667";
                     empleadoGerenteOpe.EmpleadoActivo = true;
+                    empleadoGerenteOpe.Foto = "/images/Laura.jfif.jpg";
                     empleadoGerenteOpe.Email = "laura.gonzalez@ort.edu.ar";
                     empleadoGerenteOpe.UserName = "21445695";
                     empleadoGerenteOpe.NormalizedUserName = "21445695";
                     empleadoGerenteOpe.PosicionId = posicionGerenteOpe.Id;
                     await CrearUser(empleadoGerenteOpe, false);
+
+                    var telefonoGerenenteOpe= new Telefono();
+                    telefonoGerenenteOpe.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteOpe.Numero = "1123887312";
+                    telefonoGerenenteOpe.PersonaId = empleadoGerenteOpe.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteOpe);
+                    _erpContext.SaveChanges();
+
+                    var empleadoGerenteSis = new Empleado();
+                    empleadoGerenteSis.Nombre = "Rodrigo";
+                    empleadoGerenteSis.Apellido = "Varae";
+                    empleadoGerenteSis.DNI = 23456788;
+                    empleadoGerenteSis.ObraSocial = ObraSocial.OSDE;
+                    empleadoGerenteSis.Direccion = "Yatai 22";
+                    empleadoGerenteSis.EmpleadoActivo = true;
+                    empleadoGerenteSis.Foto = "/images/Rodrigo.jfif.jpg";
+                    empleadoGerenteSis.Email = "rodrigo.varae@ort.edu.ar";
+                    empleadoGerenteSis.UserName = "23456788";
+                    empleadoGerenteSis.NormalizedUserName = "23456788";
+                    empleadoGerenteSis.PosicionId = posicionGerenteSis.Id;
+                    await CrearUser(empleadoGerenteSis, false);
+
+                    var telefonoGerenenteSis = new Telefono();
+                    telefonoGerenenteSis.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteSis.Numero = "1193887212";
+                    telefonoGerenenteSis.PersonaId = empleadoGerenteSis.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteSis);
+                    _erpContext.SaveChanges();
+
+                    var empleadoGerenteRH = new Empleado();
+                    empleadoGerenteRH.Nombre = "Romina";
+                    empleadoGerenteRH.Apellido = "Fernandez";
+                    empleadoGerenteRH.DNI = 32475888;
+                    empleadoGerenteRH.ObraSocial = ObraSocial.OMINT;
+                    empleadoGerenteRH.Direccion = "Cabildo 2322";
+                    empleadoGerenteRH.EmpleadoActivo = true;
+                    empleadoGerenteRH.Foto = "/images/Romina.jfif.jpg";
+                    empleadoGerenteRH.Email = "romina.fernandez@ort.edu.ar";
+                    empleadoGerenteRH.UserName = "32475888";
+                    empleadoGerenteRH.NormalizedUserName = "32475888";
+                    empleadoGerenteRH.PosicionId = posicionGerenteRH.Id;
+                    await CrearUser(empleadoGerenteRH, true);
+
+                    var telefonoGerenenteRH = new Telefono();
+                    telefonoGerenenteRH.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteRH.Numero = "1165223464";
+                    telefonoGerenenteRH.PersonaId = empleadoGerenteRH.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteRH);
+                    _erpContext.SaveChanges();
+
+                    var empleadoGerenteRecr = new Empleado();
+                    empleadoGerenteRecr.Nombre = "Juana";
+                    empleadoGerenteRecr.Apellido = "Villa";
+                    empleadoGerenteRecr.DNI = 33322888;
+                    empleadoGerenteRecr.ObraSocial = ObraSocial.OMINT;
+                    empleadoGerenteRecr.Direccion = "Av Lopez 3432";
+                    empleadoGerenteRecr.EmpleadoActivo = true;
+                    empleadoGerenteRecr.Foto = "/images/Juana.jfif";
+                    empleadoGerenteRecr.Email = "juana.villa@ort.edu.ar";
+                    empleadoGerenteRecr.UserName = "33322888";
+                    empleadoGerenteRecr.NormalizedUserName = "33322888";
+                    empleadoGerenteRecr.PosicionId = posicionGerenteRecr.Id;
+                    await CrearUser(empleadoGerenteRecr, true);
+
+
+                    var telefonoGerenenteRecr = new Telefono();
+                    telefonoGerenenteRecr.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoGerenenteRecr.Numero = "1145667788";
+                    telefonoGerenenteRecr.PersonaId = empleadoGerenteRecr.Id;
+                    _erpContext.Telefonos.Add(telefonoGerenenteRecr);
+                    _erpContext.SaveChanges();
+
+                    var empleadoRecruiter1 = new Empleado();
+                    empleadoRecruiter1.Nombre = "Jorge";
+                    empleadoRecruiter1.Apellido = "Gonzalez";
+                    empleadoRecruiter1.DNI = 21344022;
+                    empleadoRecruiter1.ObraSocial = ObraSocial.GALENO;
+                    empleadoRecruiter1.Direccion = "Correa 3432";
+                    empleadoRecruiter1.EmpleadoActivo = true;
+                    empleadoRecruiter1.Foto = "/images/jorge.jfif.jpg";
+                    empleadoRecruiter1.Email = "jorge.gonzalez@ort.edu.ar";
+                    empleadoRecruiter1.UserName = "21344022";
+                    empleadoRecruiter1.NormalizedUserName = "21344022";
+                    empleadoRecruiter1.PosicionId = posicionRecruiter1.Id;
+                    await CrearUser(empleadoRecruiter1, true);
+
+                    var telefonoRecruiter1 = new Telefono();
+                    telefonoRecruiter1.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoRecruiter1.Numero = "1122993322";
+                    telefonoRecruiter1.PersonaId = empleadoRecruiter1.Id;
+                    _erpContext.Telefonos.Add(telefonoRecruiter1);
+                    _erpContext.SaveChanges();
+
+                    var empleadoRecruiter2 = new Empleado();
+                    empleadoRecruiter2.Nombre = "Maria Rosa";
+                    empleadoRecruiter2.Apellido = "Faller";
+                    empleadoRecruiter2.DNI = 19233812;
+                    empleadoRecruiter2.ObraSocial = ObraSocial.SANCOR_SALUD;
+                    empleadoRecruiter2.Direccion = "Larrea 200";
+                    empleadoRecruiter2.EmpleadoActivo = true;
+                    empleadoRecruiter2.Foto = "/images/Maria Rosa.jpg";
+                    empleadoRecruiter2.Email = "maria.rosaa@ort.edu.ar";
+                    empleadoRecruiter2.UserName = "19233812";
+                    empleadoRecruiter2.NormalizedUserName = "19233812";
+                    empleadoRecruiter2.PosicionId = posicionRecruiter2.Id;
+                    await CrearUser(empleadoRecruiter2, true);
+
+                    var telefonoRecruiter2 = new Telefono();
+                    telefonoRecruiter2.Tipo = Telefono.TipoTelefono.CELULAR;
+                    telefonoRecruiter2.Numero = "1134931233";
+                    telefonoRecruiter2.PersonaId = empleadoRecruiter2.Id;
+                    _erpContext.Telefonos.Add(telefonoRecruiter2);
+                    _erpContext.SaveChanges();
                 }
             }
         }
@@ -244,17 +542,17 @@ namespace ERP_D.Controllers
 
             if (!gastoEncontrado)
             {
-                var centroDeCosto = _erpContext.CentrosDeCosto.FirstOrDefault();
-                var empleados = _erpContext.Empleados.Select(e => e.Id).ToList();
+                
+                var empleados = _erpContext.Empleados.Include(e => e.Posicion).ThenInclude(p => p.Gerencia).ThenInclude(g => g.CentroDeCosto).ToList();
 
                 foreach (var empleado in empleados)
                 {
-                    crearGasto(empleado, centroDeCosto.Id);
+                    crearGasto(empleado.Id, (int)empleado.Posicion.Gerencia.CentroDeCostoId, (int)empleado.Posicion.Gerencia.CentroDeCosto.MontoMaximo);
                 }
             }
         }
 
-        private void crearGasto(int empleadoId, int centroDeCostoId)
+        private void crearGasto(int empleadoId, int centroDeCostoId, int montoMaximo)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -262,8 +560,9 @@ namespace ERP_D.Controllers
                 var gasto = new Gasto();
                 Random rnd = new Random();
 
+                gasto.Descripcion = "Caja chica";
                 gasto.Fecha = RandomDay();
-                gasto.Monto = rnd.Next(1, 3000);
+                gasto.Monto = rnd.Next(1, montoMaximo);
                 gasto.CentroDeCostoId = centroDeCostoId;
                 gasto.EmpleadoId = empleadoId;
 

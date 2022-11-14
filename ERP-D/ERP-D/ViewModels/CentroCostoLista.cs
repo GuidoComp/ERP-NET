@@ -16,5 +16,6 @@ namespace ERP_D.ViewModels
         public string Gerencia { get; set; }
 
         public double Total { get; set; }
+
     }
 }

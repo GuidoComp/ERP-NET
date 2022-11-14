@@ -3,9 +3,8 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<div class="form">
 
-<h1>Editar</h1>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
@@ -16,16 +15,21 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EsGerenciaGeneral" /> @Html.DisplayNameFor(model => model.EsGerenciaGeneral)
-                </label>
-            </div>
+                @if(!ViewBag.AnyGerenciaGeneral)
+                {
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="EsGerenciaGeneral" /> @Html.DisplayNameFor(model => model.EsGerenciaGeneral)
+                        </label>
+                    </div>
+                }else{
+                    <input type="hidden" asp-for="EsGerenciaGeneral" />
+                }
             <div class="form-group">
-                <label asp-for="GerenciaId" class="control-label"></label>
+                <label asp-for="DireccionId" class="control-label"></label>
                 @*<select asp-for="GerenciaId" class="form-control" asp-items="ViewBag.GerenciaId"></select>*@
-                @Html.DropDownList("GerenciaId", (SelectList)ViewBag.GerenciaId, "Por favor, seleccione", new { @class = "form-control" })
-                <span asp-validation-for="GerenciaId" class="text-danger"></span>
+                    @Html.DropDownList("DireccionId", (SelectList)ViewBag.DireccionId, "Por favor, seleccione", new { @class = "form-control" })
+                <span asp-validation-for="DireccionId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ResponsableId" class="control-label"></label>
@@ -51,6 +55,7 @@
 
 <div>
     <a asp-action="Index">Volver</a>
+</div>
 </div>
 
 @section Scripts {

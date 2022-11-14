@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
 }
+<div class="form">
 <br />
 <div>
     <h4>@Model.Nombre</h4>
@@ -66,4 +67,5 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
     <a asp-action="Index">Volver</a>
+</div>
 </div>

@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Create";
 }
-
+<div class="form">
 <h1>Nuevo gasto</h1>
 <hr />
 <div class="row">
@@ -29,7 +29,8 @@
 </div>
 <br />
 <div>
-    <a asp-action="Index">Volver</a>
+    <a href="javascript:void(0);" onclick="history.go(-1);">Volver</a>
+</div>
 </div>
 
 @section Scripts {

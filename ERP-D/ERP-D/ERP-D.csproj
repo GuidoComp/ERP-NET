@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
+    <Folder Include="wwwroot\ImagenesEstilo\" />
+    <Folder Include="wwwroot\Images\IconosLanding\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Images\1.jpg" />
     <None Include="wwwroot\Images\employee.png" />
   </ItemGroup>
 
