@@ -59,8 +59,8 @@ namespace ERP_D.Controllers
 
             if (!String.IsNullOrEmpty(searchEmpleado))
             {
-                gastos = gastos.Where(g => g.Empleado.Nombre == searchEmpleado
-                                        || g.Empleado.Apellido == searchEmpleado);
+                gastos = gastos.Where(g => g.Empleado.Nombre.Contains(searchEmpleado) 
+                                        || g.Empleado.Apellido.Contains(searchEmpleado));
             }
 
             switch (sortOrder)
@@ -104,7 +104,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos/Create
-        [Authorize(Roles = "Admin, RH")]
+        [Authorize(Roles = "Empleado")]
         public IActionResult Create()
         {
             return View();

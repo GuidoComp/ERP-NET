@@ -39,8 +39,8 @@
                 @Html.DisplayFor(modelItem => item.Total)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><img src="~/icons/edit.png" class="icon-size" /></a>
+                    <a asp-action="Details" asp-route-id="@item.Id"><img src="~/icons/details.png" class="icon-size"></a>
             </td>
         </tr>
 }
