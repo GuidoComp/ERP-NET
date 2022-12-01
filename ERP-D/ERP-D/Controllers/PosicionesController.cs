@@ -10,6 +10,7 @@ using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.Helpers;
+using Microsoft.Data.SqlClient;
 
 namespace ERP_D.Controllers
 {
@@ -180,7 +181,19 @@ namespace ERP_D.Controllers
                 _context.Posiciones.Remove(posicion);
             }
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                SqlException innerException = e.InnerException as SqlException;
+                if (innerException != null && (innerException.Number == 547))
+                {
+                    return RedirectToAction(nameof(ErrorView));
+                }
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -197,6 +210,11 @@ namespace ERP_D.Controllers
             {
                 return Json(Errors.NombreDuplicadoError);
             }
+        }
+
+        public IActionResult ErrorView()
+        {
+            return View();
         }
 
         private bool PosicionExists(int id)

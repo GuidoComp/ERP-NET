@@ -59,8 +59,8 @@ namespace ERP_D.Controllers
 
             if (!String.IsNullOrEmpty(searchEmpleado))
             {
-                gastos = gastos.Where(g => g.Empleado.Nombre == searchEmpleado
-                                        || g.Empleado.Apellido == searchEmpleado);
+                gastos = gastos.Where(g => g.Empleado.Nombre.Contains(searchEmpleado) 
+                                        || g.Empleado.Apellido.Contains(searchEmpleado));
             }
 
             switch (sortOrder)
@@ -104,7 +104,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos/Create
-        [Authorize(Roles = "Admin, RH")]
+        [Authorize(Roles = "Empleado")]
         public IActionResult Create()
         {
             return View();
@@ -169,23 +169,23 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos/Edit/5
-        [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Gastos == null)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin, RH")]
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null || _context.Gastos == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var gasto = await _context.Gastos.FindAsync(id);
-            if (gasto == null)
-            {
-                return NotFound();
-            }
-            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gasto.CentroDeCostoId);
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
-            return View(gasto);
-        }
+        //    var gasto = await _context.Gastos.FindAsync(id);
+        //    if (gasto == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gasto.CentroDeCostoId);
+        //    ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
+        //    return View(gasto);
+        //}
 
         // POST: Gastos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
