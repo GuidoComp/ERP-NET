@@ -43,6 +43,10 @@
                 <label asp-for="GerenciaId" class="control-label"></label>
                 <select asp-for="GerenciaId" class ="form-control" asp-items="ViewBag.GerenciaId"></select>
             </div>
+                <div class="form-group">
+                    <label asp-for="InfoGerenciaYEmpresa" class="control-label"></label>
+                    <select asp-for="InfoGerenciaYEmpresa" class="form-control" asp-items="ViewBag.EmpresaName ?? String.Empty"></select>
+                </div>
             <br />
             <div class="form-group">
                 <input type="submit" value="Aceptar" class="btn btn-primary" />

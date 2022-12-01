@@ -37,6 +37,11 @@
                 <select asp-for="GerenciaId" class="form-control" asp-items="ViewBag.GerenciaId"></select>
                 <span asp-validation-for="GerenciaId" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="InfoGerenciaYEmpresa" class="control-label"></label>
+                    <input asp-for="InfoGerenciaYEmpresa" class="form-control" disabled>
+                    @*<select asp-for="InfoGerenciaYEmpresa" class="form-control" asp-items="ViewBag.EmpresaId"></select>*@
+            </div>
             <br />
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />

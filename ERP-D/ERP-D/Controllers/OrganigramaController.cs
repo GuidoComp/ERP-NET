@@ -91,7 +91,7 @@ namespace ERP_D.Controllers
 
             org.ListadoSubGerencias = gerencia.SubGerencias;
 
-            var empleadosGerencia = _context.Empleados.Include(e => e.Posicion).OrderByDescending(e => e.Apellido).ThenBy(e => e.Nombre).Where(e => e.Posicion.GerenciaId == Id && e.EmpleadoActivo == true).ToList();
+            var empleadosGerencia = _context.Empleados.Include(e => e.Posicion).OrderBy(e => e.Apellido).ThenBy(e => e.Nombre).Where(e => e.Posicion.GerenciaId == Id && e.EmpleadoActivo == true).ToList();
 
             org.ListadoEmpleados = empleadosGerencia;
 

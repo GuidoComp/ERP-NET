@@ -9,7 +9,7 @@ namespace ERP_D.ViewModels.Gastos
         public String Descripcion { get; set; }
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
-        [Range(1, double.MaxValue, ErrorMessage = ErrorMsgs.MsgMonto)]
+        [Range(1, int.MaxValue, ErrorMessage = ErrorMsgs.MsgMonto)]
         public double Monto { get; set; }
     }
 }

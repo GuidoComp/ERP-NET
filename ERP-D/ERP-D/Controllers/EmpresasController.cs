@@ -122,7 +122,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empresaForm = new CreacionEmpresa();
+            var empresaForm = new EdicionEmpresa();
 
             empresaForm.Id = empresa.Id;
             empresaForm.Nombre = empresa.Nombre;
@@ -137,7 +137,7 @@ namespace ERP_D.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, RH")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] CreacionEmpresa empresaForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rubro,Logo,Email")] EdicionEmpresa empresaForm)
         {
             if (id != empresaForm.Id)
             {

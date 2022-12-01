@@ -24,6 +24,25 @@ namespace ERP_D.Controllers
             this._context = erpContext;
         }
 
+        [Authorize(Roles = "Admin, RH")]
+        public async Task<IActionResult> Reactivar(int id)
+        {
+            var empleado = _context.Empleados.Find(id);
+
+            if (empleado == null)
+            {
+                return NotFound();
+            }
+
+            if (!empleado.EmpleadoActivo)
+            {
+                empleado.EmpleadoActivo = true;
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
+
         // GET: Empleados
         [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> Index(string sortOrder)
@@ -215,6 +234,7 @@ namespace ERP_D.Controllers
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
                     empleadoDB.Direccion = empleadoForm.Direccion;
                     empleadoDB.PosicionId = empleadoForm.PosicionId;
+                    empleadoDB.EmpleadoActivo = empleadoForm.EmpleadoActivo;
 
 
                     if (empleadoForm.Foto != null )

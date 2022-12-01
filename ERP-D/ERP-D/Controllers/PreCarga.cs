@@ -126,7 +126,7 @@ namespace ERP_D.Controllers
                             _erpContext.Gerencias.Add(gerencia);
                             await _erpContext.SaveChangesAsync();
 
-                            var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id };
+                            var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                             _erpContext.Posiciones.Add(posicion);
                             await _erpContext.SaveChangesAsync();
 
@@ -169,7 +169,7 @@ namespace ERP_D.Controllers
                 _erpContext.Gerencias.Add(gerencia);
                 await _erpContext.SaveChangesAsync();
 
-                var posicion = new Posicion() { Nombre = "Gerente de operaciones", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                var posicion = new Posicion() { Nombre = "Gerente de operaciones", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion);
                 await _erpContext.SaveChangesAsync();
 
@@ -203,7 +203,7 @@ namespace ERP_D.Controllers
                 _erpContext.Gerencias.Add(gerencia);
                 await _erpContext.SaveChangesAsync();
 
-                var posicion = new Posicion() { Nombre = "Gerente comercial", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                var posicion = new Posicion() { Nombre = "Gerente comercial", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion);
                 await _erpContext.SaveChangesAsync();
 
@@ -237,7 +237,7 @@ namespace ERP_D.Controllers
                 _erpContext.Gerencias.Add(gerencia);
                 await _erpContext.SaveChangesAsync();
 
-                var posicion = new Posicion() { Nombre = "Gerente sistemas", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                var posicion = new Posicion() { Nombre = "Gerente sistemas", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion);
                 await _erpContext.SaveChangesAsync();
 
@@ -270,7 +270,7 @@ namespace ERP_D.Controllers
 
                 _erpContext.Gerencias.Add(gerencia);
                 await _erpContext.SaveChangesAsync();
-                var posicion = new Posicion() { Nombre = "Gerente RH", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id };
+                var posicion = new Posicion() { Nombre = "Gerente RH", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault().Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion);
                 await _erpContext.SaveChangesAsync();
 
@@ -306,15 +306,15 @@ namespace ERP_D.Controllers
                 _erpContext.Gerencias.Add(gerencia);
                 await _erpContext.SaveChangesAsync();
 
-                var posicion = new Posicion() { Nombre = "Gerente recruiting", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente RH").Id, GerenciaId = gerencia.Id };
+                var posicion = new Posicion() { Nombre = "Gerente recruiting", Sueldo = 500000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente RH").Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion);
                 await _erpContext.SaveChangesAsync();
 
-                var posicion1 = new Posicion() { Nombre = "Recruiter 1", Sueldo = 1000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting").Id, GerenciaId = gerencia.Id };
+                var posicion1 = new Posicion() { Nombre = "Recruiter 1", Sueldo = 1000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting").Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion1);
                 await _erpContext.SaveChangesAsync();
 
-                var posicion2 = new Posicion() { Nombre = "Recruiter 2", Sueldo = 2000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting").Id, GerenciaId = gerencia.Id };
+                var posicion2 = new Posicion() { Nombre = "Recruiter 2", Sueldo = 2000, ResponsableId = _erpContext.Posiciones.FirstOrDefault(p => p.Nombre == "Gerente recruiting").Id, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
                 _erpContext.Posiciones.Add(posicion2);
                 await _erpContext.SaveChangesAsync();
 

@@ -7,5 +7,6 @@ namespace ERP_D.Helpers
         public const String email = "Correo electronico"; 
         public const String Password = "Contraseña";
         public const String ConfirmPassword = "Confirmar contraseña";
+        public const String InfoGYE = "Información adicional";
     }
 }

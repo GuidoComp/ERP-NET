@@ -1,4 +1,5 @@
-﻿using ERP_D.Models;
+﻿using ERP_D.Helpers;
+using ERP_D.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -39,5 +40,8 @@ namespace ERP_D.Models
         [ForeignKey("Gerencia")]
         public int? GerenciaId { get; set; }
         public Gerencia Gerencia { get; set; }
+
+        [Display(Name = Alias.InfoGYE)]
+        public string InfoGerenciaYEmpresa { get; set; }
     }
 }

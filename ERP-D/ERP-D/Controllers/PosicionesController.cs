@@ -61,6 +61,7 @@ namespace ERP_D.Controllers
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
             ViewBag.AnyGerenciaGeneral = _context.Posiciones.Any(p => p.ResponsableId == null);
+            ViewData["EmpresaName"] = new SelectList(_context.Empresas, "Nombre", "Nombre");
             return View();
         }
 
@@ -69,7 +70,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Sueldo,EmpleadoId,ResponsableId,GerenciaId")] Posicion posicion)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Sueldo,EmpleadoId,ResponsableId,GerenciaId,InfoGerenciaYEmpresa")] Posicion posicion)
         {
             if (ModelState.IsValid)
             {
