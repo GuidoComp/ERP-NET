@@ -17,9 +17,9 @@
         <dl class="row">
             <dt class="col-sm-2">
             @if(!String.IsNullOrEmpty(Model.ResponsableFoto)){
-                <img src="@Url.Content(Model.ResponsableFoto)" class="image-fluid" alt="IMAGES" />
+                    <img class="image-format" src="@Url.Content(Model.ResponsableFoto)" alt="IMAGES" />
             }else{
-                <img src="~/Images/employee.png" class="image-fluid" alt="IMAGES" />
+                    <img class="image-format" src="~/Images/employee.png" alt="IMAGES" />
             }
             </dt>
             <dd class="col-sm-10"></dd>

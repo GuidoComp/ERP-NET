@@ -293,6 +293,11 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
+            if (id != Int32.Parse(_userManager.GetUserId(User)))
+            {
+                return RedirectToAction("AccesoDenegado", "Account");
+            }
+
             var empleado = await _context.Empleados.Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {

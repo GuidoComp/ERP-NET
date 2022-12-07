@@ -1,11 +1,4 @@
-﻿
-.title {
-    position: relative;
-    align-content: center;
-    left: 43%;
-}
-
-.image-format {
+﻿.image-format {
     /*position: relative;
     width: 200px;
     height: 200px;
@@ -16,7 +9,6 @@
     width: 200px;
     height: 200px;
 }
-
 /*img {
     object-fit: cover;
 }*/

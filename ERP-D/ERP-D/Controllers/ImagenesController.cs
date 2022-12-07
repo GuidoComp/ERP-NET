@@ -1,179 +1,179 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ERP_D.Data;
-using ERP_D.Models;
-using Microsoft.AspNetCore.Authorization;
-using System.Data;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.Rendering;
+//using Microsoft.EntityFrameworkCore;
+//using ERP_D.Data;
+//using ERP_D.Models;
+//using Microsoft.AspNetCore.Authorization;
+//using System.Data;
 
-using System;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using ERP_D.ViewModels.Imagenes;
+//using System;
+//using System.IO;
+//using Microsoft.AspNetCore.Hosting;
+//using Microsoft.AspNetCore.Http;
+//using ERP_D.ViewModels.Imagenes;
 
-namespace ERP_D.Controllers
-{
-    [Authorize(Roles = "Admin, RH")]
-    public class ImagenesController : Controller
-    {
-        private readonly ErpContext _context;
+//namespace ERP_D.Controllers
+//{
+//    [Authorize(Roles = "Admin, RH")]
+//    public class ImagenesController : Controller
+//    {
+//        private readonly ErpContext _context;
 
-        public ImagenesController(ErpContext context)
-        {
-            _context = context;
-        }
+//        public ImagenesController(ErpContext context)
+//        {
+//            _context = context;
+//        }
 
-        // GET: Imagenes
-        public async Task<IActionResult> Index()
-        {
-              return View(await _context.Imagenes.ToListAsync());
-        }
+//        // GET: Imagenes
+//        public async Task<IActionResult> Index()
+//        {
+//              return View(await _context.Imagenes.ToListAsync());
+//        }
 
-        // GET: Imagenes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Imagenes == null)
-            {
-                return NotFound();
-            }
+//        // GET: Imagenes/Details/5
+//        public async Task<IActionResult> Details(int? id)
+//        {
+//            if (id == null || _context.Imagenes == null)
+//            {
+//                return NotFound();
+//            }
 
-            var imagen = await _context.Imagenes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imagen == null)
-            {
-                return NotFound();
-            }
+//            var imagen = await _context.Imagenes
+//                .FirstOrDefaultAsync(m => m.Id == id);
+//            if (imagen == null)
+//            {
+//                return NotFound();
+//            }
 
-            return View(imagen);
-        }
+//            return View(imagen);
+//        }
 
-        // GET: Imagenes/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+//        // GET: Imagenes/Create
+//        public IActionResult Create()
+//        {
+//            return View();
+//        }
 
-        // POST: Imagenes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre, ImageFile")] SubirImagen imagen)
-        {
-            if (imagen.ImageFile != null && imagen.ImageFile.Length > 0)
-            {
-                var nuevaImagen = new Imagen();
-                var fileName = imagen.Nombre + ".jpg";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-                nuevaImagen.Path = "/images/" + fileName;
-                nuevaImagen.Nombre = imagen.Nombre;
-                _context.Imagenes.Add(nuevaImagen);
-                _context.SaveChanges();
-                using (var fileSrteam = new FileStream(filePath, FileMode.Create))
-                {
-                    await imagen.ImageFile.CopyToAsync(fileSrteam);
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
+//        // POST: Imagenes/Create
+//        // To protect from overposting attacks, enable the specific properties you want to bind to.
+//        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//        [HttpPost]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> Create([Bind("Nombre, ImageFile")] SubirImagen imagen)
+//        {
+//            if (imagen.ImageFile != null && imagen.ImageFile.Length > 0)
+//            {
+//                var nuevaImagen = new Imagen();
+//                var fileName = imagen.Nombre + ".jpg";
+//                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+//                nuevaImagen.Path = "/images/" + fileName;
+//                nuevaImagen.Nombre = imagen.Nombre;
+//                _context.Imagenes.Add(nuevaImagen);
+//                _context.SaveChanges();
+//                using (var fileSrteam = new FileStream(filePath, FileMode.Create))
+//                {
+//                    await imagen.ImageFile.CopyToAsync(fileSrteam);
+//                }
+//            }
+//            return RedirectToAction(nameof(Index));
+//        }
 
-        // GET: Imagenes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Imagenes == null)
-            {
-                return NotFound();
-            }
+//        // GET: Imagenes/Edit/5
+//        public async Task<IActionResult> Edit(int? id)
+//        {
+//            if (id == null || _context.Imagenes == null)
+//            {
+//                return NotFound();
+//            }
 
-            var imagen = await _context.Imagenes.FindAsync(id);
-            if (imagen == null)
-            {
-                return NotFound();
-            }
-            return View(imagen);
-        }
+//            var imagen = await _context.Imagenes.FindAsync(id);
+//            if (imagen == null)
+//            {
+//                return NotFound();
+//            }
+//            return View(imagen);
+//        }
 
-        // POST: Imagenes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Path")] Imagen imagen)
-        {
-            if (id != imagen.Id)
-            {
-                return NotFound();
-            }
+//        // POST: Imagenes/Edit/5
+//        // To protect from overposting attacks, enable the specific properties you want to bind to.
+//        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//        [HttpPost]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Path")] Imagen imagen)
+//        {
+//            if (id != imagen.Id)
+//            {
+//                return NotFound();
+//            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(imagen);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ImagenExists(imagen.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(imagen);
-        }
+//            if (ModelState.IsValid)
+//            {
+//                try
+//                {
+//                    _context.Update(imagen);
+//                    await _context.SaveChangesAsync();
+//                }
+//                catch (DbUpdateConcurrencyException)
+//                {
+//                    if (!ImagenExists(imagen.Id))
+//                    {
+//                        return NotFound();
+//                    }
+//                    else
+//                    {
+//                        throw;
+//                    }
+//                }
+//                return RedirectToAction(nameof(Index));
+//            }
+//            return View(imagen);
+//        }
 
-        // GET: Imagenes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Imagenes == null)
-            {
-                return NotFound();
-            }
+//        // GET: Imagenes/Delete/5
+//        public async Task<IActionResult> Delete(int? id)
+//        {
+//            if (id == null || _context.Imagenes == null)
+//            {
+//                return NotFound();
+//            }
 
-            var imagen = await _context.Imagenes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imagen == null)
-            {
-                return NotFound();
-            }
+//            var imagen = await _context.Imagenes
+//                .FirstOrDefaultAsync(m => m.Id == id);
+//            if (imagen == null)
+//            {
+//                return NotFound();
+//            }
 
-            return View(imagen);
-        }
+//            return View(imagen);
+//        }
 
-        // POST: Imagenes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Imagenes == null)
-            {
-                return Problem("Entity set 'ErpContext.Imagenes'  is null.");
-            }
-            var imagen = await _context.Imagenes.FindAsync(id);
-            if (imagen != null)
-            {
-                _context.Imagenes.Remove(imagen);
-            }
+//        // POST: Imagenes/Delete/5
+//        [HttpPost, ActionName("Delete")]
+//        [ValidateAntiForgeryToken]
+//        public async Task<IActionResult> DeleteConfirmed(int id)
+//        {
+//            if (_context.Imagenes == null)
+//            {
+//                return Problem("Entity set 'ErpContext.Imagenes'  is null.");
+//            }
+//            var imagen = await _context.Imagenes.FindAsync(id);
+//            if (imagen != null)
+//            {
+//                _context.Imagenes.Remove(imagen);
+//            }
             
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+//            await _context.SaveChangesAsync();
+//            return RedirectToAction(nameof(Index));
+//        }
 
-        private bool ImagenExists(int id)
-        {
-          return _context.Imagenes.Any(e => e.Id == id);
-        }
+//        private bool ImagenExists(int id)
+//        {
+//          return _context.Imagenes.Any(e => e.Id == id);
+//        }
 
-    }
-}
+//    }
+//}

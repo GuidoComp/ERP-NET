@@ -48,7 +48,7 @@ namespace ERP_D.Models
 
         //// Agregamos los atributos de usuario dentro de persona
         [Display(Name = "Usuario")]
-        public override String UserName
+        public override string UserName
         {
             get => base.UserName;
             set => base.UserName = value;

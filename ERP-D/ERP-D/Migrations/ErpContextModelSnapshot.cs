@@ -43,7 +43,7 @@ namespace ERP_D.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CentrosDeCosto");
+                    b.ToTable("CentrosDeCosto", (string)null);
                 });
 
             modelBuilder.Entity("ERP_D.Models.Empresa", b =>
@@ -73,7 +73,7 @@ namespace ERP_D.Migrations
                     b.HasIndex("Nombre")
                         .IsUnique();
 
-                    b.ToTable("Empresas");
+                    b.ToTable("Empresas", (string)null);
                 });
 
             modelBuilder.Entity("ERP_D.Models.Gasto", b =>
@@ -106,7 +106,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("EmpleadoId");
 
-                    b.ToTable("Gastos");
+                    b.ToTable("Gastos", (string)null);
                 });
 
             modelBuilder.Entity("ERP_D.Models.Gerencia", b =>
@@ -152,7 +152,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("ResponsableId");
 
-                    b.ToTable("Gerencias");
+                    b.ToTable("Gerencias", (string)null);
                 });
 
             modelBuilder.Entity("ERP_D.Models.Imagen", b =>
@@ -171,7 +171,7 @@ namespace ERP_D.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Imagenes");
+                    b.ToTable("Imagenes", (string)null);
                 });
 
             modelBuilder.Entity("ERP_D.Models.Posicion", b =>
@@ -213,7 +213,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("ResponsableId");
 
-                    b.ToTable("Posiciones");
+                    b.ToTable("Posiciones", (string)null);
                 });
 
             modelBuilder.Entity("ERP_D.Models.Telefono", b =>
@@ -239,7 +239,7 @@ namespace ERP_D.Migrations
 
                     b.HasIndex("PersonaId");
 
-                    b.ToTable("Telefonos");
+                    b.ToTable("Telefonos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>

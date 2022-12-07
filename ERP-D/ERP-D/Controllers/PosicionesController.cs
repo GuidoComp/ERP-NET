@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using ERP_D.Helpers;
 using Microsoft.Data.SqlClient;
+using ERP_D.ViewModels.Posiciones;
 
 namespace ERP_D.Controllers
 {
@@ -103,9 +104,19 @@ namespace ERP_D.Controllers
             {
                 ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
             }
+
+            var editPosicion = new EditPosicion();
+            editPosicion.Id = posicion.Id;
+            editPosicion.Nombre = posicion.Nombre;
+            editPosicion.Descripcion = posicion.Descripcion;
+            editPosicion.Sueldo = posicion.Sueldo;
+            editPosicion.ResponsableId = posicion.ResponsableId;
+            editPosicion.GerenciaId = posicion.GerenciaId;
+            editPosicion.InfoGerenciaYEmpresa = posicion.InfoGerenciaYEmpresa;
+
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
-            return View(posicion);
+            return View(editPosicion);
         }
 
         // POST: Posiciones/Edit/5
@@ -113,9 +124,9 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Sueldo,EmpleadoId,ResponsableId,GerenciaId")] Posicion posicion)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Sueldo,EmpleadoId,ResponsableId,GerenciaId")] EditPosicion posicionForm)
         {
-            if (id != posicion.Id)
+            if (id != posicionForm.Id)
             {
                 return NotFound();
             }
@@ -124,12 +135,27 @@ namespace ERP_D.Controllers
             {
                 try
                 {
-                    _context.Update(posicion);
+                    var posicionEnDb = _context.Posiciones.Find(posicionForm.Id);
+                    if (posicionEnDb == null)
+                    {
+                        return NotFound();
+                    }
+                    posicionEnDb.Nombre = posicionForm.Nombre;
+                    posicionEnDb.Descripcion = posicionForm.Descripcion;
+                    posicionEnDb.Sueldo = posicionForm.Sueldo;
+                    //posicionEnDb.EmpleadoId = posicionForm.EmpleadoId;
+                    posicionEnDb.ResponsableId = posicionForm.ResponsableId;
+                    posicionEnDb.GerenciaId = posicionForm.GerenciaId;
+                    var empresa = posicionEnDb.InfoGerenciaYEmpresa.Split('-')[0];
+                    var gerencia = _context.Gerencias.Find(posicionForm.GerenciaId).Nombre;
+                    posicionEnDb.InfoGerenciaYEmpresa = $"{empresa}- {gerencia}";
+
+                    _context.Posiciones.Update(posicionEnDb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PosicionExists(posicion.Id))
+                    if (!PosicionExists(posicionForm.Id))
                     {
                         return NotFound();
                     }
@@ -141,9 +167,9 @@ namespace ERP_D.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
-            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
-            return View(posicion);
+            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicionForm.GerenciaId);
+            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicionForm.ResponsableId);
+            return View(posicionForm);
         }
 
         // GET: Posiciones/Delete/5

@@ -1,4 +1,5 @@
 ﻿@model ERP_D.Models.Empleado
+<link rel="stylesheet" href="~/css/Details/EstiloImgs.css" asp-append-version="true" />
 
 @{
     ViewData["Title"] = "Detalles";
@@ -8,9 +9,9 @@
 <div>
     <h4>@(Model.Nombre + " " + Model.Apellido)</h4>
     @if(!String.IsNullOrEmpty(Model.Foto)){
-        <img src="@Url.Content(Model.Foto)" class="image-fluid" alt="IMAGES" />
+            <img src="@Url.Content(Model.Foto)" class="image-format" alt="IMAGES" />
     }else{
-        <img src="~/Images/employee.png" class="image-fluid" alt="IMAGES" />
+            <img src="~/Images/employee.png" class="image-format" alt="IMAGES" />
     }
     <hr />
     <dl class="row">

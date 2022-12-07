@@ -33,8 +33,6 @@ namespace ERP_D.Controllers
             CrearEmpleados().Wait();
             CrearGastos().Wait();
 
-            
-
             return RedirectToAction("IniciarSesion", "Account", new {mensaje = "Termine"});
         }
 
@@ -44,22 +42,21 @@ namespace ERP_D.Controllers
 
             if (!adminEncontrado)
             {
+                var admin = new Persona();
 
-                    var admin = new Persona();
+                admin.Nombre = "Alejandro";
+                admin.Apellido = "Gonzalez";
+                admin.DNI = 25678900;
+                admin.PhoneNumber = "1145566990";
+                admin.FechaAlta = DateTime.Now;
+                admin.Email = string.Format("admin{0}", Const.defaultEmail);
+                admin.UserName = admin.Email;
 
-                    admin.Nombre = "Alejandro";
-                    admin.Apellido = "Gonzalez";
-                    admin.DNI = 25678900;
-                    admin.PhoneNumber = "1145566990";
-                    admin.FechaAlta = DateTime.Now;
-                    admin.Email = "admin@ort.edu.ar";
-                    admin.UserName = "admin@ort.edu.ar";
-
-                    var resultado = await _userManager.CreateAsync(admin, Const.defaultPassword);
-                    if (resultado.Succeeded)
-                    {
-                        var resultadoRol = await _userManager.AddToRoleAsync(admin, "Admin");
-                    }
+                var resultado = await _userManager.CreateAsync(admin, Const.defaultPassword);
+                if (resultado.Succeeded)
+                {
+                    var resultadoRol = await _userManager.AddToRoleAsync(admin, "Admin");
+                }
             }
         }
 
@@ -89,6 +86,26 @@ namespace ERP_D.Controllers
 
                 _erpContext.Empresas.Add(empresa);
                 await _erpContext.SaveChangesAsync();
+
+                //var gerencia = new Gerencia();
+                //var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+
+                //gerencia.Nombre = "Gerencia General";
+                //gerencia.EsGerenciaGeneral = true;
+                //gerencia.EmpresaId = empresa.Id;
+                //gerencia.CentroDeCostoId = centroDeCostoDb.Id;
+
+                //_erpContext.Gerencias.Add(gerencia);
+                //await _erpContext.SaveChangesAsync();
+
+                //var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}" };
+                //_erpContext.Posiciones.Add(posicion);
+                //await _erpContext.SaveChangesAsync();
+
+                //gerencia.ResponsableId = posicion.Id;
+                //_erpContext.Gerencias.Update(gerencia);
+                //await _erpContext.SaveChangesAsync();
+
             }
         }
 
@@ -350,9 +367,9 @@ namespace ERP_D.Controllers
                     empleadoCEO.Direccion = "Callao 3532";
                     empleadoCEO.Foto = "/images/Marcos.jfif.jpg";
                     empleadoCEO.EmpleadoActivo = true;
-                    empleadoCEO.Email = "marcos.lopez@ort.edu.ar";
-                    empleadoCEO.UserName = "23384556";
-                    empleadoCEO.NormalizedUserName = "23384556";
+                    empleadoCEO.Email = String.Format("{0}.{1}{2}", empleadoCEO.Nombre.ToLower(), empleadoCEO.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoCEO.UserName = empleadoCEO.Email;
+                    empleadoCEO.NormalizedUserName = empleadoCEO.UserName.ToUpper();
                     empleadoCEO.PosicionId = posicionCEO.Id;
                     await CrearUser(empleadoCEO, true);
 
@@ -373,10 +390,10 @@ namespace ERP_D.Controllers
                     empleadoGerenteCom.ObraSocial = ObraSocial.MEDICUS;
                     empleadoGerenteCom.Direccion = "Rodriguez Peña 443";
                     empleadoGerenteCom.EmpleadoActivo = true;
-                    empleadoGerenteCom.Email = "maria.perez@ort.edu.ar";
+                    empleadoGerenteCom.Email = String.Format("{0}.{1}{2}", empleadoGerenteCom.Nombre.ToLower(), empleadoGerenteCom.Apellido.ToLower(), Const.defaultEmail);
                     empleadoGerenteCom.Foto = "/images/Carmen.jfif.jpg";
-                    empleadoGerenteCom.UserName = "20944855";
-                    empleadoGerenteCom.NormalizedUserName = "20944855";
+                    empleadoGerenteCom.UserName = empleadoGerenteCom.Email;
+                    empleadoGerenteCom.NormalizedUserName = empleadoGerenteCom.UserName.ToUpper();
                     empleadoGerenteCom.PosicionId = posicionGerenteCom.Id;
                     await CrearUser(empleadoGerenteCom, false);
 
@@ -397,9 +414,9 @@ namespace ERP_D.Controllers
                     empleadoGerenteOpe.Direccion = "Peñaflor 5667";
                     empleadoGerenteOpe.EmpleadoActivo = true;
                     empleadoGerenteOpe.Foto = "/images/Laura.jfif.jpg";
-                    empleadoGerenteOpe.Email = "laura.gonzalez@ort.edu.ar";
-                    empleadoGerenteOpe.UserName = "21445695";
-                    empleadoGerenteOpe.NormalizedUserName = "21445695";
+                    empleadoGerenteOpe.Email = String.Format("{0}.{1}{2}", empleadoGerenteOpe.Nombre.ToLower(), empleadoGerenteOpe.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoGerenteOpe.UserName = empleadoGerenteOpe.Email;
+                    empleadoGerenteOpe.NormalizedUserName = empleadoGerenteOpe.UserName.ToUpper();
                     empleadoGerenteOpe.PosicionId = posicionGerenteOpe.Id;
                     await CrearUser(empleadoGerenteOpe, false);
 
@@ -418,9 +435,9 @@ namespace ERP_D.Controllers
                     empleadoGerenteSis.Direccion = "Yatai 22";
                     empleadoGerenteSis.EmpleadoActivo = true;
                     empleadoGerenteSis.Foto = "/images/Rodrigo.jfif.jpg";
-                    empleadoGerenteSis.Email = "rodrigo.varae@ort.edu.ar";
-                    empleadoGerenteSis.UserName = "23456788";
-                    empleadoGerenteSis.NormalizedUserName = "23456788";
+                    empleadoGerenteSis.Email = String.Format("{0}.{1}{2}", empleadoGerenteSis.Nombre.ToLower(), empleadoGerenteSis.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoGerenteSis.UserName = empleadoGerenteSis.Email;
+                    empleadoGerenteSis.NormalizedUserName = empleadoGerenteSis.UserName.ToUpper();
                     empleadoGerenteSis.PosicionId = posicionGerenteSis.Id;
                     await CrearUser(empleadoGerenteSis, false);
 
@@ -439,9 +456,9 @@ namespace ERP_D.Controllers
                     empleadoGerenteRH.Direccion = "Cabildo 2322";
                     empleadoGerenteRH.EmpleadoActivo = true;
                     empleadoGerenteRH.Foto = "/images/Romina.jfif.jpg";
-                    empleadoGerenteRH.Email = "romina.fernandez@ort.edu.ar";
-                    empleadoGerenteRH.UserName = "32475888";
-                    empleadoGerenteRH.NormalizedUserName = "32475888";
+                    empleadoGerenteRH.Email = String.Format("{0}.{1}{2}", empleadoGerenteRH.Nombre.ToLower(), empleadoGerenteRH.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoGerenteRH.UserName = empleadoGerenteRH.Email;
+                    empleadoGerenteRH.NormalizedUserName = empleadoGerenteRH.UserName.ToUpper();
                     empleadoGerenteRH.PosicionId = posicionGerenteRH.Id;
                     await CrearUser(empleadoGerenteRH, true);
 
@@ -460,9 +477,9 @@ namespace ERP_D.Controllers
                     empleadoGerenteRecr.Direccion = "Av Lopez 3432";
                     empleadoGerenteRecr.EmpleadoActivo = true;
                     empleadoGerenteRecr.Foto = "/images/Juana.jfif";
-                    empleadoGerenteRecr.Email = "juana.villa@ort.edu.ar";
-                    empleadoGerenteRecr.UserName = "33322888";
-                    empleadoGerenteRecr.NormalizedUserName = "33322888";
+                    empleadoGerenteRecr.Email = String.Format("{0}.{1}{2}", empleadoGerenteRecr.Nombre.ToLower(), empleadoGerenteRecr.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoGerenteRecr.UserName = empleadoGerenteRecr.Email;
+                    empleadoGerenteRecr.NormalizedUserName = empleadoGerenteRecr.UserName.ToUpper();
                     empleadoGerenteRecr.PosicionId = posicionGerenteRecr.Id;
                     await CrearUser(empleadoGerenteRecr, true);
 
@@ -482,9 +499,9 @@ namespace ERP_D.Controllers
                     empleadoRecruiter1.Direccion = "Correa 3432";
                     empleadoRecruiter1.EmpleadoActivo = true;
                     empleadoRecruiter1.Foto = "/images/jorge.jfif.jpg";
-                    empleadoRecruiter1.Email = "jorge.gonzalez@ort.edu.ar";
-                    empleadoRecruiter1.UserName = "21344022";
-                    empleadoRecruiter1.NormalizedUserName = "21344022";
+                    empleadoRecruiter1.Email = String.Format("{0}.{1}{2}", empleadoRecruiter1.Nombre.ToLower(), empleadoRecruiter1.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoRecruiter1.UserName = empleadoRecruiter1.Email;
+                    empleadoRecruiter1.NormalizedUserName = empleadoRecruiter1.UserName.ToUpper();
                     empleadoRecruiter1.PosicionId = posicionRecruiter1.Id;
                     await CrearUser(empleadoRecruiter1, true);
 
@@ -503,9 +520,9 @@ namespace ERP_D.Controllers
                     empleadoRecruiter2.Direccion = "Larrea 200";
                     empleadoRecruiter2.EmpleadoActivo = true;
                     empleadoRecruiter2.Foto = "/images/Maria Rosa.jpg";
-                    empleadoRecruiter2.Email = "maria.rosaa@ort.edu.ar";
-                    empleadoRecruiter2.UserName = "19233812";
-                    empleadoRecruiter2.NormalizedUserName = "19233812";
+                    empleadoRecruiter2.Email = String.Format("{0}.{1}{2}", empleadoRecruiter2.Nombre.ToLower(), empleadoRecruiter2.Apellido.ToLower(), Const.defaultEmail);
+                    empleadoRecruiter2.UserName = empleadoRecruiter2.Email;
+                    empleadoRecruiter2.NormalizedUserName = empleadoRecruiter2.UserName.ToUpper();
                     empleadoRecruiter2.PosicionId = posicionRecruiter2.Id;
                     await CrearUser(empleadoRecruiter2, true);
 
@@ -542,7 +559,6 @@ namespace ERP_D.Controllers
 
             if (!gastoEncontrado)
             {
-                
                 var empleados = _erpContext.Empleados.Include(e => e.Posicion).ThenInclude(p => p.Gerencia).ThenInclude(g => g.CentroDeCosto).ToList();
 
                 foreach (var empleado in empleados)
@@ -556,7 +572,6 @@ namespace ERP_D.Controllers
         {
             for (int i = 0; i < 5; i++)
             {
-
                 var gasto = new Gasto();
                 Random rnd = new Random();
 

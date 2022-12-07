@@ -26,7 +26,6 @@ namespace ERP_D.Models
         //Navegacional, para acceder a la posición de este empleado
         public Posicion Posicion { get; set; }
 
-
         public String Foto { get; set;}
 
         public List<Gasto> Gastos { get; set; }
