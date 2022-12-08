@@ -49,5 +49,11 @@ namespace ERP_D.Models
 
         [Display(Name = "Centro de costo")]
         public CentroDeCosto CentroDeCosto { get; set; }
+
+        public string ObtenerEmpresaNombre
+        {
+            get { return Empresa.Nombre + " - " + Nombre; }
+        }
+        
     }
 }

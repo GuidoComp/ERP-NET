@@ -189,9 +189,6 @@ namespace ERP_D.Migrations
                     b.Property<int?>("GerenciaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("InfoGerenciaYEmpresa")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(70)

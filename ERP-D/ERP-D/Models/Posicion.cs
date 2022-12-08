@@ -41,7 +41,7 @@ namespace ERP_D.Models
         public int? GerenciaId { get; set; }
         public Gerencia Gerencia { get; set; }
 
-        [Display(Name = Alias.InfoGYE)]
-        public string InfoGerenciaYEmpresa { get; set; }
+        //[Display(Name = Alias.InfoGYE)]
+        //public string InfoGerenciaYEmpresa { get; set; }
     }
 }

@@ -34,19 +34,16 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            if (!empleado.EmpleadoActivo)
-            {
-                empleado.EmpleadoActivo = true;
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Edit", new {id = id});
         }
+
+
 
         // GET: Empleados
         [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> Index(string sortOrder)
         {
+            //Bool hayPosiciones = true;
             if (User.IsInRole("Empleado") && !User.IsInRole("RH"))
             {
                 return RedirectToAction(nameof(Details), new { id = Int32.Parse(_userManager.GetUserId(User)) });
@@ -71,6 +68,10 @@ namespace ERP_D.Controllers
                 //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
                 //    break;
             }
+
+            var posicionesList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null);
+
+            ViewBag.PosicionesList = posicionesList.ToList();
 
             return View(empleados.ToList());
         }
@@ -98,7 +99,14 @@ namespace ERP_D.Controllers
         [Authorize(Roles = "Admin, RH")]
         public IActionResult Create()
         {
-            ViewData["PosicionId"] = new SelectList(_context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null), "Id", "Nombre");
+            var posicionesList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null);
+            
+            if (posicionesList.Count() == 0)
+            {
+                return View("NoHayPosiciones");
+            }
+            ViewData["PosicionId"] = new SelectList(posicionesList, "Id", "Nombre");
+            
             return View();
         }
 
@@ -187,19 +195,29 @@ namespace ERP_D.Controllers
             empleadoEdit.ObraSocial = empleado.ObraSocial;
             empleadoEdit.EmpleadoActivo = empleado.EmpleadoActivo;
             empleadoEdit.Direccion = empleado.Direccion;
-            empleadoEdit.PosicionId = (int)empleado.PosicionId;
+            
+            if (empleado.PosicionId != null) 
+            {
+                empleadoEdit.PosicionId = (int)empleado.PosicionId;
+            }
+            
             if(empleado.Telefonos != null && empleado.Telefonos.Count > 0)
             {
                 empleadoEdit.TipoTelefono = empleado.Telefonos[0].Tipo;
                 empleadoEdit.NumeroTelefono = empleado.Telefonos[0].Numero;
             }
 
-
             List<Posicion> positionList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null).ToList();
 
-            positionList.Add(empleado.Posicion);
-
-            ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre", empleado.PosicionId);
+            if (empleado.PosicionId != null)
+            {
+                positionList.Add(empleado.Posicion);
+                ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre", empleado.PosicionId);
+            }
+            else
+            {
+                ViewData["PosicionId"] = new SelectList(positionList, "Id", "Nombre");
+            }
             return View(empleadoEdit);
         }
 
@@ -220,7 +238,6 @@ namespace ERP_D.Controllers
             {
                 try
                 {
-
                     var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
 
                     if (empleadoDB == null)
@@ -233,9 +250,17 @@ namespace ERP_D.Controllers
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
                     empleadoDB.Direccion = empleadoForm.Direccion;
-                    empleadoDB.PosicionId = empleadoForm.PosicionId;
+                    
                     empleadoDB.EmpleadoActivo = empleadoForm.EmpleadoActivo;
 
+                    if (!empleadoForm.EmpleadoActivo)
+                    {
+                        empleadoDB.PosicionId = null;
+                    }
+                    else
+                    {
+                        empleadoDB.PosicionId = empleadoForm.PosicionId;
+                    }
 
                     if (empleadoForm.Foto != null )
                     {

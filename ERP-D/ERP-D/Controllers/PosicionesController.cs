@@ -58,11 +58,10 @@ namespace ERP_D.Controllers
         // GET: Posiciones/Create
         public IActionResult Create()
         {
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
+            //ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
+            ViewData["GerenciaId"] = new SelectList(_context.Gerencias.Include(g => g.Empresa), "Id", "ObtenerEmpresaNombre");
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre");
             ViewBag.AnyGerenciaGeneral = _context.Posiciones.Any(p => p.ResponsableId == null);
-            ViewData["EmpresaName"] = new SelectList(_context.Empresas, "Nombre", "Nombre");
             return View();
         }
 
@@ -71,7 +70,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Sueldo,EmpleadoId,ResponsableId,GerenciaId,InfoGerenciaYEmpresa")] Posicion posicion)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Sueldo,ResponsableId,GerenciaId")] Posicion posicion)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +79,7 @@ namespace ERP_D.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.AnyGerenciaGeneral = _context.Posiciones.Any(p => p.ResponsableId == null);
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
+            //ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicion.ResponsableId);
             return View(posicion);
@@ -112,10 +111,12 @@ namespace ERP_D.Controllers
             editPosicion.Sueldo = posicion.Sueldo;
             editPosicion.ResponsableId = posicion.ResponsableId;
             editPosicion.GerenciaId = posicion.GerenciaId;
-            editPosicion.InfoGerenciaYEmpresa = posicion.InfoGerenciaYEmpresa;
+            //editPosicion.InfoGerenciaYEmpresa = posicion.InfoGerenciaYEmpresa;
 
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
+            //ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
+            //ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
+            ViewData["GerenciaId"] = new SelectList(_context.Gerencias.Include(g => g.Empresa), "Id", "ObtenerEmpresaNombre");
+
             return View(editPosicion);
         }
 
@@ -124,7 +125,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Sueldo,EmpleadoId,ResponsableId,GerenciaId")] EditPosicion posicionForm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Sueldo,ResponsableId,GerenciaId")] EditPosicion posicionForm)
         {
             if (id != posicionForm.Id)
             {
@@ -146,9 +147,9 @@ namespace ERP_D.Controllers
                     //posicionEnDb.EmpleadoId = posicionForm.EmpleadoId;
                     posicionEnDb.ResponsableId = posicionForm.ResponsableId;
                     posicionEnDb.GerenciaId = posicionForm.GerenciaId;
-                    var empresa = posicionEnDb.InfoGerenciaYEmpresa.Split('-')[0];
-                    var gerencia = _context.Gerencias.Find(posicionForm.GerenciaId).Nombre;
-                    posicionEnDb.InfoGerenciaYEmpresa = $"{empresa}- {gerencia}";
+                    //var empresa = posicionEnDb.InfoGerenciaYEmpresa.Split('-')[0];
+                    //var gerencia = _context.Gerencias.Find(posicionForm.GerenciaId).Nombre;
+                    //posicionEnDb.InfoGerenciaYEmpresa = $"{empresa}- {gerencia}";
 
                     _context.Posiciones.Update(posicionEnDb);
                     await _context.SaveChangesAsync();
@@ -166,7 +167,7 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
+            //ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicionForm.GerenciaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", posicionForm.ResponsableId);
             return View(posicionForm);
