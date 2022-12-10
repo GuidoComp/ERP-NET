@@ -104,6 +104,10 @@ namespace ERP_D.Controllers
                     _context.Add(gerencia);
                     await _context.SaveChangesAsync();
 
+                    posicionCEO.GerenciaId = gerencia.Id;
+                    _context.Update(posicionCEO);
+                    await _context.SaveChangesAsync();
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException dbex)
