@@ -24,12 +24,15 @@ namespace ERP_D.Controllers
             this._erpContext = erpContext;
         }
 
-        public IActionResult Seed()
+        public async Task<IActionResult> SeedAsync()
         {
             CrearRoles().Wait();
             CrearAdmin().Wait();
-            CrearEmpresa().Wait();
-            CrearGerencias().Wait();
+            //Task<Gerencia> TGerenciaGeneral = CrearEmpresa();
+            //Gerencia gGeneralResult = await TGerenciaGeneral;
+            //CrearGerencias(gGeneralResult).Wait();
+            var gerenciaGeneral = await CrearEmpresa(); //La creación de la Empresa incluye una Gerencia General con una Posición correspondiente para el CEO y su centro de costo.
+            CrearGerencias(gerenciaGeneral).Wait();
             CrearEmpleados().Wait();
             CrearGastos().Wait();
 
@@ -73,7 +76,7 @@ namespace ERP_D.Controllers
             }
         }
 
-        private async Task CrearEmpresa()
+        private async Task<Gerencia> CrearEmpresa()
         {
             var empresaEncontrada = _erpContext.Empresas.Any();
 
@@ -108,60 +111,124 @@ namespace ERP_D.Controllers
                 //_erpContext.Gerencias.Update(gerencia);
                 //await _erpContext.SaveChangesAsync();
 
+                //CrearGerencias(gResult).Wait();
+
+                //Task<Gerencia> TGerenciaGeneral = CrearGerenciaGeneral(empresa);
+                //Gerencia gGeneralResult = await TGerenciaGeneral;
+                //return gGeneralResult;
+                
+                Gerencia gGeneralResult = await CrearGerenciaGeneral(empresa);
+                return gGeneralResult;
             }
+            return null;
         }
 
-        private async Task CrearGerencias()
+        private async Task<Gerencia> CrearGerenciaGeneral(Empresa empresa)
         {
-            var centroDeCostoEncontrado = _erpContext.CentrosDeCosto.Any();
-
-            if (!centroDeCostoEncontrado)
+            if (empresa != null)
             {
-                var centroDeCosto = new CentroDeCosto();
+                var centroDeCostoEncontrado = _erpContext.CentrosDeCosto.Any();
 
-                centroDeCosto.Nombre = "Centro de costo 1";
-                centroDeCosto.MontoMaximo = 250000;
-
-                _erpContext.CentrosDeCosto.Add(centroDeCosto);
-                var result = await _erpContext.SaveChangesAsync();
-
-                if(result > 0)
+                if (!centroDeCostoEncontrado)
                 {
-                    var gerenciaEncontrada = _erpContext.Gerencias.Any();
+                    var centroDeCosto = new CentroDeCosto();
 
-                    if (!gerenciaEncontrada)
+                    centroDeCosto.Nombre = "Centro de costo 1";
+                    centroDeCosto.MontoMaximo = 250000;
+
+                    _erpContext.CentrosDeCosto.Add(centroDeCosto);
+                    var result = await _erpContext.SaveChangesAsync();
+
+                    if (result > 0)
                     {
-                        var empresa = _erpContext.Empresas.FirstOrDefault();
-                        var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
-                        if (empresa != null)
+                        var gerenciaEncontrada = _erpContext.Gerencias.Any();
+
+                        if (!gerenciaEncontrada)
                         {
-                            var gerencia = new Gerencia();
+                            var empresaEncontrada = _erpContext.Empresas.FirstOrDefault();
+                            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+                            if (empresaEncontrada != null)
+                            {
+                                var gerencia = new Gerencia();
 
-                            gerencia.Nombre = "Gerencia General";
-                            gerencia.EsGerenciaGeneral = true;
-                            gerencia.EmpresaId = empresa.Id;
-                            gerencia.CentroDeCostoId = centroDeCostoDb.Id;
+                                gerencia.Nombre = "Gerencia General";
+                                gerencia.EsGerenciaGeneral = true;
+                                gerencia.EmpresaId = empresaEncontrada.Id;
+                                gerencia.CentroDeCostoId = centroDeCostoDb.Id;
 
-                            _erpContext.Gerencias.Add(gerencia);
-                            await _erpContext.SaveChangesAsync();
+                                _erpContext.Gerencias.Add(gerencia);
+                                await _erpContext.SaveChangesAsync();
 
-                            var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id/*, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}"*/ };
-                            _erpContext.Posiciones.Add(posicion);
-                            await _erpContext.SaveChangesAsync();
+                                var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id/*, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}"*/ };
+                                _erpContext.Posiciones.Add(posicion);
+                                await _erpContext.SaveChangesAsync();
 
-                            gerencia.ResponsableId = posicion.Id;
-                            _erpContext.Gerencias.Update(gerencia);
-                            await _erpContext.SaveChangesAsync();
+                                gerencia.ResponsableId = posicion.Id;
+                                _erpContext.Gerencias.Update(gerencia);
+                                await _erpContext.SaveChangesAsync();
 
-                            await crearGerenciaOpe(gerencia.Id);
-                            await crearGerenciaCome(gerencia.Id);
-                            await crearGerenciaSis(gerencia.Id);
-                            await crearGerenciaRH(gerencia.Id);
+                                return gerencia;
+                            }
                         }
                     }
                 }
-
             }
+            return null;
+        }
+
+        private async Task CrearGerencias(Gerencia gerenciaGeneral)
+        {
+            //var centroDeCostoEncontrado = _erpContext.CentrosDeCosto.Any();
+
+            //if (!centroDeCostoEncontrado)
+            //{
+            //    var centroDeCosto = new CentroDeCosto();
+
+            //    centroDeCosto.Nombre = "Centro de costo 1";
+            //    centroDeCosto.MontoMaximo = 250000;
+
+            //    _erpContext.CentrosDeCosto.Add(centroDeCosto);
+            //    var result = await _erpContext.SaveChangesAsync();
+
+            //    if(result > 0)
+            //    {
+            //        var gerenciaEncontrada = _erpContext.Gerencias.Any();
+
+            //        if (!gerenciaEncontrada)
+            //        {
+            //            var empresa = _erpContext.Empresas.FirstOrDefault();
+            //            var centroDeCostoDb = _erpContext.CentrosDeCosto.FirstOrDefault();
+            //            if (empresa != null)
+            //            {
+            //                var gerencia = new Gerencia();
+
+            //                gerencia.Nombre = "Gerencia General";
+            //                gerencia.EsGerenciaGeneral = true;
+            //                gerencia.EmpresaId = empresa.Id;
+            //                gerencia.CentroDeCostoId = centroDeCostoDb.Id;
+
+            //                _erpContext.Gerencias.Add(gerencia);
+            //                await _erpContext.SaveChangesAsync();
+
+            //                var posicion = new Posicion() { Nombre = "CEO", Sueldo = 1000000, GerenciaId = gerencia.Id/*, InfoGerenciaYEmpresa = $"{empresa.Nombre} - {gerencia.Nombre}"*/ };
+            //                _erpContext.Posiciones.Add(posicion);
+            //                await _erpContext.SaveChangesAsync();
+
+            //                gerencia.ResponsableId = posicion.Id;
+            //                _erpContext.Gerencias.Update(gerencia);
+            //                await _erpContext.SaveChangesAsync();
+            if (gerenciaGeneral != null)
+            {
+                await crearGerenciaOpe(gerenciaGeneral.Id);
+                await crearGerenciaCome(gerenciaGeneral.Id);
+                await crearGerenciaSis(gerenciaGeneral.Id);
+                await crearGerenciaRH(gerenciaGeneral.Id);
+            }
+            //            }
+            //        }
+            //    }
+
+            //}
         }
 
         private async Task crearGerenciaOpe(int idGerenciaGen)

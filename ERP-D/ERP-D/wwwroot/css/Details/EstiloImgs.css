@@ -1,14 +1,5 @@
 ﻿.image-format {
-    /*position: relative;
-    width: 200px;
-    height: 200px;
-    border: 1px black solid*/
-    /*padding: 10px;*/
     border: 2px solid black;
-    /*float: left;*/
     width: 200px;
     height: 200px;
 }
-/*img {
-    object-fit: cover;
-}*/

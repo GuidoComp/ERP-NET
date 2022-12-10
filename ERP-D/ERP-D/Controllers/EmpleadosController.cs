@@ -37,8 +37,6 @@ namespace ERP_D.Controllers
             return RedirectToAction("Edit", new {id = id});
         }
 
-
-
         // GET: Empleados
         [Authorize(Roles = "Admin, Empleado, RH")]
         public async Task<IActionResult> Index(string sortOrder)
@@ -50,6 +48,7 @@ namespace ERP_D.Controllers
             }
 
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.ApellidoSortParam = sortOrder == "Apellido" ? "apellido_desc" : "Apellido";
             ViewBag.SalarioSortParm = sortOrder == "Salario" ? "salario_desc" : "Salario";
 
             var empleados = _context.Empleados.Include(e => e.Posicion).OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
@@ -64,9 +63,15 @@ namespace ERP_D.Controllers
                 case "salario_desc":
                     empleados = empleados.OrderByDescending(e => e.Posicion.Sueldo);
                     break;
-                //default:
-                //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
-                //    break;
+                case "Apellido":
+                    empleados = empleados.OrderBy(e => e.Apellido).ThenBy(e => e.Nombre);
+                    break;
+                case "apellido_desc":
+                    empleados = empleados.OrderByDescending(e => e.Apellido).ThenBy(e => e.Nombre);
+                    break;
+                    //default:
+                    //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
+                    //    break;
             }
 
             var posicionesList = _context.Posiciones.Include(p => p.Empleado).Where(p => p.Empleado == null);
@@ -182,6 +187,7 @@ namespace ERP_D.Controllers
             }
 
             var empleado = await _context.Empleados.Include(e => e.Posicion).Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
+            //var empleado5 = await _context.Empleados.FirstOrDefaultAsync(e => e.Id == id);
             if (empleado == null)
             {
                 return NotFound();

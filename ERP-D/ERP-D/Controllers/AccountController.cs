@@ -28,7 +28,7 @@ namespace ERP_D.Controllers
             TempData["url"] = returnUrl;
             if (mensaje != null)
             {
-                ViewBag.Precarg = "Se termino de pre-cargar";
+                ViewBag.Precarg = "Precarga exitosa";
             }
             return View();
         }

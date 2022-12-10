@@ -8,7 +8,10 @@
     </div>
     @if(!String.IsNullOrEmpty(@ViewBag.Precarg)){
         <div>
-            @ViewBag.Precarg
+            <link rel="stylesheet" href="~/css/Login/precarga.css" asp-append-version="true" />
+            <p class="precarga">
+                @ViewBag.Precarg
+            </p>
         </div>
     }
 
