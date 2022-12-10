@@ -88,6 +88,22 @@ namespace ERP_D.Controllers
                     empresa.Email = empresaForm.Email;
                     _context.Add(empresa);
                     await _context.SaveChangesAsync();
+
+                    var posicionCEO = new Posicion();
+                    posicionCEO.Nombre = "CEO - " + empresaForm.Nombre;
+                    posicionCEO.Sueldo = 500000;
+                    _context.Add(posicionCEO);
+                    await _context.SaveChangesAsync();
+
+
+                    var gerencia = new Gerencia();
+                    gerencia.Nombre = "Gerencia general - " + empresaForm.Nombre;
+                    gerencia.EsGerenciaGeneral = true;
+                    gerencia.ResponsableId = posicionCEO.Id;
+                    gerencia.EmpresaId = empresa.Id;
+                    _context.Add(gerencia);
+                    await _context.SaveChangesAsync();
+
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException dbex)
