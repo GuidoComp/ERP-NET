@@ -435,7 +435,7 @@ namespace ERP_D.Controllers
                     empleadoCEO.ObraSocial = ObraSocial.GALENO;
                     empleadoCEO.Direccion = "Callao 3532";
                     empleadoCEO.Foto = "/images/Marcos.jfif.jpg";
-                    empleadoCEO.EmpleadoActivo = true;
+                    empleadoCEO.EmpleadoActivo = true; 
                     //empleadoCEO.Email = "marcos.lopez@ort.edu.ar";
                     //empleadoCEO.UserName = "23384556";
                     //empleadoCEO.NormalizedUserName = "23384556";
@@ -656,7 +656,7 @@ namespace ERP_D.Controllers
 
         public async Task CrearUser(Persona empleado, bool RH)
         {
-            var resultado = await _userManager.CreateAsync(empleado, empleado.UserName);
+            var resultado = await _userManager.CreateAsync(empleado, Const.defaultPassword);
             if (resultado.Succeeded)
             {
                 if (RH)
