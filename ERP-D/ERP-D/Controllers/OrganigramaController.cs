@@ -44,7 +44,7 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados.Include(e => e.Posicion).FirstOrDefaultAsync(m => m.Id == Id);
+            var empleado = await _context.Empleados.Include(e => e.Posicion).Include(e => e.Telefonos).FirstOrDefaultAsync(m => m.Id == Id);
 
             if (empleado == null)
             {
@@ -60,6 +60,8 @@ namespace ERP_D.Controllers
             tarjetaEmpleado.Direccion = empleado.Direccion;
             //tarjetaEmpleado.TipoTelefono = empleado.Telefonos;
             tarjetaEmpleado.Posicion = empleado.Posicion.Nombre;
+
+            tarjetaEmpleado.Telefonos = empleado.Telefonos;
 
             return View(tarjetaEmpleado);
         }

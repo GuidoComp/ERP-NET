@@ -19,5 +19,7 @@ namespace ERP_D.ViewModels.Organigrama
         [Display(Name = "Telefono")]
         public String NumeroTelefono { get; set; }
         public String Posicion { get; set; }
+
+        public List<Telefono> Telefonos { get; set; }
     }
 }
