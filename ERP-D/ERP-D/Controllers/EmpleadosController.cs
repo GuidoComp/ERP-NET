@@ -97,6 +97,10 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
+            var telefonos = _context.Telefonos.Include(t => t.Persona).Where(t => t.PersonaId == empleado.Id).ToList();
+
+            ViewBag.Telefonos = telefonos;
+
             return View(empleado);
         }
 

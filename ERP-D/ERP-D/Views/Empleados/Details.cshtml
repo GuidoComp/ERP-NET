@@ -81,6 +81,18 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Posicion.Nombre)
         </dd>
+            @if (ViewBag.Telefonos != null)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Telefonos)
+                </dt>
+                @foreach (var item in ViewBag.Telefonos)
+                {
+                    <dd class="col-sm-10">
+                        @item.Numero
+                    </dd>
+                }
+            }
     </dl>
 </div>
 <div>
