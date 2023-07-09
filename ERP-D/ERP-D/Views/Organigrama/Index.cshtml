@@ -78,7 +78,9 @@
                             <th>
                                 Nombre
                             </th>
-                            <th></th>
+                            <th>
+                                Ir a Empleado
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,14 +88,17 @@
                         {
                             <tr>
                                 <td>
-                                    <a asp-action="TarjetaEmpleado" asp-route-id="@empleado.Id">@Html.DisplayFor(modelItem => empleado.Apellido)</a>
+                                    @Html.DisplayFor(modelItem => empleado.Apellido)
                                     
                                 </td>
                                 <td>
-                                    <a asp-action="TarjetaEmpleado" asp-route-id="@empleado.Id">@empleado.Nombre</a>
+                                    @Html.DisplayFor(modelItem => empleado.Nombre)
                                 </td>
-                            </tr>
-                        }
+                                <td>
+                                    <a asp-action="TarjetaEmpleado" asp-route-id="@empleado.Id"> <img src="~/icons/Ir_a_Empleado.png" class="image-format-Ir-a-Empleado" /> </a>
+                                </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
             }
