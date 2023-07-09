@@ -86,12 +86,12 @@
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Telefonos)
                 </dt>
+                <dd class="col-sm-10">
                 @foreach (var item in ViewBag.Telefonos)
                 {
-                    <dd class="col-sm-10">
-                        @item.Numero
-                    </dd>
+                        <p>@item.Numero</p>
                 }
+                </dd>
             }
     </dl>
 </div>
