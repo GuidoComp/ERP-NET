@@ -33,8 +33,11 @@ namespace ERP_D.Controllers
             {
                 return NotFound();
             }
-
-            return RedirectToAction("Edit", new {id = id});
+            
+            empleado.EmpleadoActivo = true;
+            _context.Update(empleado);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: Empleados
