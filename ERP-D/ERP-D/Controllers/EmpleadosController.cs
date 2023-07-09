@@ -248,7 +248,7 @@ namespace ERP_D.Controllers
             {
                 try
                 {
-                    var empleadoDB = _context.Empleados.Find(empleadoForm.Id);
+                    var empleadoDB = await _context.Empleados.Include(e => e.Posicion).Include(e => e.Telefonos).FirstOrDefaultAsync(e => e.Id == id);
 
                     if (empleadoDB == null)
                     {

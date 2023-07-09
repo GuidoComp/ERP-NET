@@ -73,10 +73,10 @@
                     <thead class="header-border">
                         <tr>
                             <th>
-                                Nombre
+                                Apellido
                             </th>
                             <th>
-                                Apellido
+                                Nombre
                             </th>
                             <th></th>
                         </tr>
@@ -86,13 +86,14 @@
                         {
                             <tr>
                                 <td>
+                                    <a asp-action="TarjetaEmpleado" asp-route-id="@empleado.Id">@Html.DisplayFor(modelItem => empleado.Apellido)</a>
+                                    
+                                </td>
+                                <td>
                                     <a asp-action="TarjetaEmpleado" asp-route-id="@empleado.Id">@empleado.Nombre</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => empleado.Apellido)
-                            </td>
-                        </tr>
-                    }
+                                </td>
+                            </tr>
+                        }
                 </tbody>
             </table>
             }
