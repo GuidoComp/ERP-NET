@@ -93,7 +93,9 @@ namespace ERP_D.Controllers
                 return NotFound();
             }
 
-            if (id != Int32.Parse(_userManager.GetUserId(User)))
+            
+
+            if (id != Int32.Parse(_userManager.GetUserId(User)) && !User.IsInRole("RH") && !User.IsInRole("Admin"))
             {
                 return RedirectToAction("AccesoDenegado", "Account");
             }
