@@ -151,9 +151,9 @@ namespace ERP_D.Controllers
                 nuevoEmpleado.EmpleadoActivo = empleadoForm.EmpleadoActivo;
                 nuevoEmpleado.Direccion = empleadoForm.Direccion;
                 nuevoEmpleado.ObraSocial = empleadoForm.ObraSocial;
-                nuevoEmpleado.UserName = empleadoForm.DNI.ToString();
                 nuevoEmpleado.PosicionId = empleadoForm.PosicionId;
                 nuevoEmpleado.Email = empleadoForm.Nombre.ToLower() + "." + empleadoForm.Apellido.ToLower() + "@ort.edu.ar";
+                nuevoEmpleado.UserName = nuevoEmpleado.Email;
 
                 resultado = await _userManager.CreateAsync(nuevoEmpleado, nuevoEmpleado.DNI.ToString());
                 if (resultado.Succeeded)
