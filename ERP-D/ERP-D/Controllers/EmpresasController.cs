@@ -70,7 +70,7 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email")] CreacionEmpresa empresaForm)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Rubro,Logo,Email,NombreCentro,MontoMaximo")] CreacionEmpresa empresaForm)
         {
             if (ModelState.IsValid)
             {
@@ -106,6 +106,14 @@ namespace ERP_D.Controllers
 
                     posicionCEO.GerenciaId = gerencia.Id;
                     _context.Update(posicionCEO);
+                    await _context.SaveChangesAsync();
+
+                    var nuevoCentro = new CentroDeCosto();
+
+                    nuevoCentro.Nombre = empresaForm.Nombre;
+                    nuevoCentro.MontoMaximo = empresaForm.MontoMaximo;
+                    nuevoCentro.Gerencia = gerencia;
+                    _context.CentrosDeCosto.Add(nuevoCentro);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));

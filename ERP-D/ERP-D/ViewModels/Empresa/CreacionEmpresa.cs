@@ -26,5 +26,14 @@ namespace ERP_D.ViewModels.Empresa
         [Display(Name = Alias.email)]
         public String Email { get; set; }
 
+        [Required(ErrorMessage = ErrorMsgs.MsgReq)]
+        [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [Display(Name = "Nombre centro de costo")]
+        public String NombreCentro { get; set; }
+
+        [Range(1, double.MaxValue, ErrorMessage = ErrorMsgs.MsgMonto)]
+        [Display(Name = "Monto máximo")]
+        public double MontoMaximo { get; set; }
+
     }
 }
