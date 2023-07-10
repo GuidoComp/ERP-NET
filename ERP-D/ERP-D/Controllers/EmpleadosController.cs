@@ -263,17 +263,9 @@ namespace ERP_D.Controllers
                     empleadoDB.Apellido = empleadoForm.Apellido;
                     empleadoDB.ObraSocial = empleadoForm.ObraSocial;
                     empleadoDB.Direccion = empleadoForm.Direccion;
-                    
                     empleadoDB.EmpleadoActivo = empleadoForm.EmpleadoActivo;
-
-                    if (!empleadoForm.EmpleadoActivo)
-                    {
-                        empleadoDB.PosicionId = null;
-                    }
-                    else
-                    {
-                        empleadoDB.PosicionId = empleadoForm.PosicionId;
-                    }
+                    empleadoDB.PosicionId = empleadoForm.PosicionId;
+                    
 
                     if (empleadoForm.Foto != null )
                     {
