@@ -134,7 +134,7 @@ namespace ERP_D.Controllers
                     var centroDeCosto = new CentroDeCosto();
 
                     centroDeCosto.Nombre = "Centro de costo 1";
-                    centroDeCosto.MontoMaximo = 250000;
+                    centroDeCosto.MontoMaximo = 25000000;
 
                     _erpContext.CentrosDeCosto.Add(centroDeCosto);
                     var result = await _erpContext.SaveChangesAsync();
@@ -236,7 +236,7 @@ namespace ERP_D.Controllers
             var centroDeCosto = new CentroDeCosto();
 
             centroDeCosto.Nombre = "Centro operaciones";
-            centroDeCosto.MontoMaximo = 50000;
+            centroDeCosto.MontoMaximo = 5000000;
 
             _erpContext.CentrosDeCosto.Add(centroDeCosto);
             var result = await _erpContext.SaveChangesAsync();
@@ -270,7 +270,7 @@ namespace ERP_D.Controllers
             var centroDeCosto = new CentroDeCosto();
 
             centroDeCosto.Nombre = "Centro comercial";
-            centroDeCosto.MontoMaximo = 20000;
+            centroDeCosto.MontoMaximo = 2000000;
 
             _erpContext.CentrosDeCosto.Add(centroDeCosto);
             var result = await _erpContext.SaveChangesAsync();
@@ -304,7 +304,7 @@ namespace ERP_D.Controllers
             var centroDeCosto = new CentroDeCosto();
 
             centroDeCosto.Nombre = "Centro sistemas";
-            centroDeCosto.MontoMaximo = 30000;
+            centroDeCosto.MontoMaximo = 3000000;
 
             _erpContext.CentrosDeCosto.Add(centroDeCosto);
             var result = await _erpContext.SaveChangesAsync();
@@ -338,7 +338,7 @@ namespace ERP_D.Controllers
             var centroDeCosto = new CentroDeCosto();
 
             centroDeCosto.Nombre = "Centro RH";
-            centroDeCosto.MontoMaximo = 2000;
+            centroDeCosto.MontoMaximo = 200000;
 
             _erpContext.CentrosDeCosto.Add(centroDeCosto);
             var result = await _erpContext.SaveChangesAsync();
@@ -373,7 +373,7 @@ namespace ERP_D.Controllers
             var centroDeCosto = new CentroDeCosto();
 
             centroDeCosto.Nombre = "Centro Recruiting";
-            centroDeCosto.MontoMaximo = 2000;
+            centroDeCosto.MontoMaximo = 200000;
 
             _erpContext.CentrosDeCosto.Add(centroDeCosto);
             var result = await _erpContext.SaveChangesAsync();

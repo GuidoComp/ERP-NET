@@ -9,6 +9,7 @@ using ERP_D.Data;
 using ERP_D.Models;
 using Microsoft.AspNetCore.Authorization;
 using ERP_D.ViewModels;
+using System.Xml.Schema;
 
 namespace ERP_D.Controllers
 {
@@ -67,6 +68,17 @@ namespace ERP_D.Controllers
             {
                 return NotFound();
             }
+
+            double total = 0;
+
+            List<Gasto> gastos = centroDeCosto.Gastos.ToList();
+
+            for(int i = 0; i < gastos.Count; i++)
+            {
+                total = total + gastos[i].Monto;
+            }
+
+            ViewData["TotalAcumulado"] = total;
 
             return View(centroDeCosto);
         }
