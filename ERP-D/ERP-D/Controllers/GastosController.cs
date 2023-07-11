@@ -168,24 +168,24 @@ namespace ERP_D.Controllers
             return View(gastoForm);
         }
 
-        // GET: Gastos/Edit/5
-        //[Authorize(Roles = "Admin, RH")]
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null || _context.Gastos == null)
-        //    {
-        //        return NotFound();
-        //    }
+       // GET: Gastos/Edit/5
+        [Authorize(Roles = "!")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Gastos == null)
+            {
+                return NotFound();
+            }
 
-        //    var gasto = await _context.Gastos.FindAsync(id);
-        //    if (gasto == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gasto.CentroDeCostoId);
-        //    ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
-        //    return View(gasto);
-        //}
+            var gasto = await _context.Gastos.FindAsync(id);
+            if (gasto == null)
+            {
+                return NotFound();
+            }
+            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gasto.CentroDeCostoId);
+            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
+            return View(gasto);
+        }
 
         // POST: Gastos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -226,7 +226,7 @@ namespace ERP_D.Controllers
         }
 
         // GET: Gastos/Delete/5
-        [Authorize(Roles = "Admin, RH")]
+        [Authorize(Roles = "!")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Gastos == null)
