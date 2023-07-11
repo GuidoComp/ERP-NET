@@ -13,6 +13,7 @@ namespace ERP_D.ViewModels.Posiciones
 
         [Required(ErrorMessage = ErrorMsgs.MsgReq)]
         [StringLength(70, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
+        [Remote(action: "NombreDisponible", controller: "Posiciones")]
         public String Nombre { get; set; }
 
         [StringLength(200, MinimumLength = 1, ErrorMessage = ErrorMsgs.MsgStringLength)]
