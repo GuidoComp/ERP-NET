@@ -122,6 +122,7 @@ namespace ERP_D.Controllers
             ViewData["DireccionId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.DireccionId);
             ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerencia.EmpresaId);
             ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerencia.ResponsableId);
+            //ViewData["GerenciaId"] = new SelectList(_context.Gerencias.Include(g => g.Empresa), "Id", "ObtenerEmpresaNombre");
             return View(gerencia);
         }
 
@@ -130,9 +131,9 @@ namespace ERP_D.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,EsGerenciaGeneral,DireccionId,ResponsableId,EmpresaId,CentroDeCostoId")] Gerencia gerencia)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,EsGerenciaGeneral,DireccionId,ResponsableId,EmpresaId,CentroDeCostoId")] EditGerencia gerenciaForm)
         {
-            if (id != gerencia.Id)
+            if (id != gerenciaForm.Id)
             {
                 return NotFound();
             }
@@ -141,12 +142,21 @@ namespace ERP_D.Controllers
             {
                 try
                 {
+                    var gerencia = new Gerencia();
+                    gerencia.Id = gerenciaForm.Id;
+                    gerencia.Nombre = gerenciaForm.Nombre;
+                    gerencia.EsGerenciaGeneral = gerenciaForm.EsGerenciaGeneral;
+                    gerencia.DireccionId = gerenciaForm.DireccionId;
+                    gerencia.ResponsableId = gerenciaForm.ResponsableId;
+                    gerencia.EmpresaId = gerenciaForm.EmpresaId;
+                    gerencia.CentroDeCostoId = gerenciaForm.CentroDeCostoId;
+
                     _context.Update(gerencia);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GerenciaExists(gerencia.Id))
+                    if (!GerenciaExists(gerenciaForm.Id))
                     {
                         return NotFound();
                     }
@@ -157,11 +167,11 @@ namespace ERP_D.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gerencia.CentroDeCostoId);
-            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.DireccionId);
-            ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerencia.EmpresaId);
-            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerencia.ResponsableId);
-            return View(gerencia);
+            ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Nombre", gerenciaForm.CentroDeCostoId);
+            ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerenciaForm.DireccionId);
+            ViewData["EmpresaId"] = new SelectList(_context.Empresas, "Id", "Nombre", gerenciaForm.EmpresaId);
+            ViewData["ResponsableId"] = new SelectList(_context.Posiciones, "Id", "Nombre", gerenciaForm.ResponsableId);
+            return View(gerenciaForm);
         }
 
         // GET: Gerencias/Delete/5
