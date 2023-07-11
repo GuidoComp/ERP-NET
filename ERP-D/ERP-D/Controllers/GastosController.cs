@@ -74,9 +74,10 @@ namespace ERP_D.Controllers
                 case "fecha_desc":
                     gastos = gastos.OrderByDescending(g => g.Fecha);
                     break;
-                    //default:
-                    //    empleados = empleados.OrderBy(e => e.Nombre).ThenBy(e => e.Apellido);
-                    //    break;
+                default:
+                    gastos = gastos.OrderByDescending(g => g.Fecha);
+                    break;
+
             }
 
             return View(gastos.ToList());
