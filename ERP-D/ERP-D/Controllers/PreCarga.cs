@@ -695,7 +695,7 @@ namespace ERP_D.Controllers
 
                 gasto.Descripcion = "Caja chica";
                 gasto.Fecha = RandomDay();
-                gasto.Monto = rnd.Next(1, montoMaximo);
+                gasto.Monto = rnd.Next(1, 1000);
                 gasto.CentroDeCostoId = centroDeCostoId;
                 gasto.EmpleadoId = empleadoId;
 
