@@ -154,6 +154,18 @@ namespace ERP_D.Controllers
                     return View(gastoForm);
                 }
 
+                var centroCosto = empleado.Posicion.Gerencia.CentroDeCosto;
+
+                var totalGastos = _context.Gastos
+                .Where(g => g.CentroDeCostoId == centroCosto.Id)
+                .Sum(g => g.Monto);
+
+                if (gastoForm.Monto + totalGastos > centroCosto.MontoMaximo)
+                {
+                    ModelState.AddModelError(String.Empty, "El monto del gasto supera el monto máximo permitido");
+                    return View(gastoForm);
+                }
+
                 var gasto = new Gasto();
 
                 gasto.Fecha = DateTime.Now;
